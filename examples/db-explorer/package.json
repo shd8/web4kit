@@ -1,0 +1,23 @@
+{
+  "name": "@web4/example-db-explorer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./suite": "./src/suite.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@web4/conformance": "workspace:^",
+    "@web4/context": "workspace:^",
+    "@web4/decider": "workspace:^",
+    "@web4/ir": "workspace:^",
+    "@web4/manifest": "workspace:^",
+    "@web4/planner": "workspace:^",
+    "@web4/react": "workspace:^"
+  }
+}

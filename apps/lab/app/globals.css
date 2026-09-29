@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@import "@web4/react/styles.css";
+
+@source "../../../packages/react/src";
+@source "../components";
+@source "../app";
+
+@theme {
+  --font-chrome: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-code: var(--font-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: light dark;
+}
+body {
+  @apply bg-zinc-100 text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
+  font-family: var(--font-chrome);
+}

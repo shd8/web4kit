@@ -1,0 +1,22 @@
+{
+  "name": "@web4/decider-laya",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@receptron/laya": "^0.1.2",
+    "@web4/decider": "workspace:^"
+  },
+  "devDependencies": {
+    "@web4/example-restaurant": "workspace:^",
+    "@web4/ir": "workspace:^",
+    "@web4/planner": "workspace:^"
+  }
+}

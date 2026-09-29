@@ -1,0 +1,35 @@
+{
+  "name": "web4",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.11.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "conformance": "tsx scripts/conformance.ts",
+    "ci": "node scripts/ci.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
+    "@types/node": "^26.6.3",
+    "@web4/conformance": "workspace:^",
+    "@web4/context": "workspace:^",
+    "@web4/decider": "workspace:^",
+    "@web4/example-db-explorer": "workspace:^",
+    "@web4/example-restaurant": "workspace:^",
+    "@web4/ir": "workspace:^",
+    "@web4/manifest": "workspace:^",
+    "@web4/planner": "workspace:^",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}

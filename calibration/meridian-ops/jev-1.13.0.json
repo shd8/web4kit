@@ -1,0 +1,16 @@
+{
+  "engine": "jev-1.13.0",
+  "version": "cal-08c65f0348",
+  "manifestVersion": "man-498e1fc5c936",
+  "createdAt": "2026-09-29T22:38:30.935Z",
+  "entries": {
+    "A.relevance|english": {
+      "accuracy": 0.9712643678160919,
+      "overlap": 0,
+      "sampleSize": 870,
+      "flipRate": 0.025892857142857145,
+      "acceptThreshold": 0,
+      "uncalibrated": false
+    }
+  }
+}

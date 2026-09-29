@@ -1,0 +1,11 @@
+.env
+node_modules/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+.w4-cache/
+
+# Local tooling, not part of the published repo
+.claude/
+openspec/

@@ -1,0 +1,21 @@
+{
+  "name": "@web4/planner",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@web4/context": "workspace:^",
+    "@web4/decider": "workspace:^",
+    "@web4/ir": "workspace:^",
+    "@web4/manifest": "workspace:^",
+    "@web4/solver": "workspace:^",
+    "zod": "^4.6.5"
+  }
+}

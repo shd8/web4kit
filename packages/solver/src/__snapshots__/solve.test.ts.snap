@@ -1,0 +1,53 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`per-device grid templates (task 7.3) > matches the desktop snapshot 1`] = `
+{
+  "aside": [
+    "map:4x1",
+  ],
+  "footer": [],
+  "hero": [
+    "hero:12x3",
+  ],
+  "primary": [
+    "menu:8x2",
+  ],
+  "secondary": [
+    "reviews:6x2",
+  ],
+}
+`;
+
+exports[`per-device grid templates (task 7.3) > matches the mobile snapshot 1`] = `
+{
+  "aside": [],
+  "footer": [],
+  "hero": [
+    "hero:12x3",
+  ],
+  "primary": [
+    "menu:12x2",
+  ],
+  "secondary": [
+    "reviews:12x2",
+    "map:12x1",
+  ],
+}
+`;
+
+exports[`per-device grid templates (task 7.3) > matches the tablet snapshot 1`] = `
+{
+  "aside": [],
+  "footer": [],
+  "hero": [
+    "hero:12x3",
+  ],
+  "primary": [
+    "menu:8x2",
+  ],
+  "secondary": [
+    "reviews:6x2",
+    "map:4x1",
+  ],
+}
+`;

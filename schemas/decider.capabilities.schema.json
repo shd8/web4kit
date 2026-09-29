@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "maxStateTokens": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "maxRequestTokens": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "maxQuestionsPerRequest": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "maxChoiceOptions": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "maxCriteriaTokens": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "primitives": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["choice", "score", "noul"]
+      }
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "modalities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["text", "image"]
+      }
+    },
+    "locality": {
+      "type": "string",
+      "enum": ["cloud", "local", "browser"]
+    },
+    "deterministic": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "const": "unknown"
+        }
+      ]
+    },
+    "p50LatencyMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "costPerMTok": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "maxStateTokens",
+    "maxRequestTokens",
+    "maxQuestionsPerRequest",
+    "maxChoiceOptions",
+    "maxCriteriaTokens",
+    "primitives",
+    "languages",
+    "modalities",
+    "locality",
+    "deterministic",
+    "p50LatencyMs",
+    "costPerMTok"
+  ],
+  "additionalProperties": false
+}

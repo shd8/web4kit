@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`minimal, trusted decider input (task 6.1) > sends only situation labels as state and manifest semantics per question 1`] = `
+{
+  "instructions": {
+    "question": "Is this data source relevant to show to the visitor described in the state?",
+    "source": {
+      "id": "dinner-menu",
+      "tags": [
+        "dinner-menu",
+      ],
+      "what": "The restaurant's dinner-menu",
+    },
+  },
+  "meta": {
+    "kind": "A.relevance",
+    "subject": "dinner-menu",
+  },
+  "type": "noul",
+}
+`;

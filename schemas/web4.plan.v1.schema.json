@@ -1,0 +1,634 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "web4.plan/v1"
+    },
+    "site": {
+      "type": "string"
+    },
+    "situationHash": {
+      "type": "string"
+    },
+    "engine": {
+      "type": "string"
+    },
+    "calibrationVersion": {
+      "type": "string"
+    },
+    "manifestVersion": {
+      "type": "string"
+    },
+    "device": {
+      "type": "string",
+      "enum": ["mobile", "tablet", "desktop"]
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "hero": {
+          "maxItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string"
+              },
+              "componentId": {
+                "type": "string"
+              },
+              "propsBinding": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "footprint": {
+                "type": "object",
+                "properties": {
+                  "colSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "rowSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  }
+                },
+                "required": ["colSpan", "rowSpan"],
+                "additionalProperties": false
+              },
+              "prominence": {
+                "type": "number"
+              },
+              "why": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "string"
+                    },
+                    "answer": {
+                      "type": ["string", "number", "boolean", "null"]
+                    },
+                    "probabilities": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "threshold": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "decidedBy": {
+                      "type": "string",
+                      "enum": ["engine", "default", "rule", "invariant"]
+                    },
+                    "engine": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["question", "answer", "decidedBy"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "sourceId",
+              "componentId",
+              "propsBinding",
+              "footprint",
+              "prominence",
+              "why"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "primary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string"
+              },
+              "componentId": {
+                "type": "string"
+              },
+              "propsBinding": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "footprint": {
+                "type": "object",
+                "properties": {
+                  "colSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "rowSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  }
+                },
+                "required": ["colSpan", "rowSpan"],
+                "additionalProperties": false
+              },
+              "prominence": {
+                "type": "number"
+              },
+              "why": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "string"
+                    },
+                    "answer": {
+                      "type": ["string", "number", "boolean", "null"]
+                    },
+                    "probabilities": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "threshold": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "decidedBy": {
+                      "type": "string",
+                      "enum": ["engine", "default", "rule", "invariant"]
+                    },
+                    "engine": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["question", "answer", "decidedBy"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "sourceId",
+              "componentId",
+              "propsBinding",
+              "footprint",
+              "prominence",
+              "why"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "secondary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string"
+              },
+              "componentId": {
+                "type": "string"
+              },
+              "propsBinding": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "footprint": {
+                "type": "object",
+                "properties": {
+                  "colSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "rowSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  }
+                },
+                "required": ["colSpan", "rowSpan"],
+                "additionalProperties": false
+              },
+              "prominence": {
+                "type": "number"
+              },
+              "why": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "string"
+                    },
+                    "answer": {
+                      "type": ["string", "number", "boolean", "null"]
+                    },
+                    "probabilities": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "threshold": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "decidedBy": {
+                      "type": "string",
+                      "enum": ["engine", "default", "rule", "invariant"]
+                    },
+                    "engine": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["question", "answer", "decidedBy"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "sourceId",
+              "componentId",
+              "propsBinding",
+              "footprint",
+              "prominence",
+              "why"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "aside": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string"
+              },
+              "componentId": {
+                "type": "string"
+              },
+              "propsBinding": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "footprint": {
+                "type": "object",
+                "properties": {
+                  "colSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "rowSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  }
+                },
+                "required": ["colSpan", "rowSpan"],
+                "additionalProperties": false
+              },
+              "prominence": {
+                "type": "number"
+              },
+              "why": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "string"
+                    },
+                    "answer": {
+                      "type": ["string", "number", "boolean", "null"]
+                    },
+                    "probabilities": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "threshold": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "decidedBy": {
+                      "type": "string",
+                      "enum": ["engine", "default", "rule", "invariant"]
+                    },
+                    "engine": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["question", "answer", "decidedBy"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "sourceId",
+              "componentId",
+              "propsBinding",
+              "footprint",
+              "prominence",
+              "why"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "footer": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string"
+              },
+              "componentId": {
+                "type": "string"
+              },
+              "propsBinding": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "footprint": {
+                "type": "object",
+                "properties": {
+                  "colSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "rowSpan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  }
+                },
+                "required": ["colSpan", "rowSpan"],
+                "additionalProperties": false
+              },
+              "prominence": {
+                "type": "number"
+              },
+              "why": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "string"
+                    },
+                    "answer": {
+                      "type": ["string", "number", "boolean", "null"]
+                    },
+                    "probabilities": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "threshold": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "decidedBy": {
+                      "type": "string",
+                      "enum": ["engine", "default", "rule", "invariant"]
+                    },
+                    "engine": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["question", "answer", "decidedBy"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "sourceId",
+              "componentId",
+              "propsBinding",
+              "footprint",
+              "prominence",
+              "why"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["hero", "primary", "secondary", "aside", "footer"],
+      "additionalProperties": false
+    },
+    "excluded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sourceId": {
+            "type": "string"
+          },
+          "why": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "question": {
+                  "type": "string"
+                },
+                "answer": {
+                  "type": ["string", "number", "boolean", "null"]
+                },
+                "probabilities": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "number"
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "threshold": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "decidedBy": {
+                  "type": "string",
+                  "enum": ["engine", "default", "rule", "invariant"]
+                },
+                "engine": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "required": ["question", "answer", "decidedBy"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["sourceId", "why"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "format",
+    "site",
+    "situationHash",
+    "engine",
+    "calibrationVersion",
+    "manifestVersion",
+    "device",
+    "layout",
+    "excluded"
+  ],
+  "additionalProperties": false
+}

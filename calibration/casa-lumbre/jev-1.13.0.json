@@ -1,0 +1,40 @@
+{
+  "engine": "jev-1.13.0",
+  "version": "cal-e2dee9c365",
+  "manifestVersion": "man-25de99c43ba7",
+  "createdAt": "2026-09-29T22:38:03.114Z",
+  "entries": {
+    "A.relevance|english": {
+      "accuracy": 1,
+      "overlap": 0,
+      "sampleSize": 1656,
+      "flipRate": 0.03387533875338753,
+      "acceptThreshold": 0.08,
+      "uncalibrated": false
+    },
+    "A.salience|english": {
+      "accuracy": 1,
+      "overlap": 0,
+      "sampleSize": 531,
+      "flipRate": 0.07926829268292683,
+      "acceptThreshold": 0.223,
+      "uncalibrated": false
+    },
+    "C.region|english": {
+      "accuracy": 0.9256900212314225,
+      "overlap": 0,
+      "sampleSize": 471,
+      "flipRate": 0.10772357723577236,
+      "acceptThreshold": 0.217,
+      "uncalibrated": false
+    },
+    "B.component|english": {
+      "accuracy": 0.9141914191419142,
+      "overlap": 0,
+      "sampleSize": 303,
+      "flipRate": 0.028745644599303136,
+      "acceptThreshold": 0.14,
+      "uncalibrated": false
+    }
+  }
+}

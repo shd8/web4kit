@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   release:
+    # Opt-in: set the repository variable RELEASE_ENABLED=true (and the NPM_TOKEN secret) to publish.
+    if: vars.RELEASE_ENABLED == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

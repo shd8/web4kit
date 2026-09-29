@@ -110,7 +110,7 @@ Use the **engine switcher** (Rules / Jev) and the **Why** panel to see each deci
 
 ## Releasing
 
-Versions are managed with [Changesets](https://github.com/changesets/changesets); all `@web4kit/*` packages share one version. On `main`, the Release workflow opens a *Version Packages* PR, and merging it publishes to npm (with provenance once the repository is public). It needs an `NPM_TOKEN` repository secret: a granular npm token with publish rights on `@web4kit` and 2FA bypass.
+Versions are managed with [Changesets](https://github.com/changesets/changesets); all `@web4kit/*` packages share one version. On `main`, the Release workflow opens a *Version Packages* PR, and merging it publishes to npm (with provenance once the repository is public). It is opt-in: set the repository variable `RELEASE_ENABLED=true` and add an `NPM_TOKEN` secret (a granular npm token with publish rights on `@web4kit` and 2FA bypass).
 
 ## Repository layout
 

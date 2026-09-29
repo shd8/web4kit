@@ -2,6 +2,7 @@
  * web4 design system (design D9). One set of semantic tokens, two themes:
  *   lumbre  - warm, editorial (restaurant example)
  *   ops     - cool, dense (database explorer)
+ *   azulejo - tile blue and terracotta on cream (hotel starter)
  * Tailwind v4 apps: import after `@import "tailwindcss";` and add `@source` for this package.
  */
 
@@ -68,6 +69,27 @@
   --w4-font-mono: var(--font-mono, ui-monospace), monospace;
 }
 
+[data-w4-theme="azulejo"] {
+  --w4-bg: oklch(0.975 0.011 85);
+  --w4-fg: oklch(0.26 0.045 255);
+  --w4-card: oklch(0.993 0.005 85);
+  --w4-card-fg: oklch(0.26 0.045 255);
+  --w4-muted: oklch(0.945 0.014 240);
+  --w4-muted-fg: oklch(0.5 0.035 250);
+  --w4-border: oklch(0.89 0.02 245);
+  --w4-primary: oklch(0.47 0.13 258);
+  --w4-primary-fg: oklch(0.985 0.008 85);
+  --w4-accent: oklch(0.63 0.14 45);
+  --w4-accent-fg: oklch(0.99 0.01 80);
+  --w4-ok: oklch(0.58 0.12 160);
+  --w4-warn: oklch(0.72 0.14 75);
+  --w4-bad: oklch(0.56 0.18 28);
+  --w4-radius: 0.9rem;
+  --w4-font-display: var(--font-azulejo-display, var(--font-fraunces, ui-serif)), Georgia, serif;
+  --w4-font-sans: var(--font-inter, ui-sans-serif), system-ui, sans-serif;
+  --w4-font-mono: var(--font-mono, ui-monospace), monospace;
+}
+
 @media (prefers-color-scheme: dark) {
   [data-w4-theme="lumbre"]:not([data-w4-mode="light"]) {
     --w4-bg: oklch(0.17 0.012 50);
@@ -79,6 +101,17 @@
     --w4-border: oklch(0.32 0.016 50);
     --w4-primary: oklch(0.68 0.17 42);
     --w4-primary-fg: oklch(0.17 0.012 50);
+  }
+  [data-w4-theme="azulejo"]:not([data-w4-mode="light"]) {
+    --w4-bg: oklch(0.18 0.03 255);
+    --w4-fg: oklch(0.95 0.01 85);
+    --w4-card: oklch(0.22 0.035 255);
+    --w4-card-fg: oklch(0.95 0.01 85);
+    --w4-muted: oklch(0.27 0.035 255);
+    --w4-muted-fg: oklch(0.74 0.03 245);
+    --w4-border: oklch(0.33 0.04 255);
+    --w4-primary: oklch(0.7 0.12 250);
+    --w4-primary-fg: oklch(0.18 0.03 255);
   }
   [data-w4-theme="ops"]:not([data-w4-mode="light"]) {
     --w4-bg: oklch(0.17 0.012 260);

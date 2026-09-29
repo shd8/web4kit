@@ -20,6 +20,7 @@ export const SAMPLE: Record<string, { data: unknown; binding: Record<string, str
         rating: 5,
         who: "Ana",
         status: "On time",
+        img: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=60&auto=format&fit=crop",
       },
       {
         name: "Iberian pork",
@@ -30,6 +31,7 @@ export const SAMPLE: Record<string, { data: unknown; binding: Record<string, str
         rating: 4,
         who: "Tom",
         status: "Late",
+        img: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=60&auto=format&fit=crop",
       },
     ],
     binding: {
@@ -42,6 +44,7 @@ export const SAMPLE: Record<string, { data: unknown; binding: Record<string, str
       rating: "rating",
       author: "who",
       badge: "status",
+      image: "img",
     },
   },
   record: {

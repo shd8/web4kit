@@ -162,3 +162,13 @@ describe("visit cookie consent (task 4.5)", () => {
     expect(deriveSituation(sixth.envelope, rules).familiarity).toBe("regular");
   });
 });
+
+describe("hotel and booking referrers", () => {
+  it("classifies booking sites as evaluating", () => {
+    const arrival = (referer: string) =>
+      deriveSituation(collectEnvelope({ url: "/", headers: { referer } }).envelope, CORE_RULES)
+        .arrival;
+    expect(arrival("https://www.booking.com/hotel/pt/casa-ribeira.html")).toBe("evaluating");
+    expect(arrival("https://www.expedia.com/Porto-Hotels")).toBe("evaluating");
+  });
+});

@@ -2,10 +2,15 @@
   "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [["@web4kit/*"]],
+  "fixed": [["@web4kit/*", "create-web4kit"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@web4kit/lab", "@web4kit/example-restaurant", "@web4kit/example-db-explorer"]
+  "ignore": [
+    "@web4kit/example-db-explorer",
+    "@web4kit/example-restaurant",
+    "@web4kit/lab",
+    "web4kit-next-starter"
+  ]
 }

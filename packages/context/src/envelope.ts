@@ -37,6 +37,12 @@ export interface ContextEnvelope {
   consent: boolean;
   /** Roles of an authenticated first-party viewer (from the app session), if any. */
   roles?: string[];
+  /**
+   * First-party facts the site already knows about this visitor from its own systems
+   * (e.g. a booking's arrival date resolved from a confirmation-email link). Plain strings,
+   * no personal data: situation rules turn them into labels; they never reach a decider.
+   */
+  firstParty?: Record<string, string>;
   /** Only present with consent. */
   visit?: VisitMemory;
 }

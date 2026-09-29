@@ -63,7 +63,8 @@ function sortKeys(s: Situation): Situation {
 
 const VISUAL = /instagram|^ig$|tiktok|pinterest|facebook|^fb$|threads/;
 const TRANSACTIONAL = /maps|waze|citymapper|uber/;
-const EVALUATING = /tripadvisor|yelp|thefork|opentable|google|bing|duckduckgo|michelin/;
+const EVALUATING =
+  /tripadvisor|yelp|thefork|opentable|booking|expedia|hotels|kayak|trivago|google|bing|duckduckgo|michelin/;
 
 export const arrivalRule: SituationRule = (env) => {
   const source = env.src ?? env.utm.utm_source;

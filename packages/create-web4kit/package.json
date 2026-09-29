@@ -1,0 +1,44 @@
+{
+  "name": "create-web4kit",
+  "version": "0.1.0",
+  "description": "Scaffold a web4 site: pages planned per visitor by System One decision models.",
+  "license": "MIT",
+  "author": "Fernando Gómez Graciani",
+  "homepage": "https://github.com/shd8/web4/tree/main/packages/create-web4kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shd8/web4.git",
+    "directory": "packages/create-web4kit"
+  },
+  "bugs": "https://github.com/shd8/web4/issues",
+  "keywords": [
+    "web4",
+    "create",
+    "starter",
+    "template",
+    "system-one",
+    "jev"
+  ],
+  "type": "module",
+  "bin": {
+    "create-web4kit": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "template",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/copy-template.mjs",
+    "typecheck": "node --check index.mjs",
+    "test": "node scripts/test.mjs",
+    "prepack": "node scripts/copy-template.mjs"
+  }
+}

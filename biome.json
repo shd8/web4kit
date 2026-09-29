@@ -9,7 +9,9 @@
       "!**/coverage",
       "!**/*.gen.json",
       "!openspec",
-      "!.claude"
+      "!.claude",
+      "!packages/create-web4kit/template",
+      "!**/calibration/report.md"
     ]
   },
   "formatter": {

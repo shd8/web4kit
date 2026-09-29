@@ -324,3 +324,78 @@ export const recordCard = defineComponent({
     </Card>
   ),
 });
+
+/** Offer/room cards: image, title, subtitle, price and a badge; ideal for things to choose between. */
+export const cardGrid = defineComponent({
+  manifest: {
+    id: "card-grid",
+    what: "Cards with photo, name, short text and price, to compare options",
+    category: "list",
+    accepts: [{ shape: "list", requires: ["title", "image"], rank: 2 }],
+    affordances: ["compare", "browse", "highlight"],
+    footprint: fp([12, 2], [12, 2], [12, 2]),
+    mediaHeavy: true,
+    fallback: "menu-list",
+  },
+  props: z.object({
+    items: z
+      .array(
+        z.object({
+          title: z.string(),
+          image: z.string().min(1),
+          imageAlt: opt,
+          subtitle: opt,
+          value: z.union([z.string(), z.number()]).optional(),
+          badge: opt,
+          tags,
+        }),
+      )
+      .min(1),
+  }),
+  toProps: (data, binding) => ({ items: bindList(data, binding).slice(0, 6) }),
+  render: ({ items }, ctx) => (
+    <Card>
+      <Heading label={ctx.label} eyebrow={ctx.eyebrow} />
+      <ul className="grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">
+        {items.map((item, i) => (
+          <li
+            key={`${item.title}-${i}`}
+            className="group min-w-0 overflow-hidden rounded-xl border border-border bg-background"
+          >
+            <div className="relative aspect-[4/3] overflow-hidden">
+              <img
+                src={item.image}
+                alt={item.imageAlt ?? item.title}
+                className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                loading="lazy"
+              />
+              {item.badge && (
+                <span className="absolute left-3 top-3 rounded-full bg-card/90 px-2.5 py-0.5 text-xs font-semibold shadow-sm">
+                  {item.badge}
+                </span>
+              )}
+            </div>
+            <div className="p-4">
+              <div className="flex items-baseline justify-between gap-3">
+                <h3 className="font-display text-lg leading-tight">{item.title}</h3>
+                {item.value !== undefined && (
+                  <span className="shrink-0 text-sm font-semibold tabular-nums">{item.value}</span>
+                )}
+              </div>
+              {item.subtitle && (
+                <p className="mt-1 text-sm text-muted-foreground">{item.subtitle}</p>
+              )}
+              {item.tags && item.tags.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {item.tags.map((t) => (
+                    <Badge key={t}>{t}</Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  ),
+});

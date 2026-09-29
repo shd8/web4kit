@@ -57,6 +57,15 @@ renderer ────────── data fetched fresh at render time, fail-
 - **Engines are interchangeable** behind the `Decider` interface: hosted Jev, Laya (through Ollaya or in-process ONNX), a deterministic rules engine, or a cascade (a cheap engine first, escalating to Jev on low confidence).
 - **The conformance suite** plans hundreds of persona fixtures per engine. It measures accuracy *and confidence on failures*, then writes the calibration profiles the planner uses. An engine that is confidently wrong is marked uncalibrated and falls back to rules instead of failing silently.
 
+## Start a site
+
+```bash
+npm create web4kit@latest my-site   # once published; in this repo: templates/next-starter
+cd my-site && npm install && npm run dev
+```
+
+The starter is **Casa Ribeira**, a boutique hotel in Porto. It's a production-mode Next.js app with five personas (dreaming, comparing, arriving today, staying in the morning, staying on a rainy evening), calibrated manifests, a conformance suite and a `/stats` page. Calibrated on Jev: 100% invariants, 99.8% relevance accuracy, $0.00032 per uncached page. See [`templates/next-starter`](templates/next-starter).
+
 ## Use the packages
 
 ```bash
@@ -76,6 +85,7 @@ npm install @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react r
 | [`@web4kit/conformance`](packages/conformance) | Fixtures, invariants, per-engine evaluation, calibration profiles |
 | [`@web4kit/ir`](packages/ir) | Page Plan schema (`web4.plan/v1`), validation, privacy check |
 | [`@web4kit/solver`](packages/solver) | Deterministic layout solver |
+| [`create-web4kit`](packages/create-web4kit) | Scaffolder for the Casa Ribeira starter |
 
 ## Run this repository
 
@@ -125,6 +135,7 @@ packages/
   solver        Deterministic layout solver
   react         Renderer and the curated component library (Tailwind v4, container queries)
   conformance   Fixtures, invariants, runner, calibration, reports
+templates/      next-starter: Casa Ribeira, the create-web4kit template
 apps/lab        Next.js lab: context panel, personas, engine switcher, Why panel
 examples/       restaurant (Casa Lumbre) and db-explorer (Meridian Supply)
 schemas/        Language-neutral JSON Schemas: the canonical contracts

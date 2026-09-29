@@ -33,6 +33,7 @@ export const SAMPLE: Record<string, { data: unknown; binding: Record<string, str
         rating: 5,
         who: "Ana",
         status: "On time",
+        img: "https://img.example/o.jpg",
       },
       {
         name: "Iberian pork",
@@ -43,6 +44,7 @@ export const SAMPLE: Record<string, { data: unknown; binding: Record<string, str
         rating: 4,
         who: "Tom",
         status: "Late",
+        img: "https://img.example/p.jpg",
       },
     ],
     binding: {
@@ -55,6 +57,7 @@ export const SAMPLE: Record<string, { data: unknown; binding: Record<string, str
       rating: "rating",
       author: "who",
       badge: "status",
+      image: "img",
     },
   },
   record: {

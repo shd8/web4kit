@@ -1,6 +1,7 @@
 import type { ComponentManifestInput } from "@web4kit/manifest";
 import { graphView, timeseriesChart } from "./components/charts";
 import {
+  cardGrid,
   dataTable,
   eventsTimeline,
   kpiTiles,
@@ -24,6 +25,7 @@ export const LIBRARY = [
   socialGrid,
   captionList,
   menuList,
+  cardGrid,
   dataTable,
   eventsTimeline,
   reviewHighlights,

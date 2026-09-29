@@ -1,4 +1,4 @@
-import { CORE_BUCKETS, VENUE_BUCKETS } from "@web4/context";
+import { CORE_BUCKETS, VENUE_BUCKETS } from "@web4kit/context";
 import {
   createEngineDecider,
   type Decider,
@@ -6,13 +6,13 @@ import {
   type Questions,
   RULES_CAPABILITIES,
   type State,
-} from "@web4/decider";
-import { allBlocks } from "@web4/ir";
+} from "@web4kit/decider";
+import { allBlocks } from "@web4kit/ir";
 import {
   type ComponentManifestInput,
   type DataSourceManifestInput,
   defineManifests,
-} from "@web4/manifest";
+} from "@web4kit/manifest";
 import { describe, expect, it, vi } from "vitest";
 import {
   buildQuestions,

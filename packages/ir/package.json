@@ -1,14 +1,55 @@
 {
-  "name": "@web4/ir",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@web4kit/ir",
+  "version": "0.1.0",
+  "description": "web4 Page Plan IR: the versioned, language-neutral plan schema, validation, privacy check and stable hashing.",
+  "license": "MIT",
+  "author": "Fernando Gómez Graciani",
+  "homepage": "https://github.com/shd8/web4/tree/main/packages/ir#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shd8/web4.git",
+    "directory": "packages/ir"
+  },
+  "bugs": "https://github.com/shd8/web4/issues",
+  "keywords": [
+    "web4",
+    "system-one",
+    "jev",
+    "decision-model",
+    "personalization",
+    "generative-ui",
+    "page-planning"
+  ],
   "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": "./src/index.ts"
   },
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "build": "tsdown",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "prepack": "tsdown"
   },
   "dependencies": {
     "zod": "^4.6.5"

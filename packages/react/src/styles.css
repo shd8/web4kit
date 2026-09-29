@@ -1,100 +1,10 @@
 /*
- * web4 design system (design D9). One set of semantic tokens, two themes:
- *   lumbre  - warm, editorial (restaurant example)
- *   ops     - cool, dense (database explorer)
- * Import after `@import "tailwindcss";` and add `@source` for this package.
+ * Precompiled stylesheet for apps without Tailwind: design tokens + every utility the
+ * component library uses. Built to dist/styles.css by `pnpm build`.
+ * Apps that already use Tailwind v4 should import tokens.css and @source this package instead.
  */
-
-@theme inline {
-  --color-background: var(--w4-bg);
-  --color-foreground: var(--w4-fg);
-  --color-card: var(--w4-card);
-  --color-card-foreground: var(--w4-card-fg);
-  --color-muted: var(--w4-muted);
-  --color-muted-foreground: var(--w4-muted-fg);
-  --color-border: var(--w4-border);
-  --color-primary: var(--w4-primary);
-  --color-primary-foreground: var(--w4-primary-fg);
-  --color-accent: var(--w4-accent);
-  --color-accent-foreground: var(--w4-accent-fg);
-  --color-ok: var(--w4-ok);
-  --color-warn: var(--w4-warn);
-  --color-bad: var(--w4-bad);
-  --font-display: var(--w4-font-display);
-  --font-sans: var(--w4-font-sans);
-  --font-mono: var(--w4-font-mono);
-  --radius-card: var(--w4-radius);
-}
-
-[data-w4-theme="lumbre"] {
-  --w4-bg: oklch(0.972 0.012 78);
-  --w4-fg: oklch(0.22 0.018 45);
-  --w4-card: oklch(0.99 0.006 80);
-  --w4-card-fg: oklch(0.22 0.018 45);
-  --w4-muted: oklch(0.93 0.016 75);
-  --w4-muted-fg: oklch(0.47 0.022 50);
-  --w4-border: oklch(0.87 0.02 70);
-  --w4-primary: oklch(0.58 0.19 38);
-  --w4-primary-fg: oklch(0.985 0.01 80);
-  --w4-accent: oklch(0.48 0.07 130);
-  --w4-accent-fg: oklch(0.98 0.01 110);
-  --w4-ok: oklch(0.56 0.12 150);
-  --w4-warn: oklch(0.7 0.14 75);
-  --w4-bad: oklch(0.55 0.19 28);
-  --w4-radius: 1.1rem;
-  --w4-font-display: var(--font-fraunces, ui-serif), Georgia, serif;
-  --w4-font-sans: var(--font-inter, ui-sans-serif), system-ui, sans-serif;
-  --w4-font-mono: var(--font-mono, ui-monospace), monospace;
-}
-
-[data-w4-theme="ops"] {
-  --w4-bg: oklch(0.975 0.004 250);
-  --w4-fg: oklch(0.22 0.02 260);
-  --w4-card: oklch(1 0 0);
-  --w4-card-fg: oklch(0.22 0.02 260);
-  --w4-muted: oklch(0.95 0.006 250);
-  --w4-muted-fg: oklch(0.5 0.02 255);
-  --w4-border: oklch(0.9 0.008 250);
-  --w4-primary: oklch(0.53 0.17 262);
-  --w4-primary-fg: oklch(0.99 0 0);
-  --w4-accent: oklch(0.62 0.11 195);
-  --w4-accent-fg: oklch(0.99 0 0);
-  --w4-ok: oklch(0.6 0.13 155);
-  --w4-warn: oklch(0.75 0.15 75);
-  --w4-bad: oklch(0.58 0.2 25);
-  --w4-radius: 0.75rem;
-  --w4-font-display: var(--font-inter, ui-sans-serif), system-ui, sans-serif;
-  --w4-font-sans: var(--font-inter, ui-sans-serif), system-ui, sans-serif;
-  --w4-font-mono: var(--font-mono, ui-monospace), monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  [data-w4-theme="lumbre"]:not([data-w4-mode="light"]) {
-    --w4-bg: oklch(0.17 0.012 50);
-    --w4-fg: oklch(0.94 0.012 75);
-    --w4-card: oklch(0.21 0.014 50);
-    --w4-card-fg: oklch(0.94 0.012 75);
-    --w4-muted: oklch(0.26 0.014 50);
-    --w4-muted-fg: oklch(0.72 0.02 70);
-    --w4-border: oklch(0.32 0.016 50);
-    --w4-primary: oklch(0.68 0.17 42);
-    --w4-primary-fg: oklch(0.17 0.012 50);
-  }
-  [data-w4-theme="ops"]:not([data-w4-mode="light"]) {
-    --w4-bg: oklch(0.17 0.012 260);
-    --w4-fg: oklch(0.94 0.008 250);
-    --w4-card: oklch(0.21 0.014 260);
-    --w4-card-fg: oklch(0.94 0.008 250);
-    --w4-muted: oklch(0.26 0.014 260);
-    --w4-muted-fg: oklch(0.7 0.02 255);
-    --w4-border: oklch(0.31 0.016 260);
-    --w4-primary: oklch(0.68 0.15 262);
-  }
-}
-
-.w4-scroll-snap {
-  scrollbar-width: none;
-}
-.w4-scroll-snap::-webkit-scrollbar {
-  display: none;
-}
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./tokens.css";
+@source "./";

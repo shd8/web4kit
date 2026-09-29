@@ -1,4 +1,4 @@
-import type { ComponentManifestInput } from "@web4/manifest";
+import type { ComponentManifestInput } from "@web4kit/manifest";
 import { graphView, timeseriesChart } from "./components/charts";
 import {
   dataTable,

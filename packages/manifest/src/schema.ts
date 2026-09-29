@@ -1,4 +1,4 @@
-import { DEVICES, FootprintSchema, RegionSchema } from "@web4/ir";
+import { DEVICES, FootprintSchema, RegionSchema } from "@web4kit/ir";
 import { z } from "zod";
 
 export const SHAPES = [

@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@web4/react/styles.css";
+@import "@web4kit/react/tokens.css";
 
 @source "../../../packages/react/src";
 @source "../components";

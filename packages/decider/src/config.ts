@@ -1,5 +1,3 @@
-import { existsSync } from "node:fs";
-
 export const JEV_DEFAULT_BASE_URL = "https://api.typesafe.ai";
 /** Pinned Jev version (never an alias; see design D2). */
 export const JEV_DEFAULT_MODEL = "jev-1.13.0";
@@ -8,16 +6,6 @@ export interface JevConfig {
   apiKey: string;
   baseUrl: string;
   model: string;
-}
-
-/**
- * Load a .env file into process.env if it exists. Existing variables are not overwritten.
- * Uses Node's built-in loader, so no dependency is needed.
- */
-export function loadDotEnv(path = ".env"): boolean {
-  if (!existsSync(path)) return false;
-  process.loadEnvFile(path);
-  return true;
 }
 
 /**

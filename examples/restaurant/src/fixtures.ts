@@ -1,5 +1,5 @@
-import type { Fixture } from "@web4/conformance";
-import { CONSENT_COOKIE, type ContextEnvelope, pointAtDistance } from "@web4/context";
+import type { Fixture } from "@web4kit/conformance";
+import { CONSENT_COOKIE, type ContextEnvelope, pointAtDistance } from "@web4kit/context";
 import { VENUE } from "./venue";
 
 const IPHONE = "mobile";

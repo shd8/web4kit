@@ -1,5 +1,5 @@
-import type { ContextEnvelope, Situation } from "@web4/context";
-import { allBlocks, type Plan, REGIONS, type Region } from "@web4/ir";
+import type { ContextEnvelope, Situation } from "@web4kit/context";
+import { allBlocks, type Plan, REGIONS, type Region } from "@web4kit/ir";
 
 /** A page-level property every plan for a fixture must satisfy. */
 export type Invariant =

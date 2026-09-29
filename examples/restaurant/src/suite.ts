@@ -5,8 +5,8 @@ import {
   type Fixture,
   type Invariant,
   type SituatedFixture,
-} from "@web4/conformance";
-import { type ContextEnvelope, pointAtDistance, type Situation } from "@web4/context";
+} from "@web4kit/conformance";
+import { type ContextEnvelope, pointAtDistance, type Situation } from "@web4kit/context";
 import { CORE_FIXTURES } from "./fixtures";
 import { situationOf } from "./situation";
 import { VENUE } from "./venue";

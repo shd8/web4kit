@@ -1,4 +1,4 @@
-import { type ContextEnvelope, collectEnvelope } from "@web4/context";
+import { type ContextEnvelope, collectEnvelope } from "@web4kit/context";
 import { z } from "zod";
 import { isExampleId } from "@/lib/examples";
 import { LAB_MODE, planFor } from "@/lib/server";

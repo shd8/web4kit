@@ -7,19 +7,25 @@
  *   options: --example restaurant|db-explorer|all  --repeats 3  --limit 160  --write (commit profiles)
  *            --report-dir reports
  */
+
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { type EngineRun, renderReport, runEngine, type SituatedFixture } from "@web4/conformance";
+import {
+  type EngineRun,
+  renderReport,
+  runEngine,
+  type SituatedFixture,
+} from "@web4kit/conformance";
 import {
   type Decider,
   isReachable,
-  loadDotEnv,
   localEngineUrlFromEnv,
   remoteEnginesFromEnv,
-} from "@web4/decider";
-import type { ManifestSet } from "@web4/manifest";
-import { createManifestRuleDecider } from "@web4/planner";
+} from "@web4kit/decider";
+import { loadDotEnv } from "@web4kit/decider/node";
+import type { ManifestSet } from "@web4kit/manifest";
+import { createManifestRuleDecider } from "@web4kit/planner";
 import * as explorer from "../examples/db-explorer/src/index";
 import { suiteFixtures as explorerSuite } from "../examples/db-explorer/src/suite";
 import * as restaurant from "../examples/restaurant/src/index";

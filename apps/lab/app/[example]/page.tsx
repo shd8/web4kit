@@ -1,5 +1,5 @@
-import { collectEnvelope } from "@web4/context";
-import { defaultRegistry, PlanView } from "@web4/react";
+import { collectEnvelope } from "@web4kit/context";
+import { defaultRegistry, PlanView } from "@web4kit/react";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Lab } from "@/components/lab";

@@ -1,4 +1,4 @@
-import { localClock, type OpeningInterval, openState, type VenueConfig } from "@web4/context";
+import { localClock, type OpeningInterval, openState, type VenueConfig } from "@web4kit/context";
 
 export const VENUE = {
   name: "Casa Lumbre",

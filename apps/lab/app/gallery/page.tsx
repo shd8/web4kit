@@ -1,5 +1,5 @@
-import { DEVICES } from "@web4/ir";
-import { type BlockContext, LIBRARY } from "@web4/react";
+import { DEVICES } from "@web4kit/ir";
+import { type BlockContext, LIBRARY } from "@web4kit/react";
 import type { ReactElement } from "react";
 import { SAMPLE } from "@/lib/samples";
 

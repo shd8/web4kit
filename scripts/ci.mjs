@@ -5,6 +5,7 @@ import { execSync } from "node:child_process";
 const env = { ...process.env, JEV_API_KEY: "", W4_LOCAL_ENGINE_URL: "", W4_LIVE: "" };
 const steps = [
   ["build", "pnpm -r build"],
+  ["typecheck", "pnpm -r typecheck"],
   ["lint", "pnpm exec biome check ."],
   ["test", "pnpm -r test"],
   [

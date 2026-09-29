@@ -5,7 +5,7 @@ import {
   deriveSituation,
   type SituationRule,
   UNKNOWN,
-} from "@web4/context";
+} from "@web4kit/context";
 export const ROLES = ["ops-manager", "analyst", "executive"] as const;
 
 /** Role comes from the authenticated first-party session (envelope.roles). */

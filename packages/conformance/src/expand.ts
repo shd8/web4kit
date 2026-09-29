@@ -1,4 +1,4 @@
-import type { ContextEnvelope } from "@web4/context";
+import type { ContextEnvelope } from "@web4kit/context";
 import type { Fixture, Invariant } from "./fixtures";
 
 export interface Variant {

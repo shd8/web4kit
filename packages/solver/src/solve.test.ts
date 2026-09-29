@@ -1,4 +1,4 @@
-import type { Device, Footprint } from "@web4/ir";
+import type { Device, Footprint } from "@web4kit/ir";
 import { describe, expect, it } from "vitest";
 import { type Candidate, solve } from "./index";
 

@@ -1,5 +1,5 @@
-import type { Situation } from "@web4/context";
-import { createRuleDecider, type Decider, type RuleResolver, type State } from "@web4/decider";
+import type { Situation } from "@web4kit/context";
+import { createRuleDecider, type Decider, type RuleResolver, type State } from "@web4kit/decider";
 import {
   type Condition,
   compatibleComponents,
@@ -7,7 +7,7 @@ import {
   type Heuristic,
   type ManifestSet,
   SALIENCE_LEVELS,
-} from "@web4/manifest";
+} from "@web4kit/manifest";
 import { KINDS } from "./questions";
 
 export function matches(condition: Condition, situation: Situation): boolean {

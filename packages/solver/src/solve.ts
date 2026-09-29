@@ -1,5 +1,5 @@
-import type { Block, Device, Footprint, Region, Why } from "@web4/ir";
-import { REGIONS } from "@web4/ir";
+import type { Block, Device, Footprint, Region, Why } from "@web4kit/ir";
+import { REGIONS } from "@web4kit/ir";
 
 /** A source that survived Stage A, with its Stage B/C decisions, ready for layout. */
 export interface Candidate {

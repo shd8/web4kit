@@ -1,4 +1,4 @@
-import type { CalibrationEntry } from "@web4/planner";
+import type { CalibrationEntry } from "@web4kit/planner";
 
 export interface Observation {
   kind: string;

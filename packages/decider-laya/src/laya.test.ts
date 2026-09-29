@@ -12,9 +12,9 @@ const enabled = process.env.W4_LAYA === "1" && cached;
 describe.skipIf(!enabled)("in-process Laya (task 10.3)", () => {
   it("plans the restaurant offline with every answer from the pinned bundle", async () => {
     const { createInProcessLayaDecider } = await import("./index");
-    const { createPlanner } = await import("@web4/planner");
-    const { allBlocks } = await import("@web4/ir");
-    const { CORE_FIXTURES, manifests, situationOf } = await import("@web4/example-restaurant");
+    const { createPlanner } = await import("@web4kit/planner");
+    const { allBlocks } = await import("@web4kit/ir");
+    const { CORE_FIXTURES, manifests, situationOf } = await import("@web4kit/example-restaurant");
     const fetchSpy = globalThis.fetch;
     globalThis.fetch = () => Promise.reject(new Error("network disabled in this test"));
     try {

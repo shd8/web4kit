@@ -1,7 +1,8 @@
 import { resolve } from "node:path";
-import { createJevDecider, jevConfigFromEnv, loadDotEnv } from "@web4/decider";
-import { allBlocks } from "@web4/ir";
-import { createPlanner } from "@web4/planner";
+import { createJevDecider, jevConfigFromEnv } from "@web4kit/decider";
+import { loadDotEnv } from "@web4kit/decider/node";
+import { allBlocks } from "@web4kit/ir";
+import { createPlanner } from "@web4kit/planner";
 import { describe, expect, it } from "vitest";
 import { CORE_FIXTURES, manifests, situationOf } from "./index";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { type Plan, REGIONS, type Why } from "@web4/ir";
-import type { RenderedBlock } from "@web4/react";
+import { type Plan, REGIONS, type Why } from "@web4kit/ir";
+import type { RenderedBlock } from "@web4kit/react";
 import type { PlanResponse } from "@/lib/examples";
 import { Chip, cx } from "./ui";
 

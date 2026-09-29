@@ -1,4 +1,4 @@
-import { type Situation, situationHash } from "@web4/context";
+import { type Situation, situationHash } from "@web4kit/context";
 import {
   type Answer,
   type AnswerOrUnanswered,
@@ -6,7 +6,7 @@ import {
   type Decider,
   RULES_ENGINE_ID,
   withFallback,
-} from "@web4/decider";
+} from "@web4kit/decider";
 import {
   DEVICES,
   type Device,
@@ -16,10 +16,10 @@ import {
   type Region,
   stableHash,
   type Why,
-} from "@web4/ir";
-import type { ComponentManifest, DataSourceManifest, ManifestSet } from "@web4/manifest";
-import { SALIENCE_LEVELS } from "@web4/manifest";
-import { type Candidate, solve } from "@web4/solver";
+} from "@web4kit/ir";
+import type { ComponentManifest, DataSourceManifest, ManifestSet } from "@web4kit/manifest";
+import { SALIENCE_LEVELS } from "@web4kit/manifest";
+import { type Candidate, solve } from "@web4kit/solver";
 import { type PlanCache, planCacheKey } from "./cache";
 import { acceptThreshold, type CalibrationProfile } from "./calibration";
 import {

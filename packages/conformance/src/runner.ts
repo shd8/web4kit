@@ -1,14 +1,14 @@
-import type { Situation } from "@web4/context";
-import type { AnswerOrUnanswered, AnswerSet, Decider, Questions, State } from "@web4/decider";
-import { stableHash } from "@web4/ir";
-import type { ManifestSet } from "@web4/manifest";
+import type { Situation } from "@web4kit/context";
+import type { AnswerOrUnanswered, AnswerSet, Decider, Questions, State } from "@web4kit/decider";
+import { stableHash } from "@web4kit/ir";
+import type { ManifestSet } from "@web4kit/manifest";
 import {
   buildQuestions,
   type CalibrationProfile,
   calibrationKey,
   createPlanner,
   type QuestionIndexEntry,
-} from "@web4/planner";
+} from "@web4kit/planner";
 import {
   type CalibrateOptions,
   calibrateEntry,

@@ -1,4 +1,4 @@
-import { type Plan, stableHash } from "@web4/ir";
+import { type Plan, stableHash } from "@web4kit/ir";
 
 export interface PlanCache {
   get(key: string): Plan | undefined;

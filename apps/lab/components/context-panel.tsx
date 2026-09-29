@@ -1,6 +1,6 @@
 "use client";
 
-import type { ContextEnvelope } from "@web4/context";
+import type { ContextEnvelope } from "@web4kit/context";
 import {
   ARRIVALS,
   DAYS,

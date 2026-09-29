@@ -1,6 +1,6 @@
-import { checkInvariants } from "@web4/conformance";
-import { allBlocks } from "@web4/ir";
-import { buildQuestions, createPlanner, lintPortability } from "@web4/planner";
+import { checkInvariants } from "@web4kit/conformance";
+import { allBlocks } from "@web4kit/ir";
+import { buildQuestions, createPlanner, lintPortability } from "@web4kit/planner";
 import { describe, expect, it } from "vitest";
 import { REVIEWS } from "./data";
 import { BUCKETS, CORE_FIXTURES, manifests, situationOf } from "./index";
@@ -64,7 +64,7 @@ describe("core personas on rules (task 9.2)", () => {
 
 describe("conformance fixtures (task 11.1)", async () => {
   const { suiteFixtures } = await import("./suite");
-  const { runEngine } = await import("@web4/conformance");
+  const { runEngine } = await import("@web4kit/conformance");
 
   it("expands to 164 fixtures with at least 100 labelled cases", () => {
     const fixtures = suiteFixtures();
@@ -75,7 +75,7 @@ describe("conformance fixtures (task 11.1)", async () => {
   });
 
   it("rules decider passes 100% of invariants across the suite", async () => {
-    const { createManifestRuleDecider } = await import("@web4/planner");
+    const { createManifestRuleDecider } = await import("@web4kit/planner");
     const run = await runEngine({
       manifests,
       fixtures: suiteFixtures(),

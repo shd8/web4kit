@@ -1,6 +1,10 @@
-import { distanceKm } from "@web4/context";
-import { type DataSourceManifestInput, defineManifests, type FetchContext } from "@web4/manifest";
-import { libraryManifests } from "@web4/react";
+import { distanceKm } from "@web4kit/context";
+import {
+  type DataSourceManifestInput,
+  defineManifests,
+  type FetchContext,
+} from "@web4kit/manifest";
+import { libraryManifests } from "@web4kit/react";
 import {
   DINNER_MENU,
   DISH_PHOTOS,

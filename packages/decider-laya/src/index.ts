@@ -6,7 +6,7 @@ import {
   LAYA_CLASS_CAPABILITIES,
   toWireQuestion,
   type WireAnswer,
-} from "@web4/decider";
+} from "@web4kit/decider";
 
 /** Pinned Laya ONNX bundle (receptron/laya-onnx on Hugging Face), for reproducible answers. */
 export const LAYA_ONNX_REVISION = "68f27dfe5a27a54fb2b1fefc432f43f972e90868";

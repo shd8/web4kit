@@ -1,6 +1,6 @@
-import type { BucketSpec, Situation } from "@web4/context";
-import { estimateTokens } from "@web4/decider";
-import type { ManifestSet } from "@web4/manifest";
+import type { BucketSpec, Situation } from "@web4kit/context";
+import { estimateTokens } from "@web4kit/decider";
+import type { ManifestSet } from "@web4kit/manifest";
 import {
   buildQuestions,
   INTENT_MAX_CHARS,

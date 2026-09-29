@@ -1,8 +1,8 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { type ContextEnvelope, situationHash } from "@web4/context";
-import { defaultRegistry, inspectPlan, type PlanData, PlanView } from "@web4/react";
+import { type ContextEnvelope, situationHash } from "@web4kit/context";
+import { defaultRegistry, inspectPlan, type PlanData, PlanView } from "@web4kit/react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {

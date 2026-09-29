@@ -1,5 +1,5 @@
-import { DEVICES, type Plan } from "@web4/ir";
-import { type DataSourceManifestInput, defineManifests } from "@web4/manifest";
+import { DEVICES, type Plan } from "@web4kit/ir";
+import { type DataSourceManifestInput, defineManifests } from "@web4kit/manifest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {

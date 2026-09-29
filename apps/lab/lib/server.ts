@@ -1,16 +1,16 @@
+import { loadDotEnv } from "@web4kit/decider/node";
 import "server-only";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { ContextEnvelope } from "@web4/context";
+import type { ContextEnvelope } from "@web4kit/context";
 import {
   createCascadeDecider,
   type Decider,
   isReachable,
-  loadDotEnv,
   localEngineUrlFromEnv,
   remoteEnginesFromEnv,
-} from "@web4/decider";
-import type { Plan } from "@web4/ir";
+} from "@web4kit/decider";
+import type { Plan } from "@web4kit/ir";
 import {
   acceptThreshold,
   type CalibrationProfile,
@@ -19,8 +19,8 @@ import {
   type Intent,
   LruPlanCache,
   type Planner,
-} from "@web4/planner";
-import { type PlanData, resolvePlanData } from "@web4/react";
+} from "@web4kit/planner";
+import { type PlanData, resolvePlanData } from "@web4kit/react";
 import {
   type EngineChoice,
   type EngineInfo,

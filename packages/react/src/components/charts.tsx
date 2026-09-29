@@ -1,4 +1,4 @@
-import { GraphDataSchema, TimeseriesDataSchema } from "@web4/manifest";
+import { GraphDataSchema, TimeseriesDataSchema } from "@web4kit/manifest";
 import { Card, Heading } from "../primitives";
 import { defineComponent } from "../registry";
 

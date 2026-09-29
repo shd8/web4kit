@@ -57,7 +57,27 @@ renderer ────────── data fetched fresh at render time, fail-
 - **Engines are interchangeable** behind the `Decider` interface: hosted Jev, Laya (through Ollaya or in-process ONNX), a deterministic rules engine, or a cascade (a cheap engine first, escalating to Jev on low confidence).
 - **The conformance suite** plans hundreds of persona fixtures per engine. It measures accuracy *and confidence on failures*, then writes the calibration profiles the planner uses. An engine that is confidently wrong is marked uncalibrated and falls back to rules instead of failing silently.
 
-## Quick start
+## Use the packages
+
+```bash
+npm install @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react react react-dom
+```
+
+**[Getting started →](docs/getting-started.md)** builds a small site from scratch: manifests, situation, plan, render, Jev and calibration.
+
+| Package | What it is |
+|---|---|
+| [`@web4kit/planner`](packages/planner) | One decider round per page, confidence gating, plan cache, portability lint |
+| [`@web4kit/react`](packages/react) | Fail-soft renderer and curated component library (`styles.css` / `tokens.css`) |
+| [`@web4kit/context`](packages/context) | Context Envelope and situation rules |
+| [`@web4kit/manifest`](packages/manifest) | Data-source and component manifests |
+| [`@web4kit/decider`](packages/decider) | Decider interface; rules, System One HTTP (Jev, Ollaya) and cascade adapters |
+| [`@web4kit/decider-laya`](packages/decider-laya) | In-process Laya (ONNX) decider |
+| [`@web4kit/conformance`](packages/conformance) | Fixtures, invariants, per-engine evaluation, calibration profiles |
+| [`@web4kit/ir`](packages/ir) | Page Plan schema (`web4.plan/v1`), validation, privacy check |
+| [`@web4kit/solver`](packages/solver) | Deterministic layout solver |
+
+## Run this repository
 
 Requirements: Node ≥ 22 and pnpm 9.
 
@@ -83,8 +103,14 @@ Use the **engine switcher** (Rules / Jev) and the **Why** panel to see each deci
 | `pnpm test` | Unit tests (offline) |
 | `pnpm lint` | Biome lint and format check |
 | `pnpm conformance --engines rules,jev --write` | Run the conformance suite and write `calibration/` and `reports/` |
-| `node scripts/ci.mjs` | Full offline CI: build, lint, tests, conformance on rules |
-| `W4_LIVE=1 pnpm --filter @web4/example-restaurant test` | Live planning test against Jev |
+| `node scripts/ci.mjs` | Full offline CI: build, typecheck, lint, tests, conformance on rules |
+| `pnpm smoke` | Pack every package, install into a clean project, typecheck with TS 5.9 and run |
+| `pnpm changeset` | Describe a change for the next release (Changesets) |
+| `W4_LIVE=1 pnpm --filter @web4kit/example-restaurant test` | Live planning test against Jev |
+
+## Releasing
+
+Versions are managed with [Changesets](https://github.com/changesets/changesets); all `@web4kit/*` packages share one version. On `main`, the Release workflow opens a *Version Packages* PR, and merging it publishes to npm with provenance. It needs an `NPM_TOKEN` repository secret: a granular npm token with publish rights on `@web4kit` and 2FA bypass.
 
 ## Repository layout
 

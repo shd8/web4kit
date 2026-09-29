@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Build, typecheck, lint, tests and the conformance suite on the rules engine (no engine keys).
+      - run: node scripts/ci.mjs
+      # Pack every package as npm would, install into a clean project, typecheck (TS 5.9) and run.
+      - run: node scripts/smoke.mjs

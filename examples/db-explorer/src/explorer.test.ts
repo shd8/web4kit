@@ -1,6 +1,6 @@
-import { checkInvariants, runEngine } from "@web4/conformance";
-import { createEngineDecider, type EngineCall, JEV_CAPABILITIES } from "@web4/decider";
-import { allBlocks } from "@web4/ir";
+import { checkInvariants, runEngine } from "@web4kit/conformance";
+import { createEngineDecider, type EngineCall, JEV_CAPABILITIES } from "@web4kit/decider";
+import { allBlocks } from "@web4kit/ir";
 import {
   type CalibrationProfile,
   calibrationKey,
@@ -8,7 +8,7 @@ import {
   createPlanner,
   KINDS,
   lintPortability,
-} from "@web4/planner";
+} from "@web4kit/planner";
 import { describe, expect, it } from "vitest";
 import { BUCKETS, CORE_FIXTURES, detectLanguage, intentOf, manifests, situationOf } from "./index";
 import { suiteFixtures } from "./suite";

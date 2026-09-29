@@ -1,5 +1,5 @@
-import type { Device, Footprint } from "@web4/ir";
-import type { ComponentManifestInput } from "@web4/manifest";
+import type { Device, Footprint } from "@web4kit/ir";
+import type { ComponentManifestInput } from "@web4kit/manifest";
 import type { ReactElement } from "react";
 import type { z } from "zod";
 

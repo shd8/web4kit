@@ -1,5 +1,5 @@
-import { type DataSourceManifestInput, defineManifests } from "@web4/manifest";
-import { libraryManifests } from "@web4/react";
+import { type DataSourceManifestInput, defineManifests } from "@web4kit/manifest";
+import { libraryManifests } from "@web4kit/react";
 import {
   BRIEFING,
   LANES,

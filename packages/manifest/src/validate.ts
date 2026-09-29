@@ -1,4 +1,4 @@
-import { stableHash } from "@web4/ir";
+import { stableHash } from "@web4kit/ir";
 import {
   type ComponentManifest,
   type ComponentManifestInput,

@@ -1,5 +1,5 @@
-import { type Block, type Device, type Plan, type Region, validatePlan } from "@web4/ir";
-import { compatibleComponents, type ManifestSet } from "@web4/manifest";
+import { type Block, type Device, type Plan, type Region, validatePlan } from "@web4kit/ir";
+import { compatibleComponents, type ManifestSet } from "@web4kit/manifest";
 import type { ReactElement } from "react";
 import type { PlanData } from "./data";
 import { cx } from "./primitives";

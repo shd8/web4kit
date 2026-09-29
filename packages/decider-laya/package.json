@@ -1,22 +1,63 @@
 {
-  "name": "@web4/decider-laya",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@web4kit/decider-laya",
+  "version": "0.1.0",
+  "description": "web4 in-process Decider running the open Laya System One model on ONNX Runtime.",
+  "license": "MIT",
+  "author": "Fernando Gómez Graciani",
+  "homepage": "https://github.com/shd8/web4/tree/main/packages/decider-laya#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shd8/web4.git",
+    "directory": "packages/decider-laya"
+  },
+  "bugs": "https://github.com/shd8/web4/issues",
+  "keywords": [
+    "web4",
+    "system-one",
+    "jev",
+    "decision-model",
+    "personalization",
+    "generative-ui",
+    "page-planning"
+  ],
   "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": "./src/index.ts"
   },
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "build": "tsdown",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "prepack": "tsdown"
   },
   "dependencies": {
     "@receptron/laya": "^0.1.2",
-    "@web4/decider": "workspace:^"
+    "@web4kit/decider": "workspace:^"
   },
   "devDependencies": {
-    "@web4/example-restaurant": "workspace:^",
-    "@web4/ir": "workspace:^",
-    "@web4/planner": "workspace:^"
+    "@web4kit/example-restaurant": "workspace:^",
+    "@web4kit/ir": "workspace:^",
+    "@web4kit/planner": "workspace:^"
   }
 }

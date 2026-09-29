@@ -1,4 +1,4 @@
-import { GeoDataSchema, ScheduleDataSchema } from "@web4/manifest";
+import { GeoDataSchema, ScheduleDataSchema } from "@web4kit/manifest";
 import { ButtonLink, Card, cx, Heading, StatusDot } from "../primitives";
 import { defineComponent } from "../registry";
 

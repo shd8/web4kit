@@ -1,5 +1,5 @@
-import type { ExpectedAnswer, Fixture, Invariant, SituatedFixture } from "@web4/conformance";
-import type { ContextEnvelope } from "@web4/context";
+import type { ExpectedAnswer, Fixture, Invariant, SituatedFixture } from "@web4kit/conformance";
+import type { ContextEnvelope } from "@web4kit/context";
 import { intentOf, situationOf } from "./core";
 
 const envelope = (role: string, device: "mobile" | "desktop" = "desktop"): ContextEnvelope => ({

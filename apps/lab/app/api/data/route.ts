@@ -1,5 +1,5 @@
-import { type ContextEnvelope, collectEnvelope } from "@web4/context";
-import { type Plan, validatePlan } from "@web4/ir";
+import { type ContextEnvelope, collectEnvelope } from "@web4kit/context";
+import { type Plan, validatePlan } from "@web4kit/ir";
 import { z } from "zod";
 import { isExampleId } from "@/lib/examples";
 import { dataFor, LAB_MODE } from "@/lib/server";

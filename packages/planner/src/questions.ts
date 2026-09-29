@@ -1,6 +1,6 @@
-import type { Situation } from "@web4/context";
-import type { Json, Question, Questions, State } from "@web4/decider";
-import type { Region } from "@web4/ir";
+import type { Situation } from "@web4kit/context";
+import type { Json, Question, Questions, State } from "@web4kit/decider";
+import type { Region } from "@web4kit/ir";
 import {
   type ComponentManifest,
   compatibleComponents,
@@ -8,7 +8,7 @@ import {
   type ManifestSet,
   PROMINENCE_LEVELS,
   SALIENCE_LEVELS,
-} from "@web4/manifest";
+} from "@web4kit/manifest";
 
 export const KINDS = {
   relevance: "A.relevance",

@@ -1,5 +1,5 @@
-import { allBlocks, type Plan } from "@web4/ir";
-import type { Access, FetchContext, ManifestSet } from "@web4/manifest";
+import { allBlocks, type Plan } from "@web4kit/ir";
+import type { Access, FetchContext, ManifestSet } from "@web4kit/manifest";
 
 export type SourceData =
   | { status: "ok"; data: unknown }

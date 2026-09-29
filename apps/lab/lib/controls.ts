@@ -1,4 +1,4 @@
-import { type ContextEnvelope, distanceKm, localClock, pointAtDistance } from "@web4/context";
+import { type ContextEnvelope, distanceKm, localClock, pointAtDistance } from "@web4kit/context";
 
 /** Lab controls read from and write to a Context Envelope, so presets and controls share one state. */
 

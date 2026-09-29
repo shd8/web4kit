@@ -1,17 +1,17 @@
-import type { Fixture } from "@web4/conformance";
-import type { ContextEnvelope, Situation } from "@web4/context";
+import type { Fixture } from "@web4kit/conformance";
+import type { ContextEnvelope, Situation } from "@web4kit/context";
 import {
   CORE_FIXTURES as EXPLORER_FIXTURES,
   manifests as explorerManifests,
   situationOf as explorerSituation,
-} from "@web4/example-db-explorer";
+} from "@web4kit/example-db-explorer";
 import {
   CORE_FIXTURES as RESTAURANT_FIXTURES,
   manifests as restaurantManifests,
   situationOf as restaurantSituation,
   VENUE,
-} from "@web4/example-restaurant";
-import type { ManifestSet } from "@web4/manifest";
+} from "@web4kit/example-restaurant";
+import type { ManifestSet } from "@web4kit/manifest";
 
 /** Client-safe description of a lab example (no server-only modules). */
 export interface LabExample {
@@ -62,7 +62,7 @@ export interface EngineInfo {
 
 /** Response of POST /api/plan. */
 export interface PlanResponse {
-  plan: import("@web4/ir").Plan;
+  plan: import("@web4kit/ir").Plan;
   cacheHit: boolean;
   planningMs: number;
   usage: { requests: number; inputTokens: number };

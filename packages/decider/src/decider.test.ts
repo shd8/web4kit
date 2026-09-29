@@ -12,13 +12,13 @@ import {
   type EngineCall,
   isFloatingAlias,
   jevConfigFromEnv,
-  loadDotEnv,
   noulConfidence,
   QuestionSchema,
   type Questions,
   RULES_CAPABILITIES,
   withFallback,
 } from "./index";
+import { loadDotEnv } from "./node";
 
 const caps = { ...RULES_CAPABILITIES, locality: "cloud" as const, deterministic: false as const };
 

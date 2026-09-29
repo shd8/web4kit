@@ -5,7 +5,7 @@ import {
   deriveSituation,
   VENUE_BUCKETS,
   venueRules,
-} from "@web4/context";
+} from "@web4kit/context";
 import { venueConfig } from "./venue";
 
 export const RULES = [...CORE_RULES, ...venueRules(venueConfig)];

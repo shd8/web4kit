@@ -153,8 +153,8 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
   }
   const profile: CalibrationProfile = {
     engine: engineVersion,
-    version: `cal-${stableHash(JSON.stringify({ engineVersion, manifests: manifests.version, entries }), 10)}`,
-    manifestVersion: manifests.version,
+    version: `cal-${stableHash(JSON.stringify({ engineVersion, manifests: manifests.deciderVersion, entries }), 10)}`,
+    manifestVersion: manifests.deciderVersion,
     createdAt: new Date().toISOString(),
     entries,
   };

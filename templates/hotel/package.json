@@ -1,0 +1,40 @@
+{
+  "name": "web4kit-hotel-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3010",
+    "build": "next build",
+    "start": "next start --port 3010",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "calibrate": "tsx scripts/calibrate.ts"
+  },
+  "dependencies": {
+    "@web4kit/context": "workspace:*",
+    "@web4kit/decider": "workspace:*",
+    "@web4kit/manifest": "workspace:*",
+    "@web4kit/next": "workspace:*",
+    "@web4kit/planner": "workspace:*",
+    "@web4kit/react": "workspace:*",
+    "next": "^16.3.7",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19",
+    "@web4kit/conformance": "workspace:*",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.2",
+    "vitest": "^5.0.2"
+  },
+  "optionalDependencies": {
+    "@web4kit/decider-laya": "workspace:*"
+  }
+}

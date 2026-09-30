@@ -1,0 +1,9 @@
+/*
+ * Tailwind v4 integration: import right after `@import "tailwindcss";`.
+ *   @import "tailwindcss";
+ *   @import "@web4kit/react/tailwind.css";
+ * Registers the design tokens and lets Tailwind scan this package's components. `@source` is
+ * resolved relative to this file, so it works under any package manager layout.
+ */
+@import "./tokens.css";
+@source "./";

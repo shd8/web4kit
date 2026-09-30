@@ -26,6 +26,7 @@
     "@web4kit/conformance": "workspace:^",
     "@web4kit/context": "workspace:^",
     "@web4kit/decider": "workspace:^",
+    "@web4kit/decider-laya": "workspace:^",
     "@web4kit/example-db-explorer": "workspace:^",
     "@web4kit/example-restaurant": "workspace:^",
     "@web4kit/ir": "workspace:^",

@@ -300,3 +300,73 @@ describe("fail-soft blocks (task 8.4)", () => {
     expect(html).toContain('data-w4-block="menu"');
   });
 });
+
+describe("v1: upcoming schedule status and situation-aware fetch (task 4.1)", () => {
+  const render = (id: string, status: string) => {
+    const entry = defaultRegistry[id]! as unknown as import("./registry").ComponentEntry<unknown>;
+    const props = entry.props.parse(
+      entry.toProps({ status, statusText: "Check-in opens at 15:00", days: [] }, {}),
+    );
+    return renderToStaticMarkup(
+      entry.render(props, {
+        label: "Check-in",
+        footprint: { colSpan: 12, rowSpan: 1 },
+        device: "mobile",
+      }),
+    );
+  };
+
+  it("renders upcoming in the primary tone, never the closed tone", () => {
+    expect(render("status-banner", "upcoming")).toContain("bg-primary");
+    expect(render("status-banner", "upcoming")).not.toContain("bg-foreground");
+    expect(render("status-banner", "closed")).toContain("bg-foreground");
+    expect(render("hours-card", "upcoming")).toContain("bg-primary");
+    expect(render("hours-card", "upcoming")).not.toContain("bg-bad");
+  });
+
+  it("passes the planned situation and engine to fetchers", async () => {
+    let seen: unknown;
+    let engine: unknown;
+    const set = defineManifests({
+      site: "t",
+      components: [defaultRegistry["record-card"]!.manifest],
+      sources: [
+        {
+          id: "check-in",
+          shape: "record",
+          label: "Check-in",
+          tags: [],
+          what: "Check-in",
+          freshness: "live",
+          access: "public",
+          fields: { title: { path: "t", trust: "owner" } },
+          default: { include: true, salience: "standard", region: "primary", prominence: 1 },
+          fetch: async (c) => {
+            seen = c.situation;
+            engine = c.engine;
+            return { t: c.situation?.stayPhase === "in-house" ? "Check-out until 11:00" : "In" };
+          },
+        },
+      ],
+    });
+    const p: Plan = {
+      ...plan({ primary: [block("check-in", "record-card", { title: "t" })] }),
+      manifestVersion: set.version,
+    };
+    const data = await resolvePlanData(p, set, { ...ctx, situation: { stayPhase: "in-house" } });
+    expect(seen).toEqual({ stayPhase: "in-house" });
+    expect(engine).toBe(p.engine);
+    expect(data["check-in"]).toEqual({ status: "ok", data: { t: "Check-out until 11:00" } });
+  });
+});
+
+describe("row filling", () => {
+  it("widens the last block of each row to the full width", async () => {
+    const { fillRows } = await import("./render");
+    expect(fillRows([4])).toEqual([12]);
+    expect(fillRows([6, 6])).toEqual([6, 6]);
+    expect(fillRows([8, 6, 6])).toEqual([12, 6, 6]);
+    expect(fillRows([4, 4, 8])).toEqual([4, 8, 12]);
+    expect(fillRows([])).toEqual([]);
+  });
+});

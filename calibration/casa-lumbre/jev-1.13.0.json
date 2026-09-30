@@ -1,39 +1,39 @@
 {
   "engine": "jev-1.13.0",
-  "version": "cal-c78b99575e",
-  "manifestVersion": "man-11ffb759d942",
-  "createdAt": "2026-09-29T23:45:19.869Z",
+  "version": "cal-b7d43c28b6",
+  "manifestVersion": "dec-26bfc226d101",
+  "createdAt": "2026-09-30T07:46:51.392Z",
   "entries": {
     "A.relevance|english": {
-      "accuracy": 1,
+      "accuracy": 0.9993961352657005,
       "overlap": 0,
       "sampleSize": 1656,
-      "flipRate": 0.027777777777777776,
-      "acceptThreshold": 0.1,
+      "flipRate": 0.026422764227642278,
+      "acceptThreshold": 0.02,
       "uncalibrated": false
     },
     "A.salience|english": {
       "accuracy": 1,
       "overlap": 0,
       "sampleSize": 531,
-      "flipRate": 0.07926829268292683,
+      "flipRate": 0.07791327913279132,
       "acceptThreshold": 0.223,
       "uncalibrated": false
     },
     "C.region|english": {
-      "accuracy": 0.9235668789808917,
+      "accuracy": 0.9278131634819533,
       "overlap": 0,
       "sampleSize": 471,
-      "flipRate": 0.09959349593495935,
-      "acceptThreshold": 0.225,
+      "flipRate": 0.1002710027100271,
+      "acceptThreshold": 0.213,
       "uncalibrated": false
     },
     "B.component|english": {
-      "accuracy": 0.9240924092409241,
+      "accuracy": 0.9174917491749175,
       "overlap": 0,
       "sampleSize": 303,
-      "flipRate": 0.029616724738675958,
-      "acceptThreshold": 0.12,
+      "flipRate": 0.028745644599303136,
+      "acceptThreshold": 0.08,
       "uncalibrated": false
     }
   }

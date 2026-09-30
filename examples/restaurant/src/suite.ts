@@ -1,13 +1,17 @@
 import {
   type Axis,
-  type ExpectedAnswer,
   expandFixtures,
   type Fixture,
-  type Invariant,
+  invariant,
+  invariantsFrom,
+  label,
+  labelsFrom,
   type SituatedFixture,
+  situate,
 } from "@web4kit/conformance";
-import { type ContextEnvelope, pointAtDistance, type Situation } from "@web4kit/context";
+import { type ContextEnvelope, pointAtDistance } from "@web4kit/context";
 import { CORE_FIXTURES } from "./fixtures";
+import { manifests } from "./manifests";
 import { situationOf } from "./situation";
 import { VENUE } from "./venue";
 
@@ -81,76 +85,58 @@ const BASE: ContextEnvelope = {
   consent: false,
 };
 
-/** Page invariants that must hold in every situation. */
-export function universalInvariants(s: Situation): Invariant[] {
-  const out: Invariant[] = [];
-  if (s.openState === "closed" || s.openState === "closing-soon")
-    out.push({ type: "present", source: "hours" });
-  if (s.openState === "closed" || !["breakfast", "lunch"].includes(s.mealWindow ?? ""))
-    out.push({ type: "absent", source: "lunch-menu" });
-  if (s.mealWindow === "lunch" && s.openState !== "closed")
-    out.push({ type: "present", source: "lunch-menu" });
-  return out;
-}
+/**
+ * Page invariants that must hold in every situation. The manifest invariants (hours when
+ * closed or closing soon, no lunch menu while closed) are added by `situate`.
+ */
+export const universalInvariants = invariantsFrom((s) => [
+  !["breakfast", "lunch"].includes(s.mealWindow ?? "") && invariant.absent("lunch-menu"),
+  s.mealWindow === "lunch" && s.openState !== "closed" && invariant.present("lunch-menu"),
+]);
 
 /**
  * Hand-written labels: only the clear-cut judgements a restaurant designer would agree on.
  * Written from the situation, independently of the manifest heuristics.
  */
-export function labelsFor(s: Situation): ExpectedAnswer[] {
-  const L: ExpectedAnswer[] = [];
-  const add = (kind: string, source: string, accept: ExpectedAnswer["accept"]) =>
-    L.push({ kind, source, accept });
+export const labelsFor = labelsFrom((s) => {
   const open = s.openState !== "closed";
-
-  if (s.mealWindow === "lunch" && open) {
-    add("A.relevance", "lunch-menu", [true]);
-    add("A.salience", "lunch-menu", [2, 3]);
-  }
-  if (!open || s.mealWindow === "dinner" || s.mealWindow === "late")
-    add("A.relevance", "lunch-menu", [false]);
-  if (s.mealWindow === "dinner" && open) {
-    add("A.relevance", "dinner-menu", [true]);
-    add("A.salience", "dinner-menu", [2, 3]);
-  }
-  if (!open) {
-    add("A.relevance", "hours", [true]);
-    add("A.salience", "hours", [2, 3]);
-    add("C.region", "hours", ["hero", "primary"]);
-  }
-  if (s.arrival === "visual") {
-    add("A.relevance", "instagram", [true]);
-    add("A.relevance", "dish-photos", [true]);
-    add("C.region", "dish-photos", ["hero", "primary"]);
-    add("B.component", "dish-photos", ["hero-carousel", "image-grid"]);
-  }
-  if (s.arrival === "evaluating") {
-    add("A.relevance", "reviews", [true]);
-    add("A.salience", "reviews", [2, 3]);
-  }
-  if (s.arrival === "transactional") {
-    add("A.relevance", "location", [true]);
-    add("C.region", "location", ["hero", "primary"]);
-    if (s.visitor === "nearby") add("B.component", "location", ["directions-bar"]);
-  }
-  if (s.visitor === "tourist" && s.arrival !== "transactional")
-    add("B.component", "location", ["map-card"]);
-  if (s.familiarity === "regular") add("A.relevance", "whats-new", [true]);
-  if (s.familiarity === "new" || s.familiarity === "unknown")
-    add("A.relevance", "whats-new", [false]);
-  return L;
-}
+  const lunch = s.mealWindow === "lunch" && open;
+  const dinner = s.mealWindow === "dinner" && open;
+  const visual = s.arrival === "visual";
+  const evaluating = s.arrival === "evaluating";
+  const transactional = s.arrival === "transactional";
+  return [
+    lunch && label.relevant("lunch-menu"),
+    lunch && label.salience("lunch-menu", "standard", "featured"),
+    (!open || s.mealWindow === "dinner" || s.mealWindow === "late") &&
+      label.relevant("lunch-menu", false),
+    dinner && label.relevant("dinner-menu"),
+    dinner && label.salience("dinner-menu", "standard", "featured"),
+    !open && label.relevant("hours"),
+    !open && label.salience("hours", "standard", "featured"),
+    !open && label.region("hours", "hero", "primary"),
+    visual && label.relevant("instagram"),
+    visual && label.relevant("dish-photos"),
+    visual && label.region("dish-photos", "hero", "primary"),
+    visual && label.component("dish-photos", "hero-carousel", "image-grid"),
+    evaluating && label.relevant("reviews"),
+    evaluating && label.salience("reviews", "standard", "featured"),
+    transactional && label.relevant("location"),
+    transactional && label.region("location", "hero", "primary"),
+    transactional && s.visitor === "nearby" && label.component("location", "directions-bar"),
+    s.visitor === "tourist" && !transactional && label.component("location", "map-card"),
+    s.familiarity === "regular" && label.relevant("whats-new"),
+    (s.familiarity === "new" || s.familiarity === "unknown") && label.relevant("whats-new", false),
+  ];
+});
 
 /** Core personas plus a deterministic sample of the combinatorial expansion. */
 export function suiteFixtures(limit = 160): SituatedFixture[] {
   const expanded: Fixture[] = expandFixtures({ base: BASE, axes: AXES, limit });
-  return [...CORE_FIXTURES, ...expanded].map((f) => {
-    const situation = situationOf(f.envelope);
-    return {
-      ...f,
-      situation,
-      invariants: [...f.invariants, ...universalInvariants(situation)],
-      expected: [...(f.expected ?? []), ...labelsFor(situation)],
-    };
+  return situate([...CORE_FIXTURES, ...expanded], {
+    situationOf,
+    manifests,
+    invariants: universalInvariants,
+    labels: labelsFor,
   });
 }

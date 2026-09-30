@@ -1,0 +1,15 @@
+{
+  "engine": "laya-onnx@68f27dfe5a27",
+  "version": "cal-8ae4924001",
+  "manifestVersion": "dec-99dc793b3faa",
+  "createdAt": "2026-09-30T08:39:27.095Z",
+  "entries": {
+    "A.relevance|english": {
+      "accuracy": 0.6481481481481481,
+      "overlap": 0.5,
+      "sampleSize": 108,
+      "acceptThreshold": 0.537,
+      "uncalibrated": false
+    }
+  }
+}

@@ -11,6 +11,7 @@
     "@web4kit/example-db-explorer",
     "@web4kit/example-restaurant",
     "@web4kit/lab",
-    "web4kit-next-starter"
+    "web4kit-hotel-starter",
+    "web4kit-welcome-starter"
   ]
 }

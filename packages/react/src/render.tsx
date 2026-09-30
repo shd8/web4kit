@@ -29,11 +29,16 @@ export function PlanView({ plan: input, data, manifests, registry, onRendered }:
   const plan = validatePlan(input);
   const hasAside = plan.device === "desktop" && plan.layout.aside.length > 0;
   const report: RenderedBlock[] = [];
+  const spans = new Map<string, number>();
+  for (const region of REGION_ORDER)
+    for (const [i, span] of fillRows(
+      plan.layout[region].map((b) => baseSpan(b, region, hasAside)),
+    ).entries())
+      spans.set(plan.layout[region][i]!.sourceId, span);
   const render = (block: Block, region: Region) => {
     const { element, rendered } = renderBlock(
       block,
-      region,
-      hasAside,
+      spans.get(block.sourceId) ?? baseSpan(block, region, hasAside),
       plan.device,
       data,
       manifests,
@@ -93,10 +98,35 @@ export function PlanView({ plan: input, data, manifests, registry, onRendered }:
   );
 }
 
+/**
+ * Column span of a block within its region's 12-column grid. Asides are their own grid and
+ * blocks there span it; next to an aside the primary column is 8/12 wide, so footprints are
+ * re-expressed relative to that narrower area.
+ */
+function baseSpan(block: Block, region: Region, hasAside: boolean): number {
+  if (region === "aside") return 12;
+  if (region === "primary" && hasAside) return block.footprint.colSpan > 6 ? 12 : 6;
+  return block.footprint.colSpan;
+}
+
+/** Widen the last block of each row so rows end flush instead of leaving an empty gap. */
+export function fillRows(spans: number[]): number[] {
+  const out = [...spans];
+  let used = 0;
+  for (let i = 0; i < out.length; i++) {
+    used += out[i]!;
+    const next = out[i + 1];
+    if (next === undefined || used + next > 12) {
+      out[i] = out[i]! + Math.max(0, 12 - used);
+      used = 0;
+    }
+  }
+  return out;
+}
+
 function renderBlock(
   block: Block,
-  region: Region,
-  hasAside: boolean,
+  span: number,
   device: Device,
   data: PlanData,
   manifests: ManifestSet,
@@ -118,16 +148,6 @@ function renderBlock(
     footprint: block.footprint,
     device,
   };
-  // Asides are their own 12-column grid; blocks there span the whole aside. Next to an aside the
-  // primary column is 8/12 wide, so footprints are re-expressed relative to that narrower area.
-  const span =
-    region === "aside"
-      ? 12
-      : region === "primary" && hasAside
-        ? block.footprint.colSpan > 6
-          ? 12
-          : 6
-        : block.footprint.colSpan;
   const wrap = (element: ReactElement, componentId: string) => (
     <div
       key={block.sourceId}
@@ -190,7 +210,9 @@ export function inspectPlan(
 ): RenderedBlock[] {
   return REGION_ORDER.flatMap((region) =>
     plan.layout[region].map(
-      (block) => renderBlock(block, region, false, plan.device, data, manifests, registry).rendered,
+      (block) =>
+        renderBlock(block, baseSpan(block, region, false), plan.device, data, manifests, registry)
+          .rendered,
     ),
   );
 }

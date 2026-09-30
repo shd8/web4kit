@@ -1,0 +1,8 @@
+@import "tailwindcss";
+/* web4 design tokens, and lets Tailwind see the classes the web4 components use. */
+@import "@web4kit/react/tailwind.css";
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: var(--font-sans);
+}

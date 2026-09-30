@@ -3,7 +3,7 @@
  *   lumbre  - warm, editorial (restaurant example)
  *   ops     - cool, dense (database explorer)
  *   azulejo - tile blue and terracotta on cream (hotel starter)
- * Tailwind v4 apps: import after `@import "tailwindcss";` and add `@source` for this package.
+ * Tailwind v4 apps: import tailwind.css (tokens + sources) after `@import "tailwindcss";`.
  */
 
 @theme inline {

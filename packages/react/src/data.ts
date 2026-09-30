@@ -22,14 +22,15 @@ export async function resolvePlanData(
   ctx: FetchContext,
 ): Promise<PlanData> {
   const byId = new Map(manifests.sources.map((s) => [s.id, s]));
+  const fetchCtx: FetchContext = { engine: plan.engine, ...ctx };
   const ids = [...new Set(allBlocks(plan).map((b) => b.sourceId))];
   const entries = await Promise.all(
     ids.map(async (id): Promise<[string, SourceData]> => {
       const source = byId.get(id);
       if (!source) return [id, { status: "error", error: `unknown source ${id}` }];
-      if (!canAccess(source.access, ctx.viewer.roles)) return [id, { status: "unauthorized" }];
+      if (!canAccess(source.access, fetchCtx.viewer.roles)) return [id, { status: "unauthorized" }];
       try {
-        return [id, { status: "ok", data: await source.fetch(ctx) }];
+        return [id, { status: "ok", data: await source.fetch(fetchCtx) }];
       } catch (e) {
         return [id, { status: "error", error: e instanceof Error ? e.message : String(e) }];
       }

@@ -5,10 +5,12 @@ import {
   type ComponentManifest,
   compatibleComponents,
   type DataSourceManifest,
+  describeAudience,
   type ManifestSet,
   PROMINENCE_LEVELS,
   SALIENCE_LEVELS,
 } from "@web4kit/manifest";
+import { matches } from "./condition";
 
 export const KINDS = {
   relevance: "A.relevance",
@@ -73,6 +75,7 @@ export function buildState(situation: Situation, intent?: Intent): State {
  */
 export function sourceSummary(source: DataSourceManifest): Json {
   const summary: Record<string, Json> = { id: source.id, what: source.what };
+  if (source.audience) summary.audience = describeAudience(source.audience);
   if (source.not_for) summary.not_for = source.not_for;
   if (source.tags.length) summary.tags = source.tags;
   return summary;
@@ -127,6 +130,8 @@ export function buildQuestions(
   };
 
   for (const source of manifests.sources) {
+    // A source a mustExclude rule removes is never placed: asking about it would waste tokens.
+    if (matches(source.mustExclude, situation)) continue;
     const summary = sourceSummary(source);
     const ask = (question: string) => ({ question, source: summary });
     const sourceId = source.id;

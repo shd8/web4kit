@@ -7,5 +7,5 @@ export default defineConfig({
   clean: true,
   platform: "neutral",
   unbundle: false,
-  copy: ["src/tokens.css"],
+  copy: ["src/tokens.css", "src/tailwind.css"],
 });

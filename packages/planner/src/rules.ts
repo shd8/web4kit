@@ -1,20 +1,16 @@
 import type { Situation } from "@web4kit/context";
 import { createRuleDecider, type Decider, type RuleResolver, type State } from "@web4kit/decider";
 import {
-  type Condition,
   compatibleComponents,
   type DataSourceManifest,
   type Heuristic,
   type ManifestSet,
   SALIENCE_LEVELS,
 } from "@web4kit/manifest";
+import { matches } from "./condition";
 import { KINDS } from "./questions";
 
-export function matches(condition: Condition, situation: Situation): boolean {
-  return Object.entries(condition).every(([bucket, labels]) =>
-    labels.includes(situation[bucket] ?? ""),
-  );
-}
+export { matches };
 
 /** Source defaults with every matching heuristic applied in declaration order. */
 export function ruleView(source: DataSourceManifest, manifests: ManifestSet, situation: Situation) {
@@ -26,9 +22,15 @@ export function ruleView(source: DataSourceManifest, manifests: ManifestSet, sit
     component:
       source.default.component ?? compatibleComponents(source, manifests.components)[0]?.id,
   };
+  // Audience is the single declaration of who a source is for: outside it (or while a
+  // mustExclude holds) no heuristic can make the source relevant again.
+  const outside =
+    (source.audience !== undefined && !matches(source.audience, situation)) ||
+    matches(source.mustExclude, situation);
+  if (outside) view.relevant = false;
   for (const h of source.heuristics as Heuristic[]) {
     if (!matches(h.when, situation)) continue;
-    if (h.relevant !== undefined) view.relevant = h.relevant;
+    if (h.relevant !== undefined && !outside) view.relevant = h.relevant;
     if (h.salience !== undefined) view.salience = SALIENCE_LEVELS.indexOf(h.salience);
     if (h.region !== undefined) view.region = h.region;
     if (h.prominence !== undefined) view.prominence = h.prominence;

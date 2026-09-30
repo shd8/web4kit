@@ -31,7 +31,8 @@
     "LICENSE"
   ],
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./node": "./src/node.ts"
   },
   "publishConfig": {
     "access": "public",
@@ -41,6 +42,10 @@
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
+      },
+      "./node": {
+        "types": "./dist/node.d.ts",
+        "import": "./dist/node.js"
       },
       "./package.json": "./package.json"
     }

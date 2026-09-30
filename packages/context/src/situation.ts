@@ -147,26 +147,79 @@ export interface VenueConfig {
   closingSoonMinutes?: number;
 }
 
-export function venueRules(venue: VenueConfig): SituationRule[] {
-  const nearbyKm = venue.nearbyKm ?? 3;
-  const localKm = venue.localKm ?? 50;
-  const closingSoon = venue.closingSoonMinutes ?? 45;
+export const DAY_PART_BUCKET = { dayPart: ["morning", "afternoon", "evening", "night"] } as const;
 
-  const visitorRule: SituationRule = (env) => {
-    if (!env.geo) return { visitor: UNKNOWN };
-    const km = distanceKm(env.geo, venue.location);
-    return { visitor: km < nearbyKm ? "nearby" : km < localKm ? "local" : "tourist" };
+/** `visitor`: nearby / local / tourist by great-circle distance to the venue. */
+export function distanceRule(config: {
+  location: { lat: number; lng: number };
+  nearbyKm?: number;
+  localKm?: number;
+  bucket?: string;
+}): SituationRule {
+  const nearbyKm = config.nearbyKm ?? 3;
+  const localKm = config.localKm ?? 50;
+  const bucket = config.bucket ?? "visitor";
+  return (env) => {
+    if (!env.geo) return { [bucket]: UNKNOWN };
+    const km = distanceKm(env.geo, config.location);
+    return { [bucket]: km < nearbyKm ? "nearby" : km < localKm ? "local" : "tourist" };
   };
+}
 
-  const timeRules: SituationRule = (env) => {
-    const local = localClock(new Date(env.now), venue.timezone);
+/** `openState`: open / closing-soon / closed in venue local time. */
+export function openingHoursRule(config: {
+  timezone: string;
+  hours: OpeningInterval[];
+  closingSoonMinutes?: number;
+}): SituationRule {
+  const closingSoon = config.closingSoonMinutes ?? 45;
+  return (env) => ({
+    openState: openState(localClock(new Date(env.now), config.timezone), config.hours, closingSoon),
+  });
+}
+
+/** `mealWindow`: breakfast / lunch / afternoon / dinner / late in venue local time. */
+export function mealWindowRule(config: { timezone: string }): SituationRule {
+  return (env) => ({
+    mealWindow: mealWindow(localClock(new Date(env.now), config.timezone).minutes),
+  });
+}
+
+/** `dayPart`: morning (06-12) / afternoon (12-18) / evening (18-23) / night in venue local time. */
+export function dayPartRule(config: { timezone: string; bucket?: string }): SituationRule {
+  const bucket = config.bucket ?? "dayPart";
+  return (env) => {
+    const h = localClock(new Date(env.now), config.timezone).minutes / 60;
     return {
-      mealWindow: mealWindow(local.minutes),
-      openState: openState(local, venue.hours, closingSoon),
+      [bucket]:
+        h >= 6 && h < 12
+          ? "morning"
+          : h >= 12 && h < 18
+            ? "afternoon"
+            : h >= 18 && h < 23
+              ? "evening"
+              : "night",
     };
   };
+}
 
-  return [visitorRule, timeRules];
+/** Distance, meal window and opening state together (restaurants and other venues with hours). */
+export function venueRules(venue: VenueConfig): SituationRule[] {
+  return [
+    distanceRule({
+      location: venue.location,
+      ...(venue.nearbyKm !== undefined ? { nearbyKm: venue.nearbyKm } : {}),
+      ...(venue.localKm !== undefined ? { localKm: venue.localKm } : {}),
+    }),
+    mealWindowRule({ timezone: venue.timezone }),
+    openingHoursRule({
+      timezone: venue.timezone,
+      hours: venue.hours,
+      ...(venue.closingSoonMinutes !== undefined
+        ? { closingSoonMinutes: venue.closingSoonMinutes }
+        : {}),
+    }),
+  ];
 }
 
 export function distanceKm(a: Pick<Geo, "lat" | "lng">, b: Pick<Geo, "lat" | "lng">): number {

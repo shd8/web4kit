@@ -53,23 +53,35 @@ renderer ────────── data fetched fresh at render time, fail-
 ```
 
 - **The decider decides meaning; code decides mechanics.**
-- **Manifests replace pages.** You describe data sources (shape, owner-written `what`/`not_for`, trust per field, defaults, heuristics) and components (accepted shapes, affordances, footprints). The manifests *are* the prompt.
+- **Manifests replace pages.** You describe data sources (shape, owner-written `what`, `audience`, business rules, trust per field, defaults, heuristics) and components (accepted shapes, affordances, footprints). The manifests *are* the prompt.
 - **Engines are interchangeable** behind the `Decider` interface: hosted Jev, Laya (through Ollaya or in-process ONNX), a deterministic rules engine, or a cascade (a cheap engine first, escalating to Jev on low confidence).
 - **The conformance suite** plans hundreds of persona fixtures per engine. It measures accuracy *and confidence on failures*, then writes the calibration profiles the planner uses. An engine that is confidently wrong is marked uncalibrated and falls back to rules instead of failing silently.
 
 ## Start a site
 
 ```bash
-npm create web4kit@latest my-site   # once published; in this repo: templates/next-starter
-cd my-site && npm install && npm run dev
+pnpm create web4kit my-site    # once published
+cd my-site && pnpm install && pnpm dev
 ```
 
-The starter is **Casa Ribeira**, a boutique hotel in Porto. It's a production-mode Next.js app with five personas (dreaming, comparing, arriving today, staying in the morning, staying on a rainy evening), calibrated manifests, a conformance suite and a `/stats` page. Calibrated on Jev: 100% invariants, 99.8% relevance accuracy, $0.00032 per uncached page. See [`templates/next-starter`](templates/next-starter).
+Until the packages are on npm, run the scaffolder from this checkout. It works from any folder and bundles the local packages into `my-site/.web4kit`:
+
+```bash
+node /path/to/web4/packages/create-web4kit/index.mjs my-site
+cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm and yarn work too)
+```
+
+Then pick an engine in `.env`: `JEV_API_KEY` for TypeSafe Jev, or `W4_ENGINE=laya` for the open Laya model in-process (free and offline; scaffold with `--laya` or `pnpm add @web4kit/decider-laya`). Until you do, pages are planned by the rules engine, which replays your hand-written heuristics. It is the fallback that keeps the site up, not web4 itself, and the development bar says so.
+
+| Template | |
+|---|---|
+| `welcome` (default) | A welcome page planned by web4 itself: get-started steps, the situation it was planned from, notes that only some visitors see. Three personas, calibrated on Jev (100% invariants and relevance, $0.00017 per uncached page). See [`templates/welcome`](templates/welcome). |
+| `hotel` (`--template hotel`) | **Casa Ribeira**, a boutique hotel in Porto: five personas (dreaming, comparing, arriving today, staying in the morning, staying on a rainy evening), business rules, a conformance suite and a `/stats` page. Calibrated on Jev: 100% invariants, 100% relevance, $0.00034 per uncached page. See [`templates/hotel`](templates/hotel). |
 
 ## Use the packages
 
 ```bash
-npm install @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react react react-dom
+pnpm add @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react react react-dom
 ```
 
 **[Getting started →](docs/getting-started.md)** builds a small site from scratch: manifests, situation, plan, render, Jev and calibration.
@@ -77,12 +89,13 @@ npm install @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react r
 | Package | What it is |
 |---|---|
 | [`@web4kit/planner`](packages/planner) | One decider round per page, confidence gating, plan cache, portability lint |
-| [`@web4kit/react`](packages/react) | Fail-soft renderer and curated component library (`styles.css` / `tokens.css`) |
+| [`@web4kit/next`](packages/next) | Next.js adapter: one call per page from a server component, dev-only persona previews, stats |
+| [`@web4kit/react`](packages/react) | Fail-soft renderer and curated component library (`styles.css` / `tailwind.css`) |
 | [`@web4kit/context`](packages/context) | Context Envelope and situation rules |
 | [`@web4kit/manifest`](packages/manifest) | Data-source and component manifests |
 | [`@web4kit/decider`](packages/decider) | Decider interface; rules, System One HTTP (Jev, Ollaya) and cascade adapters |
 | [`@web4kit/decider-laya`](packages/decider-laya) | In-process Laya (ONNX) decider |
-| [`@web4kit/conformance`](packages/conformance) | Fixtures, invariants, per-engine evaluation, calibration profiles |
+| [`@web4kit/conformance`](packages/conformance) | Fixture grids, label and invariant builders, per-engine evaluation, calibration profiles |
 | [`@web4kit/ir`](packages/ir) | Page Plan schema (`web4.plan/v1`), validation, privacy check |
 | [`@web4kit/solver`](packages/solver) | Deterministic layout solver |
 | [`create-web4kit`](packages/create-web4kit) | Scaffolder for the Casa Ribeira starter |
@@ -135,7 +148,7 @@ packages/
   solver        Deterministic layout solver
   react         Renderer and the curated component library (Tailwind v4, container queries)
   conformance   Fixtures, invariants, runner, calibration, reports
-templates/      next-starter: Casa Ribeira, the create-web4kit template
+templates/      welcome (default) and hotel (Casa Ribeira): the create-web4kit templates
 apps/lab        Next.js lab: context panel, personas, engine switcher, Why panel
 examples/       restaurant (Casa Lumbre) and db-explorer (Meridian Supply)
 schemas/        Language-neutral JSON Schemas: the canonical contracts

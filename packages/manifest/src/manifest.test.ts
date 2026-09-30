@@ -4,7 +4,11 @@ import {
   compatibleComponents,
   type DataSourceManifestInput,
   defineManifests,
+  defineSource,
+  describeAudience,
   ManifestError,
+  owner,
+  thirdParty,
 } from "./index";
 
 const fp = { colSpan: 12, rowSpan: 2 };
@@ -116,5 +120,111 @@ describe("versioning (task 5.4)", () => {
       components: edited as ComponentManifestInput[],
     });
     expect(c.version).not.toBe(a.version);
+  });
+});
+
+describe("v1 authoring (tasks 2.1-2.3)", () => {
+  const set = (source: DataSourceManifestInput) =>
+    defineManifests({ site: "t", sources: [source], components });
+
+  it("renders audience in one phrasing, stating the complement", () => {
+    expect(describeAudience({ stayPhase: ["researching"] })).toBe(
+      "only for visitors whose stayPhase is researching (not for any other stayPhase)",
+    );
+    expect(
+      describeAudience({ stayPhase: ["in-house", "arriving-today"], dayPart: ["morning"] }),
+    ).toBe(
+      "only for visitors whose stayPhase is in-house or arriving-today and whose dayPart is morning (not for other stayPhase or dayPart values)",
+    );
+  });
+
+  it("rejects an audience that renders too long", () => {
+    const labels = Array.from({ length: 12 }, (_, i) => `label-number-${i}`);
+    expect(() => set({ ...menu, audience: { stayPhase: labels } })).toThrow(
+      /source menu: audience renders to \d+ characters/,
+    );
+  });
+
+  it("rejects identical mustInclude and mustExclude", () => {
+    expect(() =>
+      set({ ...menu, mustInclude: { a: ["x", "y"] }, mustExclude: { a: ["y", "x"] } }),
+    ).toThrow(/source menu: mustInclude and mustExclude are identical/);
+  });
+
+  it("defineSource fills defaults but never trust", () => {
+    const source = defineSource({
+      id: "menu",
+      shape: "list",
+      label: "Menu",
+      what: "Dishes",
+      fields: { title: owner("name"), body: thirdParty("review") },
+      default: { salience: "featured" },
+      fetch: async () => [{ name: "Soup" }],
+    });
+    const parsed = set(source).sources[0]!;
+    expect(parsed).toMatchObject({
+      access: "public",
+      freshness: "static",
+      tags: [],
+      heuristics: [],
+      default: { include: true, salience: "featured", region: "primary", prominence: 1 },
+      fields: { body: { trust: "third-party" } },
+    });
+    expect(() => set({ ...menu, fields: { title: { path: "name" } as never } })).toThrow(
+      /source menu: fields.title.trust/,
+    );
+  });
+});
+
+describe("decider version (task 2.2)", () => {
+  const base = defineManifests({ site: "t", sources: [menu], components });
+  const edited = (patch: Partial<DataSourceManifestInput>) =>
+    defineManifests({ site: "t", sources: [{ ...menu, ...patch }], components });
+
+  it("keeps the decider version across cosmetic and rules-only edits", () => {
+    for (const patch of [
+      { label: "Dinner" },
+      { eyebrow: "Tonight" },
+      { heuristics: [{ when: { device: ["mobile"] }, salience: "featured" as const }] },
+      {
+        default: {
+          include: false,
+          salience: "minor" as const,
+          region: "aside" as const,
+          prominence: 0,
+        },
+      },
+      { mustInclude: { openState: ["closed"] } },
+      { mustExclude: { openState: ["open"] } },
+      { freshness: "live" as const },
+      {
+        fields: {
+          title: { path: "other", trust: "system" as const },
+          value: { path: "p", trust: "owner" as const },
+        },
+      },
+    ]) {
+      const next = edited(patch);
+      expect(next.version, JSON.stringify(patch)).not.toBe(base.version);
+      expect(next.deciderVersion, JSON.stringify(patch)).toBe(base.deciderVersion);
+    }
+  });
+
+  it("changes the decider version when decider-visible content changes", () => {
+    for (const patch of [
+      { what: "Tonight's dinner dishes" },
+      { not_for: "Breakfast" },
+      { tags: ["food"] },
+      { audience: { mealWindow: ["dinner"] } },
+      { fields: { title: { path: "name", trust: "owner" as const } } },
+    ]) {
+      expect(edited(patch).deciderVersion, JSON.stringify(patch)).not.toBe(base.deciderVersion);
+    }
+    const renamed = defineManifests({
+      site: "t",
+      sources: [menu],
+      components: components.map((c) => (c.id === "menu-list" ? { ...c, what: "Dish rows" } : c)),
+    });
+    expect(renamed.deciderVersion).not.toBe(base.deciderVersion);
   });
 });

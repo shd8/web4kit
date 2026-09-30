@@ -21,7 +21,7 @@ export const manifests = defineManifests({
       what: "The welcome message introducing web4 to every visitor; the most important block",
       fields: { title: owner("title"), body: owner("body") },
       default: { salience: "featured", region: "hero", prominence: 2, component: "record-card" },
-      mustInclude: {}, // an empty condition always holds: every visitor is welcomed
+      mustInclude: "always", // every visitor is welcomed, whatever the engine answers
       // Say how this page was really planned: by a model, or by the rules fallback.
       fetch: async (ctx) => ({
         title: "Welcome to web4",

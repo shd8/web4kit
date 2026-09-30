@@ -19,3 +19,4 @@ v1 authoring API, from the frictions found building the hotel starter:
 - New `@web4kit/next` adapter: `createSite`, `site.page()`, `site.handle()`, `PreviewBar`.
 - `create-web4kit`: a new default `welcome` template (the hotel is `--template hotel`); run from a web4 checkout, it bundles the local packages so it works before publishing.
 - Renderer: the last block of a row widens to fill it, so rows no longer end with a gap.
+- `mustInclude: "always"` for blocks every page needs; the engine is no longer asked about sources a `mustExclude` removes (~11% fewer tokens for the hotel's arriving and staying guests).

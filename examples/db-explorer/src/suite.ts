@@ -130,7 +130,8 @@ export const CORE_FIXTURES: Fixture[] = [
   },
 ];
 
-export function suiteFixtures(_limit?: number): SituatedFixture[] {
+/** Core personas plus the role x device x question grid, evenly sampled down to `limit`. */
+export function suiteFixtures(limit?: number): SituatedFixture[] {
   const fixtures: Fixture[] = [];
   for (const role of ["ops-manager", "analyst", "executive"]) {
     for (const device of ["desktop", "mobile"] as const) {
@@ -156,5 +157,12 @@ export function suiteFixtures(_limit?: number): SituatedFixture[] {
       }
     }
   }
-  return situate([...CORE_FIXTURES, ...fixtures], { situationOf, manifests });
+  const sampled =
+    limit === undefined || limit >= fixtures.length
+      ? fixtures
+      : Array.from(
+          { length: limit },
+          (_, i) => fixtures[Math.floor((i * fixtures.length) / limit)]!,
+        );
+  return situate([...CORE_FIXTURES, ...sampled], { situationOf, manifests });
 }

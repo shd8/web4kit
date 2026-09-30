@@ -1,7 +1,6 @@
 import type { ContextEnvelope, Situation } from "@web4kit/context";
 import type { Region } from "@web4kit/ir";
 import {
-  type Condition,
   type ManifestSet,
   PROMINENCE_LEVELS,
   SALIENCE_LEVELS,
@@ -106,10 +105,9 @@ export function grid(config: {
 /** `mustInclude` / `mustExclude` of every source, as the invariants they imply. */
 export function manifestInvariants(manifests: ManifestSet, situation: Situation): Invariant[] {
   const out: Invariant[] = [];
-  const holds = (c: Condition | undefined) => c !== undefined && matches(c, situation);
   for (const s of manifests.sources) {
-    if (holds(s.mustExclude)) out.push(invariant.absent(s.id));
-    else if (holds(s.mustInclude)) out.push(invariant.present(s.id));
+    if (matches(s.mustExclude, situation)) out.push(invariant.absent(s.id));
+    else if (matches(s.mustInclude, situation)) out.push(invariant.present(s.id));
   }
   return out;
 }

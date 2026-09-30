@@ -10,6 +10,7 @@ import {
   PROMINENCE_LEVELS,
   SALIENCE_LEVELS,
 } from "@web4kit/manifest";
+import { matches } from "./condition";
 
 export const KINDS = {
   relevance: "A.relevance",
@@ -129,6 +130,8 @@ export function buildQuestions(
   };
 
   for (const source of manifests.sources) {
+    // A source a mustExclude rule removes is never placed: asking about it would waste tokens.
+    if (matches(source.mustExclude, situation)) continue;
     const summary = sourceSummary(source);
     const ask = (question: string) => ({ question, source: summary });
     const sourceId = source.id;

@@ -127,8 +127,11 @@ export const DataSourceManifestSchema = z.object({
     prominence: ProminenceSchema,
     component: z.string().optional(),
   }),
-  /** Structural invariant: the source must be included whenever this condition holds. */
-  mustInclude: ConditionSchema.optional(),
+  /**
+   * Structural invariant: the source must be included whenever this condition holds, or on
+   * every page with `"always"`.
+   */
+  mustInclude: z.union([z.literal("always"), ConditionSchema]).optional(),
   /** Structural invariant: the source is never placed while this condition holds. */
   mustExclude: ConditionSchema.optional(),
   heuristics: z.array(HeuristicSchema).default([]),

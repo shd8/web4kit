@@ -8,4 +8,5 @@ coverage/
 
 # Local tooling, not part of the published repo
 .claude/
+# OpenSpec planning artifacts stay local: never commit them.
 openspec/

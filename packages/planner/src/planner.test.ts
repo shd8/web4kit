@@ -375,7 +375,7 @@ describe("v1: audience, mustExclude, calibration status, stats (tasks 3.1-3.4)",
   });
 
   it("puts the rendered audience in every question about the source", () => {
-    const qp = buildQuestions(withRooms, lunch);
+    const qp = buildQuestions(withRooms, { ...lunch, visitor: "tourist" });
     const about = Object.values(qp.questions).filter((q) => q.meta?.subject === "rooms");
     expect(about.length).toBeGreaterThan(2);
     for (const q of about)
@@ -459,5 +459,42 @@ describe("v1: audience, mustExclude, calibration status, stats (tasks 3.1-3.4)",
       calibration: { status: "active" },
     });
     expect(stats.costUsd).toBe(0);
+  });
+});
+
+describe("v1 polish: mustInclude always, no questions for excluded sources", () => {
+  const set = defineManifests({
+    site: "polish",
+    components,
+    sources: [
+      src("welcome", "list", {
+        default: { include: false, salience: "minor", region: "footer", prominence: 0 },
+        mustInclude: "always",
+      }),
+      src("rooms", "list", { mustExclude: { visitor: ["nearby"] } }),
+    ],
+  });
+
+  it("includes an always-required source on every page", async () => {
+    for (const situation of [lunch, lateNight]) {
+      const { plan } = await createPlanner({ manifests: set }).plan({ situation });
+      const welcome = allBlocks(plan).find((b) => b.sourceId === "welcome")!;
+      expect(welcome.why.find((w) => w.question === "invariant.must-include")?.note).toBe(
+        "required on every page",
+      );
+    }
+  });
+
+  it("asks nothing about a source whose mustExclude holds", async () => {
+    const nearby = buildQuestions(set, lunch); // visitor: nearby
+    expect(Object.values(nearby.questions).some((q) => q.meta?.subject === "rooms")).toBe(false);
+    const tourist = buildQuestions(set, { ...lunch, visitor: "tourist" });
+    expect(Object.values(tourist.questions).some((q) => q.meta?.subject === "rooms")).toBe(true);
+    const calls: Array<{ state: State; questions: Questions }> = [];
+    const { plan } = await createPlanner({ manifests: set, decider: fakeEngine(calls) }).plan({
+      situation: lunch,
+    });
+    expect(Object.keys(calls[0]!.questions).some((id) => id.endsWith(":rooms"))).toBe(false);
+    expect(plan.excluded.find((e) => e.sourceId === "rooms")!.why[0]!.decidedBy).toBe("invariant");
   });
 });

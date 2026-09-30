@@ -74,7 +74,11 @@ export function defineManifests(input: {
           `source ${s.id}: audience renders to ${text.length} characters (allowed ${LIMITS.audience})`,
         );
     }
-    if (s.mustInclude && s.mustExclude && sameCondition(s.mustInclude, s.mustExclude))
+    if (
+      typeof s.mustInclude === "object" &&
+      s.mustExclude &&
+      sameCondition(s.mustInclude, s.mustExclude)
+    )
       issues.push(`source ${s.id}: mustInclude and mustExclude are identical`);
   }
   if (issues.length > 0) throw new ManifestError(issues);

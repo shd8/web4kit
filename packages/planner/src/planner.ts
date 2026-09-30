@@ -344,8 +344,8 @@ function assemble(ctx: {
       return value;
     };
 
-    if (source.mustExclude && matches(source.mustExclude, situation)) {
-      const conflict = source.mustInclude && matches(source.mustInclude, situation);
+    if (matches(source.mustExclude, situation)) {
+      const conflict = matches(source.mustInclude, situation);
       excluded.push({
         sourceId: source.id,
         why: [
@@ -372,14 +372,17 @@ function assemble(ctx: {
       SALIENCE_LEVELS.indexOf(source.default.salience),
       (a) => a.value as number,
     );
-    const forced = source.mustInclude ? matches(source.mustInclude, situation) : false;
+    const forced = matches(source.mustInclude, situation);
     const include = (relevant && salience >= 0.5) || forced;
     if (forced && !(relevant && salience >= 0.5)) {
       why.push({
         question: "invariant.must-include",
         answer: true,
         decidedBy: "invariant",
-        note: `required when ${JSON.stringify(source.mustInclude)}`,
+        note:
+          source.mustInclude === "always"
+            ? "required on every page"
+            : `required when ${JSON.stringify(source.mustInclude)}`,
       });
     }
     if (!include) {
@@ -441,7 +444,7 @@ function assemble(ctx: {
 
 /** A forced source is also made prominent (e.g. "closed" must be visible, not buried). */
 function situationForcesProminence(source: DataSourceManifest, situation: Situation) {
-  return source.mustInclude !== undefined && matches(source.mustInclude, situation);
+  return matches(source.mustInclude, situation);
 }
 
 function chooseComponent(

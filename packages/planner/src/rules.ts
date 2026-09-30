@@ -1,20 +1,16 @@
 import type { Situation } from "@web4kit/context";
 import { createRuleDecider, type Decider, type RuleResolver, type State } from "@web4kit/decider";
 import {
-  type Condition,
   compatibleComponents,
   type DataSourceManifest,
   type Heuristic,
   type ManifestSet,
   SALIENCE_LEVELS,
 } from "@web4kit/manifest";
+import { matches } from "./condition";
 import { KINDS } from "./questions";
 
-export function matches(condition: Condition, situation: Situation): boolean {
-  return Object.entries(condition).every(([bucket, labels]) =>
-    labels.includes(situation[bucket] ?? ""),
-  );
-}
+export { matches };
 
 /** Source defaults with every matching heuristic applied in declaration order. */
 export function ruleView(source: DataSourceManifest, manifests: ManifestSet, situation: Situation) {
@@ -30,7 +26,7 @@ export function ruleView(source: DataSourceManifest, manifests: ManifestSet, sit
   // mustExclude holds) no heuristic can make the source relevant again.
   const outside =
     (source.audience !== undefined && !matches(source.audience, situation)) ||
-    (source.mustExclude !== undefined && matches(source.mustExclude, situation));
+    matches(source.mustExclude, situation);
   if (outside) view.relevant = false;
   for (const h of source.heuristics as Heuristic[]) {
     if (!matches(h.when, situation)) continue;

@@ -324,8 +324,9 @@ describe("v1: upcoming schedule status and situation-aware fetch (task 4.1)", ()
     expect(render("hours-card", "upcoming")).not.toContain("bg-bad");
   });
 
-  it("passes the planned situation to fetchers", async () => {
+  it("passes the planned situation and engine to fetchers", async () => {
     let seen: unknown;
+    let engine: unknown;
     const set = defineManifests({
       site: "t",
       components: [defaultRegistry["record-card"]!.manifest],
@@ -342,6 +343,7 @@ describe("v1: upcoming schedule status and situation-aware fetch (task 4.1)", ()
           default: { include: true, salience: "standard", region: "primary", prominence: 1 },
           fetch: async (c) => {
             seen = c.situation;
+            engine = c.engine;
             return { t: c.situation?.stayPhase === "in-house" ? "Check-out until 11:00" : "In" };
           },
         },
@@ -353,6 +355,7 @@ describe("v1: upcoming schedule status and situation-aware fetch (task 4.1)", ()
     };
     const data = await resolvePlanData(p, set, { ...ctx, situation: { stayPhase: "in-house" } });
     expect(seen).toEqual({ stayPhase: "in-house" });
+    expect(engine).toBe(p.engine);
     expect(data["check-in"]).toEqual({ status: "ok", data: { t: "Check-out until 11:00" } });
   });
 });

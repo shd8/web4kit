@@ -3,7 +3,7 @@ import { defineManifests, defineSource, owner } from "@web4kit/manifest";
 import { libraryManifests } from "@web4kit/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { createSiteCore, PreviewBar, requestFrom } from "./index";
+import { createSiteCore, engineNotice, PreviewBar, requestFrom } from "./index";
 
 const HOTEL = { lat: 41.1405, lng: -8.6132 };
 const stayRule: SituationRule = (e) => ({
@@ -134,7 +134,18 @@ describe("@web4kit/next site pipeline (tasks 6.2-6.4)", () => {
     expect(html).toContain('href="/?as=guest"');
     expect(html).toContain("Staying guest");
     expect(html).toContain('href="/stats"');
+    expect(html).toContain("data-w4-engine-notice");
+    expect(html).toContain("hand-written heuristics");
     const off = site(false);
     expect(renderToStaticMarkup(<PreviewBar site={off} page={page} />)).toBe("");
+  });
+
+  it("says when rules plan the page instead of a calibrated model", () => {
+    expect(engineNotice("rules", { status: "none" })).toMatch(/JEV_API_KEY or W4_ENGINE=laya/);
+    expect(engineNotice("jev-1.13.0", { status: "none" })).toMatch(/no calibration profile/);
+    expect(
+      engineNotice("jev-1.13.0", { status: "stale", version: "1", reason: "manifests changed" }),
+    ).toMatch(/stale \(manifests changed\)/);
+    expect(engineNotice("jev-1.13.0", { status: "active", version: "1" })).toBeUndefined();
   });
 });

@@ -11,7 +11,7 @@ This guide builds a small web4 site from scratch, **Rosa Bakery**, and takes it 
 | **Context Envelope** | Signals from the first request: `?src=`, referrer, device, language, local time, CDN geo, a consented visit cookie. |
 | **Situation** | The envelope turned into English labels from closed sets (`arrival=visual`, `device=mobile`, …). This is the only thing the decider ever sees. |
 | **Manifest** | Your declaration of a data source (shape, owner-written `what`/`not_for`, `audience`, per-field trust, defaults, invariants) or a component. The manifests are the prompt. |
-| **Decider** | A System One model (Jev, or a Jev-like model such as Laya) or the offline rules engine. It answers typed questions: `choice`, `score`, `noul`. |
+| **Decider** | A System One model (Jev, or a Jev-like model such as Laya). It answers typed questions: `choice`, `score`, `noul`. The offline rules engine answers the same questions from your hand-written heuristics, as the fallback. |
 | **Planner** | Asks, in one round, for every source: *relevant? how important? which component? which region? how prominent?* It gates each answer by calibrated confidence, then lays the page out. |
 | **Page Plan** | JSON (`web4.plan/v1`) holding decisions only, never user data, so it can be cached per situation. |
 | **Renderer** | Fetches data fresh and renders each block fail-soft with the curated components. |
@@ -24,6 +24,8 @@ pnpm add @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react reac
 ```
 
 Node ≥ 20. The packages are ESM only.
+
+**Pick an engine now.** Until a decider is configured, pages are planned by the rules engine, which only replays the `heuristics` you write in step 2. That fallback keeps the site up when a model is down or uncalibrated, but it isn't web4 planning your pages. Get a TypeSafe Jev key (`JEV_API_KEY`, step 6), or add the open Laya model to run in-process for free (`pnpm add @web4kit/decider-laya`; the first run downloads ~1.7 GB of weights).
 
 ## 2. Describe your data sources
 
@@ -77,7 +79,7 @@ Rules of thumb:
 - **Business rules are invariants.** `mustInclude` / `mustExclude` are situation conditions the planner enforces whatever the engine answers ("never show room prices to a guest who is already staying"). Exclusion wins if both hold.
 - **`heuristics` drive the offline rules engine.** It is your fallback whenever an engine is unavailable or uncalibrated, so make it a sensible page on its own.
 - **Mark third-party fields with `thirdParty()`** (reviews, social captions). They are rendered but never sent to a decider.
-- Fetchers receive `ctx.situation` (labels only), so a block can adapt its owner-written copy, for example "check-out until 11:00" for a guest who is staying.
+- Fetchers receive `ctx.situation` (labels only), so a block can adapt its owner-written copy, for example "check-out until 11:00" for a guest who is staying. `ctx.engine` is the engine the plan was made with (`"rules"` without a decider), for copy that describes how the page was planned.
 - `defineManifests` validates everything and throws with errors that name the source and field.
 
 ## 3. Turn requests into a situation
@@ -119,7 +121,7 @@ Every question must fit Laya-class System One limits (state < 512 tokens, fewer 
 import { createPlanner, LruPlanCache } from "@web4kit/planner";
 import { defaultRegistry, PlanView, resolvePlanData } from "@web4kit/react";
 
-const planner = createPlanner({ manifests, cache: new LruPlanCache() }); // rules engine: offline, free
+const planner = createPlanner({ manifests, cache: new LruPlanCache() }); // no decider yet: rules (step 6 adds one)
 
 const { plan, cacheHit, planningMs } = await planner.plan({ situation });
 const data = await resolvePlanData(plan, manifests, { now: new Date(), viewer: { roles: [] } });
@@ -169,7 +171,7 @@ return (
 );
 ```
 
-`?as=<persona>` works only when previews are on, which is by default outside production. `site.stats()` returns pages, cache hits, tokens, cost and calibration status. `pnpm create web4kit` scaffolds a complete site like this.
+`?as=<persona>` works only when previews are on, which is by default outside production. The bar also says when a page was planned by rules alone, or by an engine without a valid calibration profile. `site.stats()` returns pages, cache hits, tokens, cost and calibration status. `pnpm create web4kit` scaffolds a complete site like this.
 
 ## 6. Plan with Jev
 

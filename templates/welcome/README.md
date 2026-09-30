@@ -1,6 +1,6 @@
 # My web4 site
 
-A [web4](https://github.com/shd8/web4) starter. The home page isn't laid out by hand: for every visitor, web4 asks a System One decision model (TypeSafe Jev, or the offline rules engine) **what** to show, **with which component**, and **where**, from the visitor's situation alone.
+A [web4](https://github.com/shd8/web4) starter. The home page isn't laid out by hand: for every visitor, web4 asks a System One decision model (TypeSafe Jev, or Laya for free local development) **what** to show, **with which component**, and **where**, from the visitor's situation alone.
 
 ## Run it
 
@@ -19,7 +19,7 @@ Open it, then use the bar at the top to preview other visitors:
 
 ### Engines
 
-Pick the System One engine in `.env` (`cp .env.example .env`):
+Pick the System One engine in `.env` (`cp .env.example .env`) before judging the page. Without one, the rules engine plans it from the manifest `heuristics`, which you write by hand: the previews above still change, but only because the starter's heuristics were written for those personas. Rules are the fallback web4 uses whenever a model is down or uncalibrated, not web4 itself, and the development bar says so.
 
 | Engine | Setting | Notes |
 |---|---|---|

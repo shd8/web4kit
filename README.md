@@ -71,7 +71,7 @@ node /path/to/web4/packages/create-web4kit/index.mjs my-site
 cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm and yarn work too)
 ```
 
-Pages are planned by the offline rules engine until you pick an engine in `.env`: `JEV_API_KEY` for TypeSafe Jev, or `W4_ENGINE=laya` for the open Laya model in-process (free and offline; scaffold with `--laya`).
+Then pick an engine in `.env`: `JEV_API_KEY` for TypeSafe Jev, or `W4_ENGINE=laya` for the open Laya model in-process (free and offline; scaffold with `--laya` or `pnpm add @web4kit/decider-laya`). Until you do, pages are planned by the rules engine, which replays your hand-written heuristics. It is the fallback that keeps the site up, not web4 itself, and the development bar says so.
 
 | Template | |
 |---|---|

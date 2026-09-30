@@ -93,6 +93,11 @@ export interface FetchContext {
    * adapt owner-written copy. Fetcher output never reaches a decider.
    */
   situation?: Readonly<Record<string, string>>;
+  /**
+   * Id of the engine the plan was made with ("rules" when no decider planned it), so owner copy
+   * that describes how the page was planned can stay true. Set from the plan by resolvePlanData.
+   */
+  engine?: string;
 }
 export type Fetch = (ctx: FetchContext) => Promise<unknown>;
 

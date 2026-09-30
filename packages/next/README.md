@@ -47,6 +47,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 }
 ```
 
+`PreviewBar` renders only when previews are on. Besides the persona links, it shows a notice when the page was planned by the rules engine alone (no decider configured) or by an engine whose calibration profile is missing or stale, since every answer then falls back to rules.
+
 `site.handle({ url, headers })` is the framework-agnostic entry, and `site.stats()` returns the planner's counters (pages, cache hits, tokens, cost, calibration status).
 
 Order of operations: persona preview (only when previews are on; off in production by default) → context → `enrich` (real requests only) → situation → plan → data.

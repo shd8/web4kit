@@ -22,9 +22,13 @@ export const manifests = defineManifests({
       fields: { title: owner("title"), body: owner("body") },
       default: { salience: "featured", region: "hero", prominence: 2, component: "record-card" },
       mustInclude: {}, // an empty condition always holds: every visitor is welcomed
-      fetch: async () => ({
+      // Say how this page was really planned: by a model, or by the rules fallback.
+      fetch: async (ctx) => ({
         title: "Welcome to web4",
-        body: "Nobody laid this page out. web4 asked a System One model what to show you, with which component and where, from your situation alone. Change the situation and the page changes.",
+        body:
+          ctx.engine === "rules"
+            ? "Nobody laid this page out, but no model planned it either: the rules engine did, from the heuristics in web4/sources.ts. That's web4's fallback. Add JEV_API_KEY or W4_ENGINE=laya to .env and a System One model plans it from your situation alone."
+            : "Nobody laid this page out. web4 asked a System One model what to show you, with which component and where, from your situation alone. Change the situation and the page changes.",
       }),
     }),
     defineSource({
@@ -49,13 +53,15 @@ export const manifests = defineManifests({
         },
         {
           step: "Step 3",
-          title: "Plan with Jev",
-          detail: "Add JEV_API_KEY to .env. Without it, the offline rules engine plans the page.",
+          title: "Pick an engine",
+          detail:
+            "JEV_API_KEY in .env for TypeSafe Jev, or W4_ENGINE=laya for Laya, free in this process. Without one, rules plan the page from your heuristics.",
         },
         {
           step: "Step 4",
           title: "Measure it",
-          detail: "pnpm test checks your page rules; pnpm calibrate measures Jev on your personas.",
+          detail:
+            "pnpm test checks your page rules; pnpm calibrate measures your engine on your personas.",
         },
       ],
     }),

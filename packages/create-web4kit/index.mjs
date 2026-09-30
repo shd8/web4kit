@@ -92,6 +92,7 @@ const agent = process.env.npm_config_user_agent ?? "";
 // pnpm is the default; follow npm or yarn when the scaffolder was started through them.
 const pm = agent.startsWith("npm") ? "npm" : agent.startsWith("yarn") ? "yarn" : "pnpm";
 const run = pm === "npm" ? "npm run" : pm;
+const add = pm === "npm" ? "npm install" : `${pm} add`;
 const port = templateName === "hotel" ? 3010 : 3000;
 const rel = relative(process.cwd(), target) || ".";
 console.log(`
@@ -101,12 +102,13 @@ console.log(`
   ${pm} install
   ${run} dev          # http://localhost:${port}
 
-Engines: the offline rules engine plans every page until you choose one in .env
-(cp .env.example .env): JEV_API_KEY for TypeSafe Jev${
-  args.includes("--laya")
-    ? ", or W4_ENGINE=laya for free in-process Laya"
-    : ", or re-create with --laya for free in-process Laya"
-}.
+Next, pick the engine that plans pages. Until you do, the rules engine replays your
+hand-written heuristics (a fallback, not web4 itself). In .env (cp .env.example .env):
+  JEV_API_KEY=…      TypeSafe Jev, hosted${
+    args.includes("--laya")
+      ? "\n  W4_ENGINE=laya     Laya in this process: free and offline (~1.7 GB of weights on first run)"
+      : `\n  W4_ENGINE=laya     Laya in this process: free and offline (${add} @web4kit/decider-laya first)`
+  }
 `);
 
 /**

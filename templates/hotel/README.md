@@ -1,6 +1,6 @@
 # Casa Ribeira: a web4 starter
 
-A complete [web4](https://github.com/shd8/web4) site: a boutique hotel in Porto whose home page is **planned for each visitor's situation** by a System One decision model (TypeSafe Jev), or by the offline rules engine when no key is set.
+A complete [web4](https://github.com/shd8/web4) site: a boutique hotel in Porto whose home page is **planned for each visitor's situation** by a System One decision model (TypeSafe Jev, or Laya for free local development).
 
 | Situation | What the page leads with |
 |---|---|
@@ -14,9 +14,11 @@ A complete [web4](https://github.com/shd8/web4) site: a boutique hotel in Porto 
 
 ```bash
 pnpm install
-cp .env.example .env    # optional: JEV_API_KEY for Jev, or W4_ENGINE=laya for free local Laya
+cp .env.example .env    # pick an engine: JEV_API_KEY for Jev, or W4_ENGINE=laya for free local Laya
 pnpm dev             # http://localhost:3010
 ```
+
+Without an engine the page still works: the rules engine plans it from the manifest `heuristics`, which you write by hand. That's the fallback web4 uses whenever a model is down or uncalibrated, not web4 itself, and the development bar says so. Laya needs `pnpm add @web4kit/decider-laya` (or `pnpm create web4kit --laya`); the first run downloads ~1.7 GB of weights.
 
 In development, the bar at the top previews each persona (`/?as=arriving-today`). A guest's booking comes from a confirmation-email link: `/?booking=CR-1042`. `/stats` shows the plan-cache hit rate, tokens and cost.
 

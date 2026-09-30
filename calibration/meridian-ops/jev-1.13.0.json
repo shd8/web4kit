@@ -1,14 +1,14 @@
 {
   "engine": "jev-1.13.0",
-  "version": "cal-05bc6b1748",
-  "manifestVersion": "man-e419004b40b1",
-  "createdAt": "2026-09-29T23:45:44.961Z",
+  "version": "cal-0577d22f4a",
+  "manifestVersion": "dec-b21075f3059c",
+  "createdAt": "2026-09-30T07:52:15.481Z",
   "entries": {
     "A.relevance|english": {
-      "accuracy": 0.9724137931034482,
+      "accuracy": 0.960919540229885,
       "overlap": 0,
       "sampleSize": 870,
-      "flipRate": 0.024107142857142858,
+      "flipRate": 0.022321428571428572,
       "acceptThreshold": 0,
       "uncalibrated": false
     }

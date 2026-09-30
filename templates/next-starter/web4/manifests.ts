@@ -1,57 +1,52 @@
 import { distanceKm } from "@web4kit/context";
-import { type DataSourceManifestInput, defineManifests } from "@web4kit/manifest";
+import {
+  type DataSourceManifestInput,
+  defineManifests,
+  defineSource,
+  owner,
+  thirdParty,
+} from "@web4kit/manifest";
 import { libraryManifests } from "@web4kit/react";
 import { ARRIVAL_STEPS, BREAKFAST, EVENTS, OFFER, PHOTOS, REVIEWS, ROOMS } from "./data";
 import { forecastFor, HOTEL, hotelClock } from "./hotel";
 
-const owner = (path: string) => ({ path, trust: "owner" as const });
-const thirdParty = (path: string) => ({ path, trust: "third-party" as const });
-
 /**
- * The manifests are the prompt: `what` / `not_for` name situation labels directly, because
- * System One models read literally. Heuristics make the offline rules engine a good page too.
+ * The manifests are the prompt. `audience` says who each source is for, as situation labels:
+ * web4 renders it into every question in one phrasing and the rules engine applies it too.
+ * `mustExclude` / `mustInclude` are business rules the planner enforces whatever the engine
+ * answers. Heuristics make the offline rules engine a good page as well.
  */
 export const sources: DataSourceManifestInput[] = [
-  {
+  defineSource({
     id: "hero-photos",
     shape: "media-list",
     label: "Casa Ribeira",
     eyebrow: "Boutique hotel · Porto",
     tags: ["photos", "hotel", "inspiration"],
     what: "Photos of the hotel, the rooftop and the river for guests deciding where to stay",
-    not_for: "Guests whose stayPhase is in-house or arriving-today",
+    audience: { stayPhase: ["researching", "upcoming"] },
     freshness: "weekly",
-    access: "public",
     fields: {
       image: owner("src"),
       imageAlt: owner("alt"),
       title: owner("title"),
       caption: owner("text"),
     },
-    default: {
-      include: true,
-      salience: "featured",
-      region: "hero",
-      prominence: 2,
-      component: "hero-carousel",
-    },
-    heuristics: [
-      { when: { stayPhase: ["in-house", "arriving-today", "checked-out"] }, relevant: false },
-      { when: { mediaBudget: ["low"] }, component: "caption-list" },
-    ],
+    default: { salience: "featured", region: "hero", prominence: 2, component: "hero-carousel" },
+    heuristics: [{ when: { mediaBudget: ["low"] }, component: "caption-list" }],
     fetch: async () => PHOTOS,
-  },
-  {
+  }),
+  defineSource({
     id: "rooms",
     shape: "list",
     label: "Rooms",
     eyebrow: "Twelve rooms · four kinds",
     tags: ["rooms", "prices", "booking"],
     what: "The room types with photo, size and nightly price, for guests who have not booked yet",
-    not_for:
-      "Guests who already booked: stayPhase upcoming, arriving-today, in-house or checked-out",
+    audience: { stayPhase: ["researching"] },
+    // Business rule: a guest who is already here never sees room prices.
+    mustExclude: { stayPhase: ["arriving-today", "in-house"] },
     freshness: "daily",
-    access: "public",
     fields: {
       title: owner("name"),
       subtitle: owner("desc"),
@@ -61,27 +56,17 @@ export const sources: DataSourceManifestInput[] = [
       tags: owner("tags"),
       badge: owner("badge"),
     },
-    default: {
-      include: true,
-      salience: "featured",
-      region: "primary",
-      prominence: 2,
-      component: "card-grid",
-    },
-    heuristics: [
-      { when: { stayPhase: ["in-house", "arriving-today", "checked-out"] }, relevant: false },
-    ],
+    default: { salience: "featured", prominence: 2, component: "card-grid" },
     fetch: async () => ROOMS,
-  },
-  {
+  }),
+  defineSource({
     id: "offer",
     shape: "record",
     label: "Book direct",
     tags: ["offer", "booking", "price"],
     what: "A direct-booking offer for guests comparing hotels or prices",
-    not_for: "Guests whose stayPhase is not researching",
+    audience: { stayPhase: ["researching"] },
     freshness: "weekly",
-    access: "public",
     fields: {
       title: owner("title"),
       body: owner("body"),
@@ -89,32 +74,19 @@ export const sources: DataSourceManifestInput[] = [
       imageAlt: owner("alt"),
       badge: owner("badge"),
     },
-    default: {
-      include: true,
-      salience: "standard",
-      region: "primary",
-      prominence: 1,
-      component: "record-card",
-    },
-    heuristics: [
-      { when: { arrival: ["evaluating"] }, salience: "featured", prominence: 2 },
-      {
-        when: { stayPhase: ["upcoming", "arriving-today", "in-house", "checked-out"] },
-        relevant: false,
-      },
-    ],
+    default: { component: "record-card" },
+    heuristics: [{ when: { arrival: ["evaluating"] }, salience: "featured", prominence: 2 }],
     fetch: async () => OFFER,
-  },
-  {
+  }),
+  defineSource({
     id: "reviews",
     shape: "list",
     label: "What guests say",
     eyebrow: "Reviews",
     tags: ["reviews", "ratings"],
     what: "Short quotes from guest reviews with star ratings, for guests still deciding",
-    not_for: "Guests whose stayPhase is in-house, arriving-today or upcoming",
+    audience: { stayPhase: ["researching"] },
     freshness: "daily",
-    access: "public",
     fields: {
       body: thirdParty("text"),
       rating: thirdParty("stars"),
@@ -122,7 +94,6 @@ export const sources: DataSourceManifestInput[] = [
       date: thirdParty("date"),
     },
     default: {
-      include: true,
       salience: "minor",
       region: "secondary",
       prominence: 0,
@@ -130,32 +101,21 @@ export const sources: DataSourceManifestInput[] = [
     },
     heuristics: [
       { when: { arrival: ["evaluating"] }, salience: "featured", region: "primary", prominence: 2 },
-      {
-        when: { stayPhase: ["upcoming", "arriving-today", "in-house", "checked-out"] },
-        relevant: false,
-      },
     ],
     fetch: async () => REVIEWS,
-  },
-  {
+  }),
+  defineSource({
     id: "arrival-guide",
     shape: "list",
     label: "Your arrival today",
     eyebrow: "Welcome to Porto",
     tags: ["arrival", "check-in", "luggage"],
     what: "Step by step for today's arrival: luggage drop, check-in time, welcome drink",
-    not_for: "Guests whose stayPhase is not arriving-today",
-    freshness: "daily",
-    access: "public",
-    fields: { title: owner("title"), date: owner("when"), subtitle: owner("detail") },
-    default: {
-      include: false,
-      salience: "standard",
-      region: "primary",
-      prominence: 1,
-      component: "events-timeline",
-    },
+    audience: { stayPhase: ["arriving-today"] },
     mustInclude: { stayPhase: ["arriving-today"] },
+    freshness: "daily",
+    fields: { title: owner("title"), date: owner("when"), subtitle: owner("detail") },
+    default: { include: false, component: "events-timeline" },
     heuristics: [
       {
         when: { stayPhase: ["arriving-today"] },
@@ -166,17 +126,17 @@ export const sources: DataSourceManifestInput[] = [
       },
     ],
     fetch: async () => ARRIVAL_STEPS,
-  },
-  {
+  }),
+  defineSource({
     id: "check-in",
     shape: "schedule",
-    label: "Check-in",
-    tags: ["check-in", "reception", "hours"],
-    what: "Check-in time and whether it is open now, for guests arriving today or soon",
-    not_for: "Guests whose stayPhase is researching, in-house or checked-out",
+    label: "Check-in and check-out",
+    tags: ["check-in", "check-out", "reception"],
+    what: "Check-in and check-out times and whether check-in is open now, for guests with a booking",
+    audience: { stayPhase: ["upcoming", "arriving-today", "in-house"] },
+    // Business rule, not a judgment: an arriving guest always sees check-in.
+    mustInclude: { stayPhase: ["arriving-today"] },
     freshness: "live",
-    access: "public",
-    fields: {},
     default: {
       include: false,
       salience: "minor",
@@ -184,8 +144,6 @@ export const sources: DataSourceManifestInput[] = [
       prominence: 0,
       component: "hours-card",
     },
-    // Business rule, not a judgment: an arriving guest always sees check-in.
-    mustInclude: { stayPhase: ["arriving-today"] },
     heuristics: [
       {
         when: { stayPhase: ["arriving-today"] },
@@ -195,47 +153,36 @@ export const sources: DataSourceManifestInput[] = [
         prominence: 2,
         component: "status-banner",
       },
-      {
-        when: { stayPhase: ["upcoming"] },
-        relevant: true,
-        salience: "minor",
-        region: "aside",
-        prominence: 0,
-      },
+      { when: { stayPhase: ["upcoming", "in-house"] }, relevant: true },
     ],
+    // The copy follows the situation: arrival details before check-in, check-out once staying.
     fetch: async (ctx) => {
       const { minutes } = hotelClock(ctx.now);
+      const staying = ctx.situation?.stayPhase === "in-house";
       const open = minutes >= 15 * 60 || minutes < 60;
       return {
-        status: open ? "open" : "closed",
-        statusText: open
-          ? "Check-in is open · reception 24h"
-          : `Check-in opens at ${HOTEL.checkIn} · bags welcome now`,
+        status: staying || open ? "open" : "upcoming",
+        statusText: staying
+          ? `Check-out until ${HOTEL.checkOut} · late check-out on request`
+          : open
+            ? "Check-in is open · reception 24h"
+            : `Check-in opens at ${HOTEL.checkIn} · bags welcome now`,
         days: [
-          { label: "Check-in", hours: `from ${HOTEL.checkIn}`, today: true },
-          { label: "Check-out", hours: `until ${HOTEL.checkOut}`, today: false },
+          { label: "Check-in", hours: `from ${HOTEL.checkIn}`, today: !staying },
+          { label: "Check-out", hours: `until ${HOTEL.checkOut}`, today: staying },
           { label: "Reception", hours: "24 hours", today: false },
         ],
       };
     },
-  },
-  {
+  }),
+  defineSource({
     id: "getting-here",
     shape: "geo",
     label: "Getting here",
     tags: ["directions", "map", "metro"],
     what: "Address and directions to the hotel; guests arriving today need the quickest route and a call",
-    not_for: "Guests whose stayPhase is in-house",
-    freshness: "static",
-    access: "public",
-    fields: {},
-    default: {
-      include: true,
-      salience: "minor",
-      region: "secondary",
-      prominence: 0,
-      component: "map-card",
-    },
+    audience: { stayPhase: ["researching", "upcoming", "arriving-today", "checked-out"] },
+    default: { salience: "minor", region: "secondary", prominence: 0, component: "map-card" },
     heuristics: [
       {
         when: { stayPhase: ["arriving-today"] },
@@ -244,7 +191,6 @@ export const sources: DataSourceManifestInput[] = [
         prominence: 2,
         component: "directions-bar",
       },
-      { when: { stayPhase: ["in-house"] }, relevant: false },
     ],
     fetch: async (ctx) => {
       const km = ctx.visitorGeo ? distanceKm(ctx.visitorGeo, HOTEL.location) : undefined;
@@ -267,24 +213,17 @@ export const sources: DataSourceManifestInput[] = [
         ...(distanceText ? { distanceText } : {}),
       };
     },
-  },
-  {
+  }),
+  defineSource({
     id: "today",
     shape: "record",
     label: "Today at Casa Ribeira",
     tags: ["today", "weather", "plans"],
-    what: "Today's short brief for guests already staying (stayPhase in-house): weather and what is on",
-    not_for: "Guests whose stayPhase is not in-house",
+    what: "Today's short brief for guests already staying: weather and what is on",
+    audience: { stayPhase: ["in-house"] },
     freshness: "live",
-    access: "public",
     fields: { title: owner("title"), body: owner("body"), badge: owner("badge") },
-    default: {
-      include: false,
-      salience: "standard",
-      region: "primary",
-      prominence: 1,
-      component: "record-card",
-    },
+    default: { include: false, component: "record-card" },
     heuristics: [
       {
         when: { stayPhase: ["in-house"] },
@@ -313,25 +252,18 @@ export const sources: DataSourceManifestInput[] = [
         badge: f.sky === "rainy" ? "Umbrellas at reception" : undefined,
       };
     },
-  },
-  {
+  }),
+  defineSource({
     id: "breakfast",
     shape: "list",
     label: "This morning's breakfast",
     eyebrow: "Terrace · until 10:30",
     tags: ["breakfast", "food"],
     what: "This morning's breakfast menu, served on the terrace until 10:30",
-    not_for: "Guests whose dayPart is not morning, or whose stayPhase is not in-house",
+    audience: { stayPhase: ["in-house"], dayPart: ["morning"] },
     freshness: "daily",
-    access: "public",
     fields: { title: owner("name"), subtitle: owner("desc"), tags: owner("tags") },
-    default: {
-      include: false,
-      salience: "standard",
-      region: "primary",
-      prominence: 1,
-      component: "menu-list",
-    },
+    default: { include: false, component: "menu-list" },
     heuristics: [
       {
         when: { stayPhase: ["in-house"], dayPart: ["morning"] },
@@ -341,8 +273,8 @@ export const sources: DataSourceManifestInput[] = [
       },
     ],
     fetch: async () => BREAKFAST,
-  },
-  {
+  }),
+  defineSource({
     id: "events",
     shape: "list",
     label: "Around the hotel",
@@ -350,10 +282,8 @@ export const sources: DataSourceManifestInput[] = [
     tags: ["events", "fado", "port wine"],
     what: "Fado nights, port tastings and rooftop sunsets; indoor options when it rains",
     freshness: "daily",
-    access: "public",
     fields: { title: owner("title"), date: owner("when"), subtitle: owner("detail") },
     default: {
-      include: true,
       salience: "minor",
       region: "secondary",
       prominence: 0,
@@ -371,7 +301,7 @@ export const sources: DataSourceManifestInput[] = [
       const rainy = forecastFor(ctx.now).sky === "rainy";
       return rainy ? [...EVENTS].sort((a, b) => Number(b.indoor) - Number(a.indoor)) : EVENTS;
     },
-  },
+  }),
 ];
 
 export const manifests = defineManifests({

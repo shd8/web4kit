@@ -5,6 +5,7 @@ import {
   type ComponentManifest,
   compatibleComponents,
   type DataSourceManifest,
+  describeAudience,
   type ManifestSet,
   PROMINENCE_LEVELS,
   SALIENCE_LEVELS,
@@ -73,6 +74,7 @@ export function buildState(situation: Situation, intent?: Intent): State {
  */
 export function sourceSummary(source: DataSourceManifest): Json {
   const summary: Record<string, Json> = { id: source.id, what: source.what };
+  if (source.audience) summary.audience = describeAudience(source.audience);
   if (source.not_for) summary.not_for = source.not_for;
   if (source.tags.length) summary.tags = source.tags;
   return summary;

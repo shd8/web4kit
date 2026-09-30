@@ -77,12 +77,13 @@ npm install @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react r
 | Package | What it is |
 |---|---|
 | [`@web4kit/planner`](packages/planner) | One decider round per page, confidence gating, plan cache, portability lint |
-| [`@web4kit/react`](packages/react) | Fail-soft renderer and curated component library (`styles.css` / `tokens.css`) |
+| [`@web4kit/next`](packages/next) | Next.js adapter: one call per page from a server component, dev-only persona previews, stats |
+| [`@web4kit/react`](packages/react) | Fail-soft renderer and curated component library (`styles.css` / `tailwind.css`) |
 | [`@web4kit/context`](packages/context) | Context Envelope and situation rules |
 | [`@web4kit/manifest`](packages/manifest) | Data-source and component manifests |
 | [`@web4kit/decider`](packages/decider) | Decider interface; rules, System One HTTP (Jev, Ollaya) and cascade adapters |
 | [`@web4kit/decider-laya`](packages/decider-laya) | In-process Laya (ONNX) decider |
-| [`@web4kit/conformance`](packages/conformance) | Fixtures, invariants, per-engine evaluation, calibration profiles |
+| [`@web4kit/conformance`](packages/conformance) | Fixture grids, label and invariant builders, per-engine evaluation, calibration profiles |
 | [`@web4kit/ir`](packages/ir) | Page Plan schema (`web4.plan/v1`), validation, privacy check |
 | [`@web4kit/solver`](packages/solver) | Deterministic layout solver |
 | [`create-web4kit`](packages/create-web4kit) | Scaffolder for the Casa Ribeira starter |

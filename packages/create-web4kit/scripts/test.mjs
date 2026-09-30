@@ -21,6 +21,10 @@ try {
     noSecrets: !existsSync(join(target, ".env")),
     noBuildOutput: !existsSync(join(target, ".next")) && !existsSync(join(target, "node_modules")),
     calibration: existsSync(join(target, "calibration/jev-1.13.0.json")),
+    nextAdapter: pkg.dependencies["@web4kit/next"] === `^${version}`,
+    tailwindIntegration: readFileSync(join(target, "app/globals.css"), "utf8").includes(
+      "@web4kit/react/tailwind.css",
+    ),
   };
   const failed = Object.entries(checks).filter(([, ok]) => !ok);
   if (failed.length) {

@@ -197,6 +197,8 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
 
+  packages/create-web4kit: {}
+
   packages/decider:
     dependencies:
       zod:
@@ -236,6 +238,43 @@ importers:
       zod:
         specifier: ^4.6.5
         version: 4.6.5
+
+  packages/next:
+    dependencies:
+      '@web4kit/context':
+        specifier: workspace:^
+        version: link:../context
+      '@web4kit/decider':
+        specifier: workspace:^
+        version: link:../decider
+      '@web4kit/ir':
+        specifier: workspace:^
+        version: link:../ir
+      '@web4kit/manifest':
+        specifier: workspace:^
+        version: link:../manifest
+      '@web4kit/planner':
+        specifier: workspace:^
+        version: link:../planner
+      '@web4kit/react':
+        specifier: workspace:^
+        version: link:../react
+    devDependencies:
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.3.0
+        version: 19.3.0(@types/react@19.3.0)
+      next:
+        specifier: ^16.3.7
+        version: 16.3.7(@types/node@26.6.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      react:
+        specifier: ^19.3.0
+        version: 19.3.0
+      react-dom:
+        specifier: ^19.3.0
+        version: 19.3.0(react@19.3.0)
 
   packages/planner:
     dependencies:
@@ -312,6 +351,9 @@ importers:
       '@web4kit/manifest':
         specifier: workspace:*
         version: link:../../packages/manifest
+      '@web4kit/next':
+        specifier: workspace:*
+        version: link:../../packages/next
       '@web4kit/planner':
         specifier: workspace:*
         version: link:../../packages/planner

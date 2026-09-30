@@ -88,8 +88,8 @@ export function Badge({
   );
 }
 
-export function StatusDot({ tone }: { tone: "ok" | "warn" | "bad" }) {
-  const color = { ok: "bg-ok", warn: "bg-warn", bad: "bg-bad" }[tone];
+export function StatusDot({ tone }: { tone: "ok" | "warn" | "bad" | "neutral" }) {
+  const color = { ok: "bg-ok", warn: "bg-warn", bad: "bg-bad", neutral: "bg-primary" }[tone];
   return <span aria-hidden className={cx("inline-block size-2 rounded-full", color)} />;
 }
 

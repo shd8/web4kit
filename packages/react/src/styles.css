@@ -1,7 +1,7 @@
 /*
  * Precompiled stylesheet for apps without Tailwind: design tokens + every utility the
  * component library uses. Built to dist/styles.css by `pnpm build`.
- * Apps that already use Tailwind v4 should import tokens.css and @source this package instead.
+ * Apps that already use Tailwind v4 should import tailwind.css instead.
  */
 @layer theme, utilities;
 @import "tailwindcss/theme.css" layer(theme);

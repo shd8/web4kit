@@ -5,7 +5,8 @@ import { z } from "zod";
  * their own objects and are mapped to component roles through `fields` bindings instead.
  */
 export const ScheduleDataSchema = z.object({
-  status: z.enum(["open", "closing-soon", "closed"]),
+  /** `upcoming`: not open yet, as expected (e.g. "Check-in opens at 15:00"); neutral tone. */
+  status: z.enum(["open", "upcoming", "closing-soon", "closed"]),
   /** e.g. "Open until 23:00", "Closed · opens tomorrow at 13:00" */
   statusText: z.string(),
   days: z.array(

@@ -1,6 +1,5 @@
 import { loadDotEnv } from "@web4kit/decider/node";
 import "server-only";
-import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { ContextEnvelope } from "@web4kit/context";
 import {
@@ -13,13 +12,12 @@ import {
 import type { Plan } from "@web4kit/ir";
 import {
   acceptThreshold,
-  type CalibrationProfile,
-  CalibrationProfileSchema,
   createPlanner,
   type Intent,
   LruPlanCache,
   type Planner,
 } from "@web4kit/planner";
+import { loadCalibration as loadStoredCalibration } from "@web4kit/planner/node";
 import { type PlanData, resolvePlanData } from "@web4kit/react";
 import {
   type EngineChoice,
@@ -39,16 +37,8 @@ const cache = new LruPlanCache(2000);
 const planners = new Map<string, Planner>();
 let localReachable: boolean | undefined;
 
-function loadCalibration(site: string, engineId: string): CalibrationProfile | undefined {
-  const file = resolve(
-    ROOT,
-    "calibration",
-    site,
-    `${engineId.replace(/[^a-zA-Z0-9._-]+/g, "_")}.json`,
-  );
-  if (!existsSync(file)) return undefined;
-  return CalibrationProfileSchema.parse(JSON.parse(readFileSync(file, "utf8")));
-}
+const loadCalibration = (site: string, engineId: string) =>
+  loadStoredCalibration(resolve(ROOT, "calibration", site), engineId);
 
 async function localAvailable(): Promise<boolean> {
   const url = localEngineUrlFromEnv();
@@ -125,9 +115,16 @@ async function plannerFor(
     });
     planners.set(key, planner);
   }
+  const status = planner.calibrationStatus;
   return {
     planner,
-    calibration: decider ? (profile?.version ?? "none (uncalibrated → rules)") : "rules",
+    calibration: !decider
+      ? "rules"
+      : status.status === "active"
+        ? status.version
+        : status.status === "stale"
+          ? `stale ${status.version} (re-run conformance) → rules`
+          : "none (uncalibrated → rules)",
   };
 }
 
@@ -152,10 +149,12 @@ export async function dataFor(
   roles: string[] = [],
 ): Promise<PlanData> {
   const example = EXAMPLES[exampleId];
+  const situation = example.situationOf(envelope);
   return resolvePlanData(plan, example.manifests, {
     now: new Date(envelope.now),
     viewer: { roles: envelope.roles ?? roles },
+    situation,
     ...(envelope.geo ? { visitorGeo: { lat: envelope.geo.lat, lng: envelope.geo.lng } } : {}),
-    language: example.situationOf(envelope).language ?? "english",
+    language: situation.language ?? "english",
   });
 }

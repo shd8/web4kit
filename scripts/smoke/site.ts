@@ -1,5 +1,5 @@
 import { CORE_BUCKETS, CORE_RULES, collectEnvelope, deriveSituation } from "@web4kit/context";
-import { defineManifests } from "@web4kit/manifest";
+import { defineManifests, defineSource, owner } from "@web4kit/manifest";
 import { createPlanner, LruPlanCache, lintPortability } from "@web4kit/planner";
 import { defaultRegistry, libraryManifests, PlanView, resolvePlanData } from "@web4kit/react";
 import { createElement } from "react";
@@ -10,54 +10,35 @@ const manifests = defineManifests({
   site: "rosa-bakery",
   components: libraryManifests,
   sources: [
-    {
+    defineSource({
       id: "breads",
       shape: "list",
       label: "Today's bread",
       tags: ["bread", "prices"],
       what: "Breads baked this morning, with prices",
       freshness: "daily",
-      access: "public",
-      fields: { title: { path: "name", trust: "owner" }, value: { path: "price", trust: "owner" } },
-      default: {
-        include: true,
-        salience: "featured",
-        region: "primary",
-        prominence: 2,
-        component: "menu-list",
-      },
-      heuristics: [],
+      fields: { title: owner("name"), value: owner("price") },
+      default: { salience: "featured", prominence: 2, component: "menu-list" },
       fetch: async () => [
         { name: "Sourdough loaf", price: "€5.50" },
         { name: "Rye & caraway", price: "€4.80" },
       ],
-    },
-    {
+    }),
+    defineSource({
       id: "photos",
       shape: "media-list",
       label: "From the oven",
       tags: ["photos"],
       what: "Photos of fresh bread and pastries",
-      not_for: "Visitors with mediaBudget low",
+      audience: { mediaBudget: ["high"] },
       freshness: "weekly",
-      access: "public",
-      fields: {
-        image: { path: "src", trust: "owner" },
-        imageAlt: { path: "alt", trust: "owner" },
-        title: { path: "name", trust: "owner" },
-      },
-      default: {
-        include: false,
-        salience: "standard",
-        region: "hero",
-        prominence: 2,
-        component: "hero-carousel",
-      },
+      fields: { image: owner("src"), imageAlt: owner("alt"), title: owner("name") },
+      default: { include: false, region: "hero", prominence: 2, component: "hero-carousel" },
       heuristics: [{ when: { arrival: ["visual"] }, relevant: true }],
       fetch: async () => [
         { src: "https://example.com/loaf.jpg", alt: "A sourdough loaf", name: "Sourdough" },
       ],
-    },
+    }),
   ],
 });
 
@@ -74,7 +55,11 @@ const situation = deriveSituation(envelope, CORE_RULES);
 const { plan } = await planner.plan({ situation });
 
 // 4. Render it (data is fetched at render time).
-const data = await resolvePlanData(plan, manifests, { now: new Date(), viewer: { roles: [] } });
+const data = await resolvePlanData(plan, manifests, {
+  now: new Date(),
+  viewer: { roles: [] },
+  situation,
+});
 const html = renderToStaticMarkup(
   createElement(PlanView, { plan, data, manifests, registry: defaultRegistry }),
 );
@@ -83,6 +68,7 @@ console.log(
   JSON.stringify(
     {
       lintStateTokens: lint.stateTokens,
+      stats: planner.stats().pages,
       situation,
       hero: plan.layout.hero.map((b) => b.componentId),
       primary: plan.layout.primary.map((b) => b.componentId),

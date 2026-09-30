@@ -15,6 +15,7 @@
     "@web4kit/context": "workspace:*",
     "@web4kit/decider": "workspace:*",
     "@web4kit/manifest": "workspace:*",
+    "@web4kit/next": "workspace:*",
     "@web4kit/planner": "workspace:*",
     "@web4kit/react": "workspace:*",
     "next": "^16.3.7",

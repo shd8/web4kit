@@ -86,7 +86,7 @@ describe("typed-question intent (task 13.3)", () => {
   const profile: CalibrationProfile = {
     engine: "fake-reader",
     version: "cal-x",
-    manifestVersion: manifests.version,
+    manifestVersion: manifests.deciderVersion,
     createdAt: "2026-09-29T00:00:00Z",
     entries: Object.fromEntries(
       Object.values(KINDS).map((k) => [

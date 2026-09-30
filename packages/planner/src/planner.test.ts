@@ -154,7 +154,7 @@ function fakeEngine(calls: Array<{ state: State; questions: Questions }>): Decid
 const calibratedFor = (kinds: string[], threshold = 0.5): CalibrationProfile => ({
   engine: "fake-2.0.0",
   version: "cal-test",
-  manifestVersion: manifests.version,
+  manifestVersion: manifests.deciderVersion,
   createdAt: "2026-09-29T00:00:00Z",
   entries: Object.fromEntries(
     kinds.map((k) => [
@@ -274,7 +274,7 @@ describe("hierarchical choice (task 6.3)", () => {
       capabilities: RULES_CAPABILITIES,
       call,
     });
-    const profile = { ...calibratedFor(ALL_KINDS), manifestVersion: set.version };
+    const profile = { ...calibratedFor(ALL_KINDS), manifestVersion: set.deciderVersion };
     const { plan } = await createPlanner({ manifests: set, decider, calibration: profile }).plan({
       situation: lunch,
     });
@@ -349,5 +349,115 @@ describe("plan cache (task 6.6)", () => {
     expect(second.cacheHit).toBe(true);
     expect(second.plan).toEqual(first.plan);
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("v1: audience, mustExclude, calibration status, stats (tasks 3.1-3.4)", () => {
+  const withRooms = defineManifests({
+    site: "test-hotel",
+    components,
+    sources: [
+      ...sources,
+      src("rooms", "list", {
+        audience: { familiarity: ["new"] },
+        mustExclude: { visitor: ["nearby"] },
+        heuristics: [{ when: { familiarity: ["regular"] }, relevant: true }],
+      }),
+      src("offer", "list", {
+        mustInclude: { mealWindow: ["late"] },
+        mustExclude: { openState: ["closed"] },
+      }),
+    ],
+  });
+  const profile = (): CalibrationProfile => ({
+    ...calibratedFor(ALL_KINDS),
+    manifestVersion: withRooms.deciderVersion,
+  });
+
+  it("puts the rendered audience in every question about the source", () => {
+    const qp = buildQuestions(withRooms, lunch);
+    const about = Object.values(qp.questions).filter((q) => q.meta?.subject === "rooms");
+    expect(about.length).toBeGreaterThan(2);
+    for (const q of about)
+      expect(JSON.stringify(q.instructions)).toContain(
+        "only for visitors whose familiarity is new (not for any other familiarity)",
+      );
+  });
+
+  it("rules honour audience over heuristics", async () => {
+    const regular = { ...lunch, visitor: "tourist", familiarity: "regular" };
+    const { plan } = await createPlanner({ manifests: withRooms }).plan({ situation: regular });
+    expect(allBlocks(plan).map((b) => b.sourceId)).not.toContain("rooms");
+    const tourist = { ...regular, familiarity: "new" };
+    const next = await createPlanner({ manifests: withRooms }).plan({ situation: tourist });
+    expect(allBlocks(next.plan).map((b) => b.sourceId)).toContain("rooms");
+  });
+
+  it("mustExclude beats a confident engine and wins over mustInclude", async () => {
+    const planner = createPlanner({
+      manifests: withRooms,
+      decider: fakeEngine([]),
+      calibration: profile(),
+    });
+    const { plan } = await planner.plan({ situation: { ...lateNight } });
+    const ids = allBlocks(plan).map((b) => b.sourceId);
+    expect(ids).not.toContain("rooms");
+    expect(ids).not.toContain("offer");
+    const rooms = plan.excluded.find((e) => e.sourceId === "rooms")!;
+    expect(rooms.why).toEqual([
+      expect.objectContaining({ question: "invariant.must-exclude", decidedBy: "invariant" }),
+    ]);
+    const offer = plan.excluded.find((e) => e.sourceId === "offer")!;
+    expect(offer.why[0]!.note).toContain("exclusion wins");
+  });
+
+  it("reports calibration status and drops a stale profile", async () => {
+    const decider = fakeEngine([]);
+    expect(createPlanner({ manifests: withRooms, decider }).calibrationStatus).toEqual({
+      status: "none",
+    });
+    expect(
+      createPlanner({ manifests: withRooms, decider, calibration: profile() }).calibrationStatus,
+    ).toEqual({ status: "active", version: "cal-test" });
+    const stale = createPlanner({
+      manifests: withRooms,
+      decider,
+      calibration: { ...profile(), manifestVersion: "man-old" },
+    });
+    expect(stale.calibrationStatus.status).toBe("stale");
+    const { plan } = await stale.plan({ situation: lunch });
+    expect(plan.calibrationVersion).toBe("cal-none");
+    const why = allBlocks(plan)[0]!.why.find((w) => w.question === KINDS.relevance)!;
+    expect(why).toMatchObject({ decidedBy: "rule" });
+    expect(why.note).toContain("uncalibrated");
+  });
+
+  it("counts pages, hits, tokens and cost; a throwing hook is ignored", async () => {
+    const events: string[] = [];
+    const planner = createPlanner({
+      manifests: withRooms,
+      decider: fakeEngine([]),
+      calibration: profile(),
+      cache: new LruPlanCache(),
+      onPlan: (e) => {
+        events.push(`${e.cacheHit}`);
+        throw new Error("boom");
+      },
+    });
+    await planner.plan({ situation: { ...lunch } });
+    await planner.plan({ situation: { ...lunch } });
+    await planner.plan({ situation: { ...lateNight } });
+    const stats = planner.stats();
+    expect(events).toEqual(["false", "true", "false"]);
+    expect(stats).toMatchObject({
+      engineId: "fake-2.0.0",
+      pages: 3,
+      cacheHits: 1,
+      deciderRequests: 2,
+      inputTokens: 200,
+      distinctSituations: 2,
+      calibration: { status: "active" },
+    });
+    expect(stats.costUsd).toBe(0);
   });
 });

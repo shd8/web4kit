@@ -1,26 +1,30 @@
-import Link from "next/link";
-import { stats } from "@/web4/server";
+import { site } from "@/web4/site";
 
 export const dynamic = "force-dynamic";
 
 export default function Stats() {
-  const hitRate = stats.pages ? stats.cacheHits / stats.pages : 0;
-  const cost = (stats.inputTokens / 1e6) * stats.costPerMTok;
+  const s = site.stats();
+  const hitRate = s.pages ? s.cacheHits / s.pages : 0;
+  const calibration =
+    s.calibration.status === "active"
+      ? s.calibration.version
+      : s.calibration.status === "stale"
+        ? `stale (${s.calibration.reason}): run pnpm calibrate`
+        : s.engineId === "rules"
+          ? "rules"
+          : "missing: every answer falls back to rules";
   const rows: Array<[string, string]> = [
-    ["Engine", stats.engine],
-    ["Calibration", stats.calibration],
-    ["Pages served", stats.pages.toLocaleString("en")],
+    ["Engine", s.engineId],
+    ["Calibration", calibration],
+    ["Pages served", s.pages.toLocaleString("en")],
     ["Plan cache hit rate", `${(hitRate * 100).toFixed(1)}%`],
-    ["Distinct situations", stats.situations.size.toLocaleString("en")],
-    ["Decider requests", stats.deciderRequests.toLocaleString("en")],
-    ["Input tokens", stats.inputTokens.toLocaleString("en")],
-    ["Decider cost", `$${cost.toFixed(5)}`],
-    ["Cost per page (average)", `$${(stats.pages ? cost / stats.pages : 0).toFixed(6)}`],
-    [
-      "Average planning time",
-      `${stats.pages ? Math.round(stats.planningMsTotal / stats.pages) : 0} ms`,
-    ],
-    ["Since", stats.startedAt],
+    ["Distinct situations", s.distinctSituations.toLocaleString("en")],
+    ["Decider requests", s.deciderRequests.toLocaleString("en")],
+    ["Input tokens", s.inputTokens.toLocaleString("en")],
+    ["Decider cost", `$${s.costUsd.toFixed(5)}`],
+    ["Cost per page (average)", `$${(s.pages ? s.costUsd / s.pages : 0).toFixed(6)}`],
+    ["Average planning time", `${s.pages ? Math.round(s.planningMsTotal / s.pages) : 0} ms`],
+    ["Since", s.since],
   ];
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
@@ -32,13 +36,13 @@ export default function Stats() {
         {rows.map(([k, v]) => (
           <div key={k} className="flex justify-between gap-4 px-4 py-3 text-sm">
             <dt className="text-muted-foreground">{k}</dt>
-            <dd className="font-mono tabular-nums">{v}</dd>
+            <dd className="text-right font-mono tabular-nums">{v}</dd>
           </div>
         ))}
       </dl>
-      <Link href="/" className="mt-6 inline-block text-sm underline">
+      <a href="/" className="mt-6 inline-block text-sm underline">
         Back to the site
-      </Link>
+      </a>
     </main>
   );
 }

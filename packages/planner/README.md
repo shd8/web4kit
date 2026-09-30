@@ -17,8 +17,14 @@ npm install @web4kit/planner
 ```ts
 import { createPlanner, LruPlanCache } from "@web4kit/planner";
 
+import { loadCalibration } from "@web4kit/planner/node";
+
+const calibration = loadCalibration("calibration", decider.id); // undefined when missing
 const planner = createPlanner({ manifests, decider, calibration, cache: new LruPlanCache() });
 const { plan, cacheHit } = await planner.plan({ situation });
+
+planner.calibrationStatus; // { status: "active" | "stale" | "none", ... }: stale profiles are ignored
+planner.stats();           // pages, cache hits, decider requests, tokens, cost, distinct situations
 ```
 
 See the [getting started guide](https://github.com/shd8/web4/blob/main/docs/getting-started.md).

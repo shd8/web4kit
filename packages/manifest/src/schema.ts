@@ -43,6 +43,7 @@ export const LIMITS = {
   tag: 24,
   tags: 6,
   componentWhat: 80,
+  audience: 160,
   question: 280,
 } as const;
 
@@ -87,6 +88,11 @@ export interface FetchContext {
   visitorGeo?: { lat: number; lng: number };
   /** Language the content should be presented in (English name, e.g. "english"). */
   language?: string;
+  /**
+   * The label-only situation the plan was made for (bucket -> English label), so a fetcher can
+   * adapt owner-written copy. Fetcher output never reaches a decider.
+   */
+  situation?: Readonly<Record<string, string>>;
 }
 export type Fetch = (ctx: FetchContext) => Promise<unknown>;
 
@@ -100,6 +106,11 @@ export const DataSourceManifestSchema = z.object({
   tags: z.array(limited("tag", LIMITS.tag)).max(LIMITS.tags),
   what: limited("what", LIMITS.what),
   not_for: limited("not_for", LIMITS.notFor).optional(),
+  /**
+   * Who the source is for, as a situation condition. Rendered into decider questions in one
+   * consistent phrasing and applied by the rules engine: written once, it cannot drift.
+   */
+  audience: ConditionSchema.optional(),
   freshness: z.enum(["live", "daily", "weekly", "static"]),
   access: AccessSchema,
   /** Component input role -> field path and trust level. */
@@ -113,6 +124,8 @@ export const DataSourceManifestSchema = z.object({
   }),
   /** Structural invariant: the source must be included whenever this condition holds. */
   mustInclude: ConditionSchema.optional(),
+  /** Structural invariant: the source is never placed while this condition holds. */
+  mustExclude: ConditionSchema.optional(),
   heuristics: z.array(HeuristicSchema).default([]),
   fetch: z.custom<Fetch>((v) => typeof v === "function", { error: "fetch must be a function" }),
 });
@@ -149,7 +162,10 @@ export type ComponentManifestInput = z.input<typeof ComponentManifestSchema>;
 
 export interface ManifestSet {
   site: string;
+  /** Full content version (plan cache key). */
   version: string;
+  /** Version of the decider-visible surface only (calibration profiles match on it). */
+  deciderVersion: string;
   sources: DataSourceManifest[];
   components: ComponentManifest[];
 }

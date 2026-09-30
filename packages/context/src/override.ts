@@ -14,6 +14,11 @@ export interface ResolveOptions extends CollectOptions {
   fixtures?: Record<string, ContextEnvelope>;
   /** An envelope set directly by the lab UI (lab mode only). */
   labEnvelope?: ContextEnvelope;
+  /**
+   * Adds first-party facts (plain strings in `firstParty`) the site knows from its own systems.
+   * Applied to real requests only, never to lab envelopes or fixtures.
+   */
+  enrich?: (envelope: ContextEnvelope, request: RequestLike) => ContextEnvelope;
 }
 
 export interface ResolvedContext extends CollectResult {
@@ -28,7 +33,11 @@ export function resolveContext(request: RequestLike, options: ResolveOptions): R
     const fixture = name ? options.fixtures?.[name] : undefined;
     if (name && fixture) return { envelope: fixture, source: "fixture", fixture: name };
   }
-  return { ...collectEnvelope(request, options), source: "request" };
+  const collected = collectEnvelope(request, options);
+  const envelope = options.enrich
+    ? options.enrich(collected.envelope, request)
+    : collected.envelope;
+  return { ...collected, envelope, source: "request" };
 }
 
 export function isLabMode(env: NodeJS.ProcessEnv = process.env): boolean {

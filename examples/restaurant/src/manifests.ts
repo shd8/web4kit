@@ -3,6 +3,8 @@ import {
   type DataSourceManifestInput,
   defineManifests,
   type FetchContext,
+  owner,
+  thirdParty,
 } from "@web4kit/manifest";
 import { libraryManifests } from "@web4kit/react";
 import {
@@ -26,9 +28,6 @@ const dishes = (list: Dish[]) => async (ctx: FetchContext) =>
     tags: d.tags,
     badge: d.badge,
   }));
-
-const owner = (path: string) => ({ path, trust: "owner" as const });
-const thirdParty = (path: string) => ({ path, trust: "third-party" as const });
 
 /**
  * Casa Lumbre manifests. Heuristics drive the rules decider and double as the "what a good
@@ -193,7 +192,10 @@ export const sources: DataSourceManifestInput[] = [
     eyebrow: "Menú del día · 13:00–16:00",
     tags: ["food", "menu", "lunch", "set menu"],
     what: "The weekday lunch set menu: three courses, bread and wine at a fixed price",
-    not_for: "Any visitor whose mealWindow is not lunch, or any time openState is closed",
+    audience: { mealWindow: ["breakfast", "lunch"] },
+    not_for: "Any time openState is closed",
+    // Business rule: never offer the set menu while the restaurant is closed.
+    mustExclude: { openState: ["closed"] },
     freshness: "daily",
     access: "public",
     fields: {
@@ -218,7 +220,6 @@ export const sources: DataSourceManifestInput[] = [
         region: "primary",
         prominence: 2,
       },
-      { when: { openState: ["closed"] }, relevant: false },
     ],
     fetch: dishes(LUNCH_MENU),
   },
@@ -399,7 +400,7 @@ export const sources: DataSourceManifestInput[] = [
     label: "What's new",
     tags: ["news", "announcement"],
     what: "This week's announcement; the first thing a regular or returning guest should see",
-    not_for: "Visitors whose familiarity is new or unknown",
+    audience: { familiarity: ["returning", "regular"] },
     freshness: "weekly",
     access: "public",
     fields: {

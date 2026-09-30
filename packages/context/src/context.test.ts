@@ -6,7 +6,12 @@ import {
   CORE_RULES,
   type ContextEnvelope,
   collectEnvelope,
+  DAY_PART_BUCKET,
+  dayPartRule,
   deriveSituation,
+  distanceRule,
+  mealWindowRule,
+  openingHoursRule,
   pointAtDistance,
   resolveContext,
   situationHash,
@@ -170,5 +175,77 @@ describe("hotel and booking referrers", () => {
         .arrival;
     expect(arrival("https://www.booking.com/hotel/pt/casa-ribeira.html")).toBe("evaluating");
     expect(arrival("https://www.expedia.com/Porto-Hotels")).toBe("evaluating");
+  });
+});
+
+describe("composable venue rules (v1 1.1)", () => {
+  const env = (now: string, km?: number): ContextEnvelope => ({
+    utm: {},
+    languages: [],
+    device: "mobile",
+    saveData: false,
+    consent: false,
+    now,
+    ...(km === undefined ? {} : { geo: pointAtDistance(MADRID, km) }),
+  });
+
+  it("distance alone yields only the visitor label", () => {
+    const s = deriveSituation(env("2026-09-29T11:00:00Z", 1), [distanceRule({ location: MADRID })]);
+    expect(s).toEqual({ visitor: "nearby" });
+    expect(
+      deriveSituation(env("2026-09-29T11:00:00Z", 20), [
+        distanceRule({ location: MADRID, localKm: 10, bucket: "guest" }),
+      ]),
+    ).toEqual({ guest: "tourist" });
+  });
+
+  it("venueRules equals its parts", () => {
+    const at = env("2026-09-29T21:40:00Z", 900);
+    const parts = [
+      distanceRule({ location: venue.location }),
+      mealWindowRule({ timezone: venue.timezone }),
+      openingHoursRule({ timezone: venue.timezone, hours: venue.hours }),
+    ];
+    expect(deriveSituation(at, venueRules(venue))).toEqual(deriveSituation(at, parts));
+  });
+
+  it("day part in venue local time", () => {
+    const rule = [dayPartRule({ timezone: "Europe/Lisbon" })];
+    const spec = DAY_PART_BUCKET;
+    const at = (now: string) => deriveSituation(env(now), rule);
+    expect(at("2026-10-02T07:30:00Z")).toEqual({ dayPart: "morning" }); // 08:30 WEST
+    expect(at("2026-10-02T12:00:00Z")).toEqual({ dayPart: "afternoon" });
+    expect(at("2026-10-02T19:00:00Z")).toEqual({ dayPart: "evening" });
+    expect(at("2026-10-02T23:30:00Z")).toEqual({ dayPart: "night" });
+    assertSituation(at("2026-10-02T07:30:00Z"), spec);
+  });
+});
+
+describe("first-party enrichment (v1 1.3)", () => {
+  const request = { url: "https://hotel.example/?booking=AB12", headers: {} };
+  const enrich = (e: ContextEnvelope, r: { url: string }) => {
+    const code = new URL(r.url).searchParams.get("booking");
+    return code === "AB12" ? { ...e, firstParty: { arrival: "2026-10-02" } } : e;
+  };
+
+  it("adds first-party facts to real requests", () => {
+    const ctx = resolveContext(request, { labMode: false, enrich });
+    expect(ctx.source).toBe("request");
+    expect(ctx.envelope.firstParty).toEqual({ arrival: "2026-10-02" });
+  });
+
+  it("never enriches fixtures or lab envelopes", () => {
+    let calls = 0;
+    const counting = (e: ContextEnvelope) => {
+      calls++;
+      return e;
+    };
+    const fixture = collectEnvelope({ url: "/", headers: {} }).envelope;
+    resolveContext(
+      { url: "/?w4_ctx=f", headers: {} },
+      { labMode: true, fixtures: { f: fixture }, enrich: counting },
+    );
+    resolveContext(request, { labMode: true, labEnvelope: fixture, enrich: counting });
+    expect(calls).toBe(0);
   });
 });

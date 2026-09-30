@@ -4,6 +4,7 @@
 import { execSync, spawn } from "node:child_process";
 import {
   cpSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
@@ -24,6 +25,7 @@ const PACKAGES = [
   "solver",
   "react",
   "conformance",
+  "next",
   "decider-laya",
   "create-web4kit",
 ];
@@ -45,7 +47,8 @@ try {
   );
   const scaffolder = tarballs["@web4kit/create-web4kit"];
   delete tarballs["@web4kit/create-web4kit"];
-  const { "@web4kit/decider-laya": _laya, ...deps } = tarballs; // decider-laya pulls onnxruntime; packed only
+  // decider-laya pulls onnxruntime and next needs a Next app: both are packed, not installed here.
+  const { "@web4kit/decider-laya": _laya, "@web4kit/next": _next, ...deps } = tarballs;
   writeFileSync(
     join(app, "package.json"),
     JSON.stringify(
@@ -92,6 +95,16 @@ try {
     run("npx tsc --noEmit -p tsconfig.json", site);
     run("npx vitest run", site);
     run("npx next build", site);
+    // tailwind.css must let the app's Tailwind build see the component library's classes.
+    const cssDir = join(site, ".next/static");
+    const css = existsSync(cssDir)
+      ? readdirSync(cssDir, { recursive: true })
+          .filter((f) => String(f).endsWith(".css"))
+          .map((f) => readFileSync(join(cssDir, String(f)), "utf8"))
+          .join("\n")
+      : "";
+    if (!/letter-spacing:\s*\.2em|letter-spacing:\s*0\.2em/.test(css))
+      throw new Error("built CSS lacks component classes: @web4kit/react/tailwind.css not applied");
     const server = spawn("npx", ["next", "start", "--port", "3099"], {
       cwd: site,
       stdio: "ignore",

@@ -40,6 +40,37 @@ export interface PlannerConfig {
   cache?: PlanCache;
   /** Language of the decider input when no intent is given (situation labels are English). */
   inputLanguage?: string;
+  /** Called after every plan (cache hits included). Errors thrown here are ignored. */
+  onPlan?: (event: PlanEvent) => void;
+}
+
+export interface PlanEvent extends PlanResult {
+  situationHash: string;
+  engineId: string;
+}
+
+/**
+ * none: no profile given (engine answers gate as uncalibrated, i.e. rules decide);
+ * active: profile matches the manifests' decider version;
+ * stale: profile was measured against another decider surface and is ignored.
+ */
+export type CalibrationStatus =
+  | { status: "none" }
+  | { status: "active"; version: string }
+  | { status: "stale"; version: string; reason: string };
+
+export interface PlannerStats {
+  engineId: string;
+  calibration: CalibrationStatus;
+  since: string;
+  pages: number;
+  cacheHits: number;
+  deciderRequests: number;
+  inputTokens: number;
+  /** Estimated from the engine's declared price per million input tokens. */
+  costUsd: number;
+  planningMsTotal: number;
+  distinctSituations: number;
 }
 
 export interface PlanRequest {
@@ -56,7 +87,27 @@ export interface PlanResult {
 
 export interface Planner {
   readonly engineId: string;
+  readonly calibrationStatus: CalibrationStatus;
   plan(request: PlanRequest): Promise<PlanResult>;
+  /** Per-process counters since the planner was created. */
+  stats(): PlannerStats;
+}
+
+const MAX_TRACKED_SITUATIONS = 10_000;
+
+/** Match a profile against the manifests it is used with (design D6 of web4-v1-authoring). */
+export function checkCalibration(
+  manifests: ManifestSet,
+  profile: CalibrationProfile | undefined,
+): CalibrationStatus {
+  if (!profile) return { status: "none" };
+  if (profile.manifestVersion !== manifests.deciderVersion)
+    return {
+      status: "stale",
+      version: profile.version,
+      reason: `measured against ${profile.manifestVersion}, manifests are ${manifests.deciderVersion}`,
+    };
+  return { status: "active", version: profile.version };
 }
 
 const NO_CALIBRATION = "cal-none";
@@ -67,10 +118,53 @@ export function createPlanner(config: PlannerConfig): Planner {
   const engine = config.decider ?? rules;
   const isRules = engine.id === RULES_ENGINE_ID;
   const decider = isRules ? rules : withFallback(engine, rules);
-  const calibrationVersion = isRules ? "rules" : (config.calibration?.version ?? NO_CALIBRATION);
+  const calibrationStatus: CalibrationStatus = isRules
+    ? { status: "none" }
+    : checkCalibration(manifests, config.calibration);
+  // A stale profile would gate with thresholds measured on other questions: drop it.
+  const calibration = calibrationStatus.status === "active" ? config.calibration : undefined;
+  const calibrationVersion = isRules ? "rules" : (calibration?.version ?? NO_CALIBRATION);
+
+  const counters = {
+    since: new Date().toISOString(),
+    pages: 0,
+    cacheHits: 0,
+    deciderRequests: 0,
+    inputTokens: 0,
+    planningMsTotal: 0,
+    situations: new Set<string>(),
+  };
+  const costPerMTok = isRules ? 0 : (engine.capabilities.costPerMTok ?? 0);
+  const record = (result: PlanResult, situationHash: string) => {
+    counters.pages++;
+    if (result.cacheHit) counters.cacheHits++;
+    counters.deciderRequests += result.usage.requests;
+    counters.inputTokens += result.usage.inputTokens;
+    counters.planningMsTotal += result.planningMs;
+    if (counters.situations.size < MAX_TRACKED_SITUATIONS) counters.situations.add(situationHash);
+    try {
+      config.onPlan?.({ ...result, situationHash, engineId: engine.id });
+    } catch {
+      // Instrumentation must never break a page.
+    }
+    return result;
+  };
 
   return {
     engineId: engine.id,
+    calibrationStatus,
+    stats: () => ({
+      engineId: engine.id,
+      calibration: calibrationStatus,
+      since: counters.since,
+      pages: counters.pages,
+      cacheHits: counters.cacheHits,
+      deciderRequests: counters.deciderRequests,
+      inputTokens: counters.inputTokens,
+      costUsd: (counters.inputTokens / 1e6) * costPerMTok,
+      planningMsTotal: counters.planningMsTotal,
+      distinctSituations: counters.situations.size,
+    }),
     async plan(request) {
       const started = performance.now();
       const hash = situationHash(request.situation);
@@ -84,12 +178,15 @@ export function createPlanner(config: PlannerConfig): Planner {
       });
       const cached = config.cache?.get(key);
       if (cached) {
-        return {
-          plan: cached,
-          cacheHit: true,
-          planningMs: performance.now() - started,
-          usage: { requests: 0, inputTokens: 0 },
-        };
+        return record(
+          {
+            plan: cached,
+            cacheHit: true,
+            planningMs: performance.now() - started,
+            usage: { requests: 0, inputTokens: 0 },
+          },
+          hash,
+        );
       }
 
       const qp = buildQuestions(
@@ -105,7 +202,7 @@ export function createPlanner(config: PlannerConfig): Planner {
       const gate = createGate({
         isRules,
         engineId: engine.id,
-        calibration: config.calibration,
+        calibration,
         language,
         answers,
         ruleAnswers,
@@ -121,12 +218,15 @@ export function createPlanner(config: PlannerConfig): Planner {
         gate,
       });
       config.cache?.set(key, plan);
-      return {
-        plan,
-        cacheHit: false,
-        planningMs: performance.now() - started,
-        usage: { requests: answers.usage.requests, inputTokens: answers.usage.inputTokens },
-      };
+      return record(
+        {
+          plan,
+          cacheHit: false,
+          planningMs: performance.now() - started,
+          usage: { requests: answers.usage.requests, inputTokens: answers.usage.inputTokens },
+        },
+        hash,
+      );
     },
   };
 }
@@ -243,6 +343,24 @@ function assemble(ctx: {
       why.push({ ...g.why, answer: value });
       return value;
     };
+
+    if (source.mustExclude && matches(source.mustExclude, situation)) {
+      const conflict = source.mustInclude && matches(source.mustInclude, situation);
+      excluded.push({
+        sourceId: source.id,
+        why: [
+          {
+            question: "invariant.must-exclude",
+            answer: false,
+            decidedBy: "invariant",
+            note: `excluded when ${JSON.stringify(source.mustExclude)}${
+              conflict ? "; mustInclude also held, exclusion wins" : ""
+            }`,
+          },
+        ],
+      });
+      return; // No decider answer is read for an excluded source.
+    }
 
     const relevant = decide(
       KINDS.relevance,

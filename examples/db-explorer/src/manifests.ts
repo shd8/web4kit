@@ -1,4 +1,4 @@
-import { type DataSourceManifestInput, defineManifests } from "@web4kit/manifest";
+import { type DataSourceManifestInput, defineManifests, system } from "@web4kit/manifest";
 import { libraryManifests } from "@web4kit/react";
 import {
   BRIEFING,
@@ -12,7 +12,7 @@ import {
   WAREHOUSES,
 } from "./data";
 
-const f = (path: string) => ({ path, trust: "system" as const });
+const f = system;
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 const supplierBadge = (onTime: number) =>
   onTime >= 0.9 ? "On time" : onTime >= 0.8 ? "Watch" : "At risk";
@@ -98,7 +98,7 @@ export const sources: DataSourceManifestInput[] = [
     shape: "list",
     label: "Supplier reliability",
     tags: ["suppliers", "on-time", "reliability", "performance"],
-    what: "Each supplier's on-time rate this month with a status of on time, watch or at risk",
+    what: "Each supplier's on-time rate this month with a status of on time, watch or at risk; a core view for role analyst",
     not_for: "Individual shipments",
     freshness: "daily",
     access: "public",
@@ -322,7 +322,7 @@ export const sources: DataSourceManifestInput[] = [
     label: "Weekly briefing",
     tags: ["summary", "briefing", "news"],
     what: "A short written summary of the week's main story, written for executives",
-    not_for: "Ops managers and analysts, who need the detailed views instead",
+    audience: { role: ["executive"] },
     freshness: "weekly",
     access: "public",
     fields: { title: f("title"), body: f("body") },

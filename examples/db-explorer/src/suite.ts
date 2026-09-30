@@ -1,6 +1,15 @@
-import type { ExpectedAnswer, Fixture, Invariant, SituatedFixture } from "@web4kit/conformance";
+import {
+  type ExpectedAnswer,
+  type Fixture,
+  type Invariant,
+  invariant,
+  label,
+  type SituatedFixture,
+  situate,
+} from "@web4kit/conformance";
 import type { ContextEnvelope } from "@web4kit/context";
 import { intentOf, situationOf } from "./core";
+import { manifests } from "./manifests";
 
 const envelope = (role: string, device: "mobile" | "desktop" = "desktop"): ContextEnvelope => ({
   utm: {},
@@ -14,34 +23,22 @@ const envelope = (role: string, device: "mobile" | "desktop" = "desktop"): Conte
 
 const ROLE_INVARIANTS: Record<string, Invariant[]> = {
   "ops-manager": [
-    { type: "present", source: "late-shipments" },
-    { type: "hero", sources: ["kpis", "late-shipments"] },
-    { type: "absent", source: "briefing" },
+    invariant.present("late-shipments"),
+    invariant.hero("kpis", "late-shipments"),
+    invariant.absent("briefing"),
   ],
-  analyst: [
-    { type: "present", source: "on-time-trend" },
-    { type: "present", source: "supplier-status" },
-  ],
-  executive: [
-    { type: "hero", sources: ["briefing", "kpis"] },
-    { type: "absent", source: "inventory-risk" },
-  ],
+  analyst: [invariant.present("on-time-trend"), invariant.present("supplier-status")],
+  executive: [invariant.hero("briefing", "kpis"), invariant.absent("inventory-risk")],
 };
 
 const ROLE_LABELS: Record<string, ExpectedAnswer[]> = {
   "ops-manager": [
-    { kind: "A.relevance", source: "late-shipments", accept: [true] },
-    { kind: "A.relevance", source: "briefing", accept: [false] },
-    { kind: "A.relevance", source: "top-products", accept: [false] },
+    label.relevant("late-shipments"),
+    label.relevant("briefing", false),
+    label.relevant("top-products", false),
   ],
-  analyst: [
-    { kind: "A.relevance", source: "on-time-trend", accept: [true] },
-    { kind: "A.relevance", source: "supplier-status", accept: [true] },
-  ],
-  executive: [
-    { kind: "A.relevance", source: "briefing", accept: [true] },
-    { kind: "A.relevance", source: "kpis", accept: [true] },
-  ],
+  analyst: [label.relevant("on-time-trend"), label.relevant("supplier-status")],
+  executive: [label.relevant("briefing"), label.relevant("kpis")],
 };
 
 /** Typed questions with paraphrases and the sources a good analyst would (not) show. */
@@ -151,13 +148,13 @@ export function suiteFixtures(_limit?: number): SituatedFixture[] {
             intent: intentOf(text),
             invariants: [],
             expected: [
-              ...q.show.map((source) => ({ kind: "A.relevance", source, accept: [true] })),
-              ...q.hide.map((source) => ({ kind: "A.relevance", source, accept: [false] })),
+              ...q.show.map((source) => label.relevant(source)),
+              ...q.hide.map((source) => label.relevant(source, false)),
             ],
           });
         }
       }
     }
   }
-  return [...CORE_FIXTURES, ...fixtures].map((f) => ({ ...f, situation: situationOf(f.envelope) }));
+  return situate([...CORE_FIXTURES, ...fixtures], { situationOf, manifests });
 }

@@ -8,7 +8,12 @@ const fp = (m: [number, number], t: [number, number], d: [number, number]) => ({
   desktop: { colSpan: d[0], rowSpan: d[1] },
 });
 
-const statusTone = { open: "ok", "closing-soon": "warn", closed: "bad" } as const;
+const statusTone = {
+  open: "ok",
+  upcoming: "neutral",
+  "closing-soon": "warn",
+  closed: "bad",
+} as const;
 
 export const hoursCard = defineComponent({
   manifest: {

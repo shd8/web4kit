@@ -1,6 +1,16 @@
-import type { ExpectedAnswer, Fixture, Invariant, SituatedFixture } from "@web4kit/conformance";
-import { type ContextEnvelope, pointAtDistance, type Situation } from "@web4kit/context";
+import {
+  type Fixture,
+  grid,
+  invariant,
+  invariantsFrom,
+  label,
+  labelsFrom,
+  type SituatedFixture,
+  situate,
+} from "@web4kit/conformance";
+import { type ContextEnvelope, pointAtDistance } from "@web4kit/context";
 import { HOTEL } from "./hotel";
+import { manifests } from "./manifests";
 import { situationOf } from "./situation";
 
 // 2026-10-02 is a Friday; Porto is UTC+1 in October (WEST).
@@ -100,81 +110,74 @@ export const PERSONAS: Fixture[] = [
   },
 ];
 
-/** Page invariants that must hold in every situation. */
-export function universalInvariants(s: Situation): Invariant[] {
-  const out: Invariant[] = [];
-  if (s.stayPhase === "arriving-today") out.push({ type: "present", source: "arrival-guide" });
-  if (s.stayPhase === "in-house") out.push({ type: "absent", source: "rooms" });
-  if (s.stayPhase !== "in-house" || s.dayPart !== "morning")
-    out.push({ type: "absent", source: "breakfast" });
-  return out;
-}
+/**
+ * Page invariants that must hold in every situation. `mustInclude` / `mustExclude` in the
+ * manifests (check-in and arrival guide for arriving guests, no rooms once here) are added
+ * automatically by `situate`.
+ */
+export const universalInvariants = invariantsFrom((s) => [
+  s.stayPhase === "in-house" && invariant.absent("rooms"),
+  (s.stayPhase !== "in-house" || s.dayPart !== "morning") && invariant.absent("breakfast"),
+]);
 
 /** Clear-cut labels written from the situation, independently of the manifest heuristics. */
-export function labelsFor(s: Situation): ExpectedAnswer[] {
-  const L: ExpectedAnswer[] = [];
-  const add = (kind: string, source: string, accept: ExpectedAnswer["accept"]) =>
-    L.push({ kind, source, accept });
+export const labelsFor = labelsFrom((s) => {
   const staying = s.stayPhase === "in-house";
   const researching = s.stayPhase === "researching";
-  add("A.relevance", "rooms", [researching]);
-  add("A.relevance", "arrival-guide", [s.stayPhase === "arriving-today"]);
-  add("A.relevance", "today", [staying]);
-  if (staying && s.dayPart === "morning") add("A.relevance", "breakfast", [true]);
-  if (!staying) add("A.relevance", "breakfast", [false]);
-  if (researching && s.arrival === "evaluating") add("A.relevance", "reviews", [true]);
-  if (staying) add("A.relevance", "reviews", [false]);
-  if (researching) add("A.relevance", "hero-photos", [true]);
-  if (s.stayPhase === "arriving-today") add("B.component", "getting-here", ["directions-bar"]);
-  if (researching) add("B.component", "rooms", ["card-grid"]);
-  return L;
-}
+  return [
+    label.relevant("rooms", researching),
+    label.relevant("arrival-guide", s.stayPhase === "arriving-today"),
+    label.relevant("today", staying),
+    staying && s.dayPart === "morning" && label.relevant("breakfast"),
+    !staying && label.relevant("breakfast", false),
+    researching && s.arrival === "evaluating" && label.relevant("reviews"),
+    staying && label.relevant("reviews", false),
+    researching && label.relevant("hero-photos"),
+    s.stayPhase === "arriving-today" && label.component("getting-here", "directions-bar"),
+    researching && label.component("rooms", "card-grid"),
+  ];
+});
 
-const DATES = ["2026-10-02", "2026-10-03", "2026-10-04"];
+const onDay = (date: string) => (e: ContextEnvelope) => ({
+  ...e,
+  now: at(date, e.now.slice(11, 16)),
+});
+const atTime = (time: string) => (e: ContextEnvelope) => ({
+  ...e,
+  now: at(e.now.slice(0, 10), time),
+});
 const TIMES = ["07:30", "12:00", "16:30", "19:00", "22:30"];
-const STAYS: Array<Partial<ContextEnvelope>> = [
-  {},
-  booking("2026-10-06"),
-  booking("2026-10-02"),
-  booking("2026-10-01", 4),
-  booking("2026-09-27", 3),
-];
-const ARRIVALS: Array<Partial<ContextEnvelope>> = [
-  { src: "instagram" },
-  { referrer: "https://www.booking.com/hotel/pt/x.html" },
-  { referrer: "https://www.google.com/maps/place/x" },
-  {},
-];
 
-/** Personas plus a deterministic grid over stay phase, time, arrival and device. */
+/** Every stay phase x day x time x arrival x device, sampled to 100 fixtures. */
+export const GRID = grid({
+  base: envelope({ geo: pointAtDistance(HOTEL.location, 0.4), now: at("2026-10-02", "12:00") }),
+  axes: {
+    stay: {
+      none: { geo: pointAtDistance(HOTEL.location, 1200) },
+      upcoming: booking("2026-10-06"),
+      arriving: booking("2026-10-02"),
+      staying: booking("2026-10-01", 4),
+      left: booking("2026-09-27", 3),
+    },
+    day: { fri: onDay("2026-10-02"), sat: onDay("2026-10-03"), sun: onDay("2026-10-04") },
+    utc: Object.fromEntries(TIMES.map((t) => [t, atTime(t)])),
+    arrival: {
+      instagram: { src: "instagram" },
+      booking: { referrer: "https://www.booking.com/hotel/pt/x.html" },
+      maps: { referrer: "https://www.google.com/maps/place/x" },
+      direct: {},
+    },
+    device: { mobile: { device: "mobile" }, desktop: { device: "desktop" } },
+  },
+  limit: 100,
+});
+
+/** Personas plus the grid, situated: situations, invariants and labels attached. */
 export function suiteFixtures(): SituatedFixture[] {
-  const grid: Fixture[] = [];
-  for (const [si, stay] of STAYS.entries()) {
-    for (const [di, date] of DATES.entries()) {
-      for (const [ti, time] of TIMES.entries()) {
-        const arrival = ARRIVALS[(si + di + ti) % ARRIVALS.length]!;
-        const device = (si + ti) % 2 ? "desktop" : "mobile";
-        grid.push({
-          name: `stay=${si},date=${date},utc=${time},arr=${(si + di + ti) % ARRIVALS.length},${device}`,
-          envelope: envelope({
-            ...stay,
-            ...arrival,
-            device,
-            geo: pointAtDistance(HOTEL.location, si === 0 ? 1200 : 0.4),
-            now: at(date, time),
-          }),
-          invariants: [],
-        });
-      }
-    }
-  }
-  return [...PERSONAS, ...grid].map((f) => {
-    const situation = situationOf(f.envelope);
-    return {
-      ...f,
-      situation,
-      invariants: [...f.invariants, ...universalInvariants(situation)],
-      expected: [...(f.expected ?? []), ...labelsFor(situation)],
-    };
+  return situate([...PERSONAS, ...GRID], {
+    situationOf,
+    manifests,
+    invariants: universalInvariants,
+    labels: labelsFor,
   });
 }

@@ -25,6 +25,7 @@
   },
   "files": [
     "index.mjs",
+    "lib.mjs",
     "template",
     "README.md",
     "LICENSE"
@@ -37,7 +38,7 @@
   },
   "scripts": {
     "build": "node scripts/copy-template.mjs",
-    "typecheck": "node --check index.mjs",
+    "typecheck": "node --check index.mjs && node --check lib.mjs",
     "test": "node scripts/test.mjs",
     "prepack": "node scripts/copy-template.mjs"
   }

@@ -1,12 +1,12 @@
 {
-  "name": "web4kit-next-starter",
+  "name": "web4kit-welcome-starter",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --port 3010",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start --port 3010",
+    "start": "next start",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run --passWithNoTests",
     "calibrate": "tsx scripts/calibrate.ts"

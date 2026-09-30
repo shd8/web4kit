@@ -17,3 +17,5 @@ v1 authoring API, from the frictions found building the hotel starter:
 - `FetchContext.situation`, the `upcoming` schedule status, and `@web4kit/react/tailwind.css`.
 - Conformance builders: `label`, `invariant`, `labelsFrom`, `invariantsFrom`, `grid`, `situate`, `manifestInvariants`.
 - New `@web4kit/next` adapter: `createSite`, `site.page()`, `site.handle()`, `PreviewBar`.
+- `create-web4kit`: a new default `welcome` template (the hotel is `--template hotel`); run from a web4 checkout, it bundles the local packages so it works before publishing.
+- Renderer: the last block of a row widens to fill it, so rows no longer end with a gap.

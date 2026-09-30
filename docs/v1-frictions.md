@@ -1,6 +1,6 @@
 # API frictions found building the Casa Ribeira starter
 
-The hotel starter (`templates/next-starter`) was built only against the public `@web4kit/*` API. Everything below was actually hit while building it.
+The hotel starter (`templates/hotel`) was built only against the public `@web4kit/*` API. Everything below was actually hit while building it.
 
 **Status: all 12 resolved in v1** (OpenSpec change `web4-v1-authoring`). Each item ends with what shipped.
 

@@ -4,7 +4,6 @@
 import { execSync, spawn } from "node:child_process";
 import {
   cpSync,
-  existsSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
@@ -76,59 +75,84 @@ try {
   run("node site.ts", app);
   console.log("\n✓ library smoke passed: packed packages install, type-check (TS 5.9) and run");
 
-  // Starter: scaffold from the packed create-web4kit, install the tarballs, build and serve.
+  // Starters: scaffold each template from the packed create-web4kit, install the tarballs,
+  // build and serve in production mode.
   if (!process.argv.includes("--no-starter")) {
     const tool = join(work, "tool");
     mkdirSync(tool);
     run(`tar -xzf ${scaffolder.replace("file:", "")} -C ${tool}`, work);
-    const site = join(work, "site");
-    run(`node ${join(tool, "package/index.mjs")} ${site}`, work);
-    const sitePkgPath = join(site, "package.json");
-    const sitePkg = JSON.parse(readFileSync(sitePkgPath, "utf8"));
-    sitePkg.overrides = tarballs;
-    for (const field of ["dependencies", "devDependencies"]) {
-      for (const name of Object.keys(sitePkg[field] ?? {}))
-        if (tarballs[name]) sitePkg[field][name] = tarballs[name];
-    }
-    writeFileSync(sitePkgPath, JSON.stringify(sitePkg, null, 2));
-    run("npm install --no-audit --no-fund --loglevel=error", site);
-    run("npx tsc --noEmit -p tsconfig.json", site);
-    run("npx vitest run", site);
-    run("npx next build", site);
-    // tailwind.css must let the app's Tailwind build see the component library's classes.
-    const cssDir = join(site, ".next/static");
-    const css = existsSync(cssDir)
-      ? readdirSync(cssDir, { recursive: true })
-          .filter((f) => String(f).endsWith(".css"))
-          .map((f) => readFileSync(join(cssDir, String(f)), "utf8"))
-          .join("\n")
-      : "";
-    if (!/letter-spacing:\s*\.2em|letter-spacing:\s*0\.2em/.test(css))
-      throw new Error("built CSS lacks component classes: @web4kit/react/tailwind.css not applied");
-    const server = spawn("npx", ["next", "start", "--port", "3099"], {
-      cwd: site,
-      stdio: "ignore",
-      env: { ...process.env, JEV_API_KEY: "" },
-    });
-    try {
-      let html = "";
-      for (let i = 0; i < 60 && !html; i++) {
-        await new Promise((r) => setTimeout(r, 1000));
-        html = await fetch("http://localhost:3099/?src=instagram&as=arriving-today").then(
-          (r) => (r.ok ? r.text() : ""),
-          () => "",
-        );
+    const STARTERS = [
+      // Production must ignore ?as= previews: the real request (?src=instagram) is planned.
+      {
+        template: "welcome",
+        query: "?src=instagram&as=night-owl",
+        want: ["welcome", "get-started", "from-social"],
+        never: ["late-night"],
+      },
+      {
+        template: "hotel",
+        query: "?src=instagram&as=arriving-today",
+        want: ["hero-photos", "rooms"],
+        never: ["arrival-guide"],
+      },
+    ];
+    for (const [i, starter] of STARTERS.entries()) {
+      const site = join(work, `site-${starter.template}`);
+      const flags = starter.template === "welcome" ? "" : ` --template ${starter.template}`;
+      run(`node ${join(tool, "package/index.mjs")} ${site}${flags}`, work);
+      const sitePkgPath = join(site, "package.json");
+      const sitePkg = JSON.parse(readFileSync(sitePkgPath, "utf8"));
+      sitePkg.overrides = tarballs;
+      for (const field of ["dependencies", "devDependencies"]) {
+        for (const name of Object.keys(sitePkg[field] ?? {}))
+          if (tarballs[name]) sitePkg[field][name] = tarballs[name];
       }
-      const blocks = [...html.matchAll(/data-w4-block="([a-z-]+)"/g)].map((m) => m[1]);
-      if (!blocks.includes("hero-photos") || !blocks.includes("rooms"))
-        throw new Error(`starter page missing blocks: ${blocks.join(", ")}`);
-      if (blocks.includes("arrival-guide"))
-        throw new Error("production must ignore ?as= persona previews");
-      if (html.includes("Preview as"))
-        throw new Error("production must not render the dev persona bar");
-      console.log(`\n✓ starter smoke passed: scaffolded, built and served (${blocks.join(", ")})`);
-    } finally {
-      server.kill();
+      writeFileSync(sitePkgPath, JSON.stringify(sitePkg, null, 2));
+      run("npm install --no-audit --no-fund --loglevel=error", site);
+      run("npx tsc --noEmit -p tsconfig.json", site);
+      run("npx vitest run", site);
+      run("npx next build", site);
+      // tailwind.css must let the app's Tailwind build see the component library's classes.
+      const cssDir = join(site, ".next/static");
+      const css = readdirSync(cssDir, { recursive: true })
+        .filter((f) => String(f).endsWith(".css"))
+        .map((f) => readFileSync(join(cssDir, String(f)), "utf8"))
+        .join("\n");
+      if (!/letter-spacing:\s*\.16em|letter-spacing:\s*0\.16em/.test(css))
+        throw new Error(
+          "built CSS lacks component classes: @web4kit/react/tailwind.css not applied",
+        );
+      const port = 3099 - i;
+      const server = spawn("npx", ["next", "start", "--port", String(port)], {
+        cwd: site,
+        stdio: "ignore",
+        env: { ...process.env, JEV_API_KEY: "" },
+      });
+      try {
+        let html = "";
+        for (let t = 0; t < 60 && !html; t++) {
+          await new Promise((r) => setTimeout(r, 1000));
+          html = await fetch(`http://localhost:${port}/${starter.query}`).then(
+            (r) => (r.ok ? r.text() : ""),
+            () => "",
+          );
+        }
+        const blocks = [...html.matchAll(/data-w4-block="([a-z-]+)"/g)].map((m) => m[1]);
+        const missing = starter.want.filter((b) => !blocks.includes(b));
+        if (missing.length)
+          throw new Error(
+            `${starter.template} page missing blocks ${missing}: ${blocks.join(", ")}`,
+          );
+        if (starter.never.some((b) => blocks.includes(b)))
+          throw new Error(`${starter.template}: production must ignore ?as= persona previews`);
+        if (html.includes("Preview as"))
+          throw new Error(`${starter.template}: production must not render the dev persona bar`);
+        console.log(
+          `\n✓ ${starter.template} starter smoke passed: scaffolded, built and served (${blocks.join(", ")})`,
+        );
+      } finally {
+        server.kill();
+      }
     }
   }
 } finally {

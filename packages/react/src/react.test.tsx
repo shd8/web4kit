@@ -356,3 +356,14 @@ describe("v1: upcoming schedule status and situation-aware fetch (task 4.1)", ()
     expect(data["check-in"]).toEqual({ status: "ok", data: { t: "Check-out until 11:00" } });
   });
 });
+
+describe("row filling", () => {
+  it("widens the last block of each row to the full width", async () => {
+    const { fillRows } = await import("./render");
+    expect(fillRows([4])).toEqual([12]);
+    expect(fillRows([6, 6])).toEqual([6, 6]);
+    expect(fillRows([8, 6, 6])).toEqual([12, 6, 6]);
+    expect(fillRows([4, 4, 8])).toEqual([4, 8, 12]);
+    expect(fillRows([])).toEqual([]);
+  });
+});

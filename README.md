@@ -53,18 +53,28 @@ renderer ────────── data fetched fresh at render time, fail-
 ```
 
 - **The decider decides meaning; code decides mechanics.**
-- **Manifests replace pages.** You describe data sources (shape, owner-written `what`/`not_for`, trust per field, defaults, heuristics) and components (accepted shapes, affordances, footprints). The manifests *are* the prompt.
+- **Manifests replace pages.** You describe data sources (shape, owner-written `what`, `audience`, business rules, trust per field, defaults, heuristics) and components (accepted shapes, affordances, footprints). The manifests *are* the prompt.
 - **Engines are interchangeable** behind the `Decider` interface: hosted Jev, Laya (through Ollaya or in-process ONNX), a deterministic rules engine, or a cascade (a cheap engine first, escalating to Jev on low confidence).
 - **The conformance suite** plans hundreds of persona fixtures per engine. It measures accuracy *and confidence on failures*, then writes the calibration profiles the planner uses. An engine that is confidently wrong is marked uncalibrated and falls back to rules instead of failing silently.
 
 ## Start a site
 
 ```bash
-npm create web4kit@latest my-site   # once published; in this repo: templates/next-starter
+npm create web4kit@latest my-site    # once published
 cd my-site && npm install && npm run dev
 ```
 
-The starter is **Casa Ribeira**, a boutique hotel in Porto. It's a production-mode Next.js app with five personas (dreaming, comparing, arriving today, staying in the morning, staying on a rainy evening), calibrated manifests, a conformance suite and a `/stats` page. Calibrated on Jev: 100% invariants, 99.8% relevance accuracy, $0.00032 per uncached page. See [`templates/next-starter`](templates/next-starter).
+Until the packages are on npm, run the scaffolder from this checkout. It works from any folder and bundles the local packages into `my-site/.web4kit`:
+
+```bash
+node /path/to/web4/packages/create-web4kit/index.mjs my-site
+cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm works too)
+```
+
+| Template | |
+|---|---|
+| `welcome` (default) | A welcome page planned by web4 itself: get-started steps, the situation it was planned from, notes that only some visitors see. Three personas, calibrated on Jev (100% invariants and relevance, $0.00017 per uncached page). See [`templates/welcome`](templates/welcome). |
+| `hotel` (`--template hotel`) | **Casa Ribeira**, a boutique hotel in Porto: five personas (dreaming, comparing, arriving today, staying in the morning, staying on a rainy evening), business rules, a conformance suite and a `/stats` page. Calibrated on Jev: 100% invariants, 100% relevance, $0.00034 per uncached page. See [`templates/hotel`](templates/hotel). |
 
 ## Use the packages
 
@@ -136,7 +146,7 @@ packages/
   solver        Deterministic layout solver
   react         Renderer and the curated component library (Tailwind v4, container queries)
   conformance   Fixtures, invariants, runner, calibration, reports
-templates/      next-starter: Casa Ribeira, the create-web4kit template
+templates/      welcome (default) and hotel (Casa Ribeira): the create-web4kit templates
 apps/lab        Next.js lab: context panel, personas, engine switcher, Why panel
 examples/       restaurant (Casa Lumbre) and db-explorer (Meridian Supply)
 schemas/        Language-neutral JSON Schemas: the canonical contracts

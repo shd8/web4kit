@@ -28,10 +28,10 @@ In production (`npm run build && npm start`) only real request signals are used:
 web4/
   hotel.ts       hotel facts, demo bookings, a deterministic demo forecast
   situation.ts   situation rules: stayPhase, dayPart, weather, visitor (all maths here)
-  manifests.ts   the ten data sources: what / not_for wording, trust, defaults, heuristics
+  manifests.ts   the ten data sources: what, audience, business rules, trust, heuristics
   data.ts        content (rooms, breakfast, events, reviews)
-  fixtures.ts    personas, page invariants and hand-written labels
-  server.ts      planner (Jev or rules), calibration loading, plan cache, stats
+  fixtures.ts    personas, a fixture grid, page invariants and labels
+  site.ts        createSite: Jev or rules, calibration, personas, booking enrichment
 app/
   page.tsx       the site: PlanView inside your own header and footer
   stats/         planner stats
@@ -42,15 +42,15 @@ scripts/
 ## Make it yours
 
 1. **Change the content** in `web4/data.ts` and `web4/hotel.ts`.
-2. **Edit the manifests.** Write `what` / `not_for` in terms of your situation labels (for example "Guests whose stayPhase is not in-house"). System One models read literally.
+2. **Edit the manifests.** Say who each source is for with `audience: { stayPhase: ["researching"] }`, and put hard business rules in `mustInclude` / `mustExclude`. System One models read literally.
 3. **Keep the rules engine good:** `npm test` checks that every invariant holds with rules alone, because rules are the fallback.
-4. **Recalibrate** after changing manifests: `npm run calibrate`. That's about $0.05 of Jev. A profile only applies to the manifest version it was measured on; until you recalibrate, Jev's answers fall back to rules.
+4. **Recalibrate** after changing what the model sees (`what`, `not_for`, `audience`, tags): `npm run calibrate`, about $0.05 of Jev. Headings, heuristics and defaults can change freely. Until you recalibrate, Jev's answers fall back to rules, and `/stats` says the profile is stale.
 
-Measured on this starter (Jev 1.13, 80 fixtures, 3 repeats): **100% invariants, 99.8% relevance accuracy, ~7.7k input tokens and $0.00032 per uncached page**. A page served from the plan cache costs nothing.
+Measured on this starter (Jev 1.13, 105 fixtures, 3 repeats): **100% invariants, 100% relevance accuracy, ~8k input tokens and $0.00034 per uncached page**. A page served from the plan cache costs nothing.
 
 ## Styles
 
-The page uses the `azulejo` theme (`data-w4-theme="azulejo"` in `app/layout.tsx`) and Tailwind v4 with `@web4kit/react/tokens.css`. The other themes are `lumbre` and `ops`. For apps without Tailwind, import `@web4kit/react/styles.css` instead.
+The page uses the `azulejo` theme (`data-w4-theme="azulejo"` in `app/layout.tsx`) and Tailwind v4 with `@web4kit/react/tailwind.css`. The other themes are `lumbre` and `ops`. For apps without Tailwind, import `@web4kit/react/styles.css` instead.
 
 ## License
 

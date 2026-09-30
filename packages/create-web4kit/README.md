@@ -7,6 +7,15 @@ npm create web4kit@latest my-site
 cd my-site && npm install && npm run dev
 ```
 
-The starter is **Casa Ribeira**, a boutique hotel in Porto with five personas, calibrated manifests, a conformance suite and a `/stats` page. See its README for how to make it yours.
+| Template | What you get |
+|---|---|
+| `welcome` (default) | A welcome page, planned by web4 itself: get-started steps, the situation it was planned from, notes that appear only for some visitors. Three personas, calibrated. |
+| `hotel` | Casa Ribeira, a complete boutique-hotel site in Porto: five personas, ten sources, business rules, a conformance suite. |
+
+```bash
+npm create web4kit@latest my-hotel -- --template hotel
+```
+
+Run from a web4 checkout (`node <web4>/packages/create-web4kit/index.mjs my-site`), the scaffolder bundles the local `@web4kit/*` packages as tarballs in `my-site/.web4kit`, so it works before anything is published. Pass `--registry` to use the published packages instead.
 
 MIT

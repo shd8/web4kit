@@ -1,53 +1,126 @@
 #!/usr/bin/env node
-// create-web4kit: scaffold a web4 site from the Casa Ribeira starter.
-import { cpSync, existsSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { basename, relative, resolve } from "node:path";
+// create-web4kit: scaffold a web4 site (Next.js) planned per visitor by System One models.
+import { execFileSync } from "node:child_process";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  writeFileSync,
+} from "node:fs";
+import { basename, dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { copyTemplate, DEFAULT_TEMPLATE, TEMPLATES } from "./lib.mjs";
 
-const self = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
+const here = dirname(fileURLToPath(import.meta.url));
+const self = JSON.parse(readFileSync(join(here, "package.json"), "utf8"));
 const args = process.argv.slice(2);
+const flag = (name) => {
+  const i = args.indexOf(name);
+  return i === -1 ? undefined : (args[i + 1] ?? "");
+};
+
 if (args.includes("--help") || args.includes("-h")) {
-  console.log(
-    "Usage: npm create web4kit@latest [directory]\n\nScaffolds a web4 site (Next.js) planned per visitor by System One models.",
-  );
+  console.log(`Usage: npm create web4kit@latest [directory] [--template ${TEMPLATES.join("|")}]
+
+Scaffolds a web4 site (Next.js) whose pages are planned per visitor by System One models.
+
+  --template <name>  ${TEMPLATES.map((t) => (t === DEFAULT_TEMPLATE ? `${t} (default)` : t)).join(", ")}
+  --registry         use published @web4kit packages even when run from a web4 checkout`);
   process.exit(0);
 }
 
-const target = resolve(args.find((a) => !a.startsWith("-")) ?? "my-web4-site");
+const templateName = flag("--template") ?? DEFAULT_TEMPLATE;
+if (!TEMPLATES.includes(templateName)) {
+  console.error(`✖ unknown template "${templateName}" (choose ${TEMPLATES.join(", ")})`);
+  process.exit(1);
+}
+const valued = new Set(["--template"]);
+const positional = args.filter((a, i) => !a.startsWith("-") && !valued.has(args[i - 1] ?? ""));
+const target = resolve(positional[0] ?? "my-web4-site");
 if (existsSync(target) && readdirSync(target).length > 0) {
   console.error(`✖ ${target} is not empty`);
   process.exit(1);
 }
 
-const template = new URL("./template", import.meta.url).pathname;
+// Run from a web4 checkout (packages not on npm yet): bundle the local packages as tarballs.
+const repo = resolve(here, "../..");
+const local = !args.includes("--registry") && existsSync(join(repo, "packages/ir/package.json"));
+const template = local
+  ? join(repo, "templates", templateName)
+  : join(here, "template", templateName);
 if (!existsSync(template)) {
-  console.error("✖ template missing: run `pnpm build` in packages/create-web4kit first");
+  console.error(`✖ template missing: run \`pnpm build\` in packages/create-web4kit first`);
   process.exit(1);
 }
-cpSync(template, target, { recursive: true });
-if (existsSync(resolve(target, "_gitignore")))
-  renameSync(resolve(target, "_gitignore"), resolve(target, ".gitignore"));
 
-// Point workspace dependencies at the published @web4kit version this scaffolder belongs to.
-const pkgPath = resolve(target, "package.json");
+console.log(`Creating a web4 site (${templateName}) in ${target}`);
+copyTemplate(template, target, cpSync);
+if (existsSync(join(target, "_gitignore")))
+  renameSync(join(target, "_gitignore"), join(target, ".gitignore"));
+
+const pkgPath = join(target, "package.json");
 const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-pkg.name = basename(target)
-  .toLowerCase()
-  .replace(/[^a-z0-9-]+/g, "-");
+pkg.name =
+  basename(target)
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "my-web4-site";
+
+let versions = (_name) => `^${self.version}`;
+if (local) versions = packLocal(repo, target, pkg);
 for (const field of ["dependencies", "devDependencies"]) {
   for (const [name, range] of Object.entries(pkg[field] ?? {})) {
-    if (String(range).startsWith("workspace:")) pkg[field][name] = `^${self.version}`;
+    if (String(range).startsWith("workspace:")) pkg[field][name] = versions(name);
   }
 }
 writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
+const agent = process.env.npm_config_user_agent ?? "";
+const pm = agent.startsWith("pnpm") ? "pnpm" : agent.startsWith("yarn") ? "yarn" : "npm";
+const run = pm === "npm" ? "npm run" : pm;
+const port = templateName === "hotel" ? 3010 : 3000;
 const rel = relative(process.cwd(), target) || ".";
 console.log(`
-✔ Created a web4 site in ${rel}
+✔ Created ${rel}${local ? " (with the local @web4kit packages from your web4 checkout)" : ""}
 
   cd ${rel}
-  npm install
-  cp .env.example .env     # optional: JEV_API_KEY to plan with Jev
-  npm run dev              # http://localhost:3010
+  ${pm} install
+  ${run} dev          # http://localhost:${port}
 
-Preview personas with /?as=arriving-today, see /stats, and read README.md to make it yours.
+Optional: cp .env.example .env and add JEV_API_KEY to plan with TypeSafe Jev
+(without it, the offline rules engine plans every page).
 `);
+
+/**
+ * Pack every @web4kit library into <target>/.web4kit and point the app at the tarballs,
+ * including transitive @web4kit dependencies (overrides), so install works without npm.
+ */
+function packLocal(repo, target, pkg) {
+  const out = join(target, ".web4kit");
+  mkdirSync(out, { recursive: true });
+  const names = {};
+  const libs = readdirSync(join(repo, "packages")).filter((d) => {
+    const file = join(repo, "packages", d, "package.json");
+    if (!existsSync(file)) return false;
+    const p = JSON.parse(readFileSync(file, "utf8"));
+    return p.name.startsWith("@web4kit/") && p.name !== "@web4kit/decider-laya";
+  });
+  for (const dir of libs) {
+    process.stdout.write(`  packing ${dir}…\n`);
+    const before = new Set(readdirSync(out));
+    execFileSync("pnpm", ["pack", "--pack-destination", out], {
+      cwd: join(repo, "packages", dir),
+      stdio: "ignore",
+    });
+    const tgz = readdirSync(out).find((f) => !before.has(f));
+    const name = JSON.parse(readFileSync(join(repo, "packages", dir, "package.json"), "utf8")).name;
+    names[name] = `file:./.web4kit/${tgz}`;
+  }
+  pkg.overrides = { ...pkg.overrides, ...names };
+  pkg.pnpm = { ...pkg.pnpm, overrides: { ...pkg.pnpm?.overrides, ...names } };
+  pkg.resolutions = { ...pkg.resolutions, ...names };
+  return (name) => names[name] ?? `^${self.version}`;
+}

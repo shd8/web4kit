@@ -7,6 +7,7 @@ const config: NextConfig = {
     "@web4kit/decider",
     "@web4kit/ir",
     "@web4kit/manifest",
+    "@web4kit/next",
     "@web4kit/planner",
     "@web4kit/react",
     "@web4kit/solver",

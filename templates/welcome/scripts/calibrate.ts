@@ -1,7 +1,8 @@
 /**
  * Measure the configured engine on this site's fixtures and write its calibration profile.
- *   pnpm calibrate            (needs JEV_API_KEY; ~$0.05 of Jev usage)
- * Re-run whenever you change manifests: profiles are tied to the manifest version.
+ *   pnpm calibrate            (needs JEV_API_KEY; under $0.01 of Jev usage)
+ * Re-run after changing what the model sees (what, not_for, audience, tags). Headings,
+ * heuristics and defaults can change freely: the profile stays valid.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -9,8 +10,8 @@ import { renderReport, runEngine } from "@web4kit/conformance";
 import { createJevDecider, jevConfigFromEnv } from "@web4kit/decider";
 import { loadDotEnv } from "@web4kit/decider/node";
 import { createManifestRuleDecider } from "@web4kit/planner";
-import { suiteFixtures } from "../web4/fixtures";
-import { manifests } from "../web4/manifests";
+import { suiteFixtures } from "../web4/personas";
+import { manifests } from "../web4/sources";
 
 loadDotEnv(resolve(import.meta.dirname, "../.env"));
 const fixtures = suiteFixtures();

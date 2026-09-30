@@ -1,18 +1,18 @@
 import "server-only";
 import { resolve } from "node:path";
-import { createJevDecider, jevConfigFromEnv } from "@web4kit/decider";
 import { loadDotEnv } from "@web4kit/decider/node";
 import { createSite } from "@web4kit/next";
 import { loadCalibration } from "@web4kit/planner/node";
+import { engineFromEnv } from "./engine";
 import { PERSONAS } from "./personas";
 import { RULES } from "./situation";
 import { manifests } from "./sources";
 
 loadDotEnv(resolve(process.cwd(), ".env"));
 
-// With JEV_API_KEY, pages are planned by TypeSafe Jev; without it, by the offline rules engine.
-const jev = jevConfigFromEnv();
-const decider = jev ? createJevDecider(jev) : undefined;
+// Jev with a JEV_API_KEY, the offline rules engine without one; W4_ENGINE=laya for free local
+// planning with Laya (see web4/engine.ts).
+const decider = await engineFromEnv();
 const calibration = decider
   ? loadCalibration(resolve(process.cwd(), "calibration"), decider.id)
   : undefined;

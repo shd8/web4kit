@@ -28,6 +28,7 @@ try {
       noBuildOutput:
         !existsSync(join(target, ".next")) && !existsSync(join(target, "node_modules")),
       calibration: existsSync(join(target, "calibration/jev-1.13.0.json")),
+      noLayaByDefault: !pkg.optionalDependencies?.["@web4kit/decider-laya"],
       tailwindIntegration: readFileSync(join(target, "app/globals.css"), "utf8").includes(
         "@web4kit/react/tailwind.css",
       ),
@@ -38,6 +39,16 @@ try {
       console.error(`✖ create-web4kit ${template}:`, failed.map(([k]) => k).join(", "));
     } else console.log(`✓ create-web4kit ${template}: ${Object.keys(checks).length} checks passed`);
   }
+  // --laya keeps the optional in-process Laya engine, pinned like the other packages.
+  const withLaya = join(dir, "with-laya");
+  execFileSync("node", [join(here, "index.mjs"), withLaya, "--laya", "--registry"], {
+    stdio: "ignore",
+  });
+  const layaPkg = JSON.parse(readFileSync(join(withLaya, "package.json"), "utf8"));
+  if (layaPkg.optionalDependencies?.["@web4kit/decider-laya"] !== `^${version}`) {
+    failures++;
+    console.error("✖ create-web4kit --laya: @web4kit/decider-laya missing");
+  } else console.log("✓ create-web4kit --laya: includes @web4kit/decider-laya");
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

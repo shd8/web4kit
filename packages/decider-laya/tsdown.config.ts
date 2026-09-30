@@ -5,6 +5,6 @@ export default defineConfig({
   format: "esm",
   dts: true,
   clean: true,
-  platform: "node",
+  platform: "neutral",
   unbundle: false,
 });

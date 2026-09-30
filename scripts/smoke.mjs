@@ -44,6 +44,29 @@ try {
       `file:${join(packDir, f)}`,
     ]),
   );
+  // Every file a packed package.json points at (main, types, exports, bin) must be in the tarball.
+  for (const [name, spec] of Object.entries(tarballs)) {
+    const file = spec.replace("file:", "");
+    const listing = new Set(
+      execSync(`tar -tzf ${file}`, { encoding: "utf8" })
+        .split("\n")
+        .map((l) => l.replace(/^package\//, "")),
+    );
+    const manifest = JSON.parse(
+      execSync(`tar -xzOf ${file} package/package.json`, { encoding: "utf8" }),
+    );
+    const targets = [];
+    const collect = (v) =>
+      typeof v === "string"
+        ? targets.push(v)
+        : v && typeof v === "object" && Object.values(v).forEach(collect);
+    collect([manifest.main, manifest.types, manifest.exports, manifest.bin]);
+    const missing = targets
+      .map((t) => t.replace(/^\.\//, ""))
+      .filter((t) => t !== "package.json" && !listing.has(t));
+    if (missing.length) throw new Error(`${name}: tarball lacks ${missing.join(", ")}`);
+  }
+  console.log("✓ every packed entry point exists in its tarball");
   const scaffolder = tarballs["@web4kit/create-web4kit"];
   delete tarballs["@web4kit/create-web4kit"];
   // decider-laya pulls onnxruntime and next needs a Next app: both are packed, not installed here.

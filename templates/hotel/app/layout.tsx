@@ -17,9 +17,18 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  // Browser extensions (dark mode, grammar checkers, password managers) edit <html> and <body>
+  // before React loads; suppressHydrationWarning ignores only those two elements' attributes.
   return (
-    <html lang="en" data-w4-theme="azulejo" className={`${display.variable} ${sans.variable}`}>
-      <body data-w4-theme="azulejo">{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-w4-theme="azulejo"
+      className={`${display.variable} ${sans.variable}`}
+    >
+      <body data-w4-theme="azulejo" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

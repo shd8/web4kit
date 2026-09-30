@@ -28,6 +28,7 @@ if (args.includes("--help") || args.includes("-h")) {
 Scaffolds a web4 site (Next.js) whose pages are planned per visitor by System One models.
 
   --template <name>  ${TEMPLATES.map((t) => (t === DEFAULT_TEMPLATE ? `${t} (default)` : t)).join(", ")}
+  --laya             include in-process Laya (W4_ENGINE=laya: free, offline planning; ~300 MB)
   --registry         use published @web4kit packages even when run from a web4 checkout`);
   process.exit(0);
 }
@@ -69,12 +70,21 @@ pkg.name =
     .replace(/[^a-z0-9-]+/g, "-")
     .replace(/^-+|-+$/g, "") || "my-web4-site";
 
+// Laya (ONNX Runtime) is heavy: keep it only when asked for.
+if (!args.includes("--laya")) {
+  delete pkg.optionalDependencies?.["@web4kit/decider-laya"];
+  if (pkg.optionalDependencies && Object.keys(pkg.optionalDependencies).length === 0)
+    delete pkg.optionalDependencies;
+}
 let versions = (_name) => `^${self.version}`;
 if (local) versions = packLocal(repo, target, pkg);
 for (const field of ["dependencies", "devDependencies"]) {
   for (const [name, range] of Object.entries(pkg[field] ?? {})) {
     if (String(range).startsWith("workspace:")) pkg[field][name] = versions(name);
   }
+}
+for (const [name, range] of Object.entries(pkg.optionalDependencies ?? {})) {
+  if (String(range).startsWith("workspace:")) pkg.optionalDependencies[name] = versions(name);
 }
 writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
@@ -91,8 +101,12 @@ console.log(`
   ${pm} install
   ${run} dev          # http://localhost:${port}
 
-Optional: cp .env.example .env and add JEV_API_KEY to plan with TypeSafe Jev
-(without it, the offline rules engine plans every page).
+Engines: the offline rules engine plans every page until you choose one in .env
+(cp .env.example .env): JEV_API_KEY for TypeSafe Jev${
+  args.includes("--laya")
+    ? ", or W4_ENGINE=laya for free in-process Laya"
+    : ", or re-create with --laya for free in-process Laya"
+}.
 `);
 
 /**
@@ -107,7 +121,7 @@ function packLocal(repo, target, pkg) {
     const file = join(repo, "packages", d, "package.json");
     if (!existsSync(file)) return false;
     const p = JSON.parse(readFileSync(file, "utf8"));
-    return p.name.startsWith("@web4kit/") && p.name !== "@web4kit/decider-laya";
+    return p.name.startsWith("@web4kit/");
   });
   for (const dir of libs) {
     process.stdout.write(`  packing ${dir}…\n`);

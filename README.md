@@ -71,6 +71,8 @@ node /path/to/web4/packages/create-web4kit/index.mjs my-site
 cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm and yarn work too)
 ```
 
+Pages are planned by the offline rules engine until you pick an engine in `.env`: `JEV_API_KEY` for TypeSafe Jev, or `W4_ENGINE=laya` for the open Laya model in-process (free and offline; scaffold with `--laya`).
+
 | Template | |
 |---|---|
 | `welcome` (default) | A welcome page planned by web4 itself: get-started steps, the situation it was planned from, notes that only some visitors see. Three personas, calibrated on Jev (100% invariants and relevance, $0.00017 per uncached page). See [`templates/welcome`](templates/welcome). |

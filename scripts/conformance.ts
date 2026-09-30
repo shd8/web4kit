@@ -3,6 +3,7 @@
  *
  *   pnpm conformance                              # rules only (offline, CI)
  *   pnpm conformance --engines rules,jev          # + hosted Jev (JEV_API_KEY)
+ *   pnpm conformance --engines rules,laya         # + in-process Laya (free, offline; for testing)
  *   pnpm conformance --engines rules,jev,local    # + local System One endpoint (W4_LOCAL_ENGINE_URL)
  *   options: --example restaurant|db-explorer|all  --repeats 3  --limit 160  --write (commit profiles)
  *            --report-dir reports
@@ -31,6 +32,8 @@ import { suiteFixtures as explorerSuite } from "../examples/db-explorer/src/suit
 import * as restaurant from "../examples/restaurant/src/index";
 import { suiteFixtures as restaurantSuite } from "../examples/restaurant/src/suite";
 
+/** In-process Laya, loaded once on first use. */
+let laya: Promise<Decider> | undefined;
 const root = resolve(import.meta.dirname, "..");
 loadDotEnv(resolve(root, ".env"));
 
@@ -122,11 +125,16 @@ for (const name of selected) {
   writeFileSync(file, renderReport(example.site, runs));
   console.log(`[${name}] report: ${file}`);
 }
+await laya?.then((d) => (d as { close?: () => Promise<void> }).close?.());
 process.exit(failed ? 1 : 0);
 
 async function engineFor(engine: string, manifests: ManifestSet): Promise<Decider | string> {
   if (engine === "rules") return createManifestRuleDecider(manifests);
   if (engine === "jev") return remote.jev ?? "JEV_API_KEY not set";
+  if (engine === "laya") {
+    laya ??= import("@web4kit/decider-laya").then((m) => m.createInProcessLayaDecider());
+    return laya;
+  }
   if (engine === "local") {
     const url = localEngineUrlFromEnv();
     if (!remote.local || !url) return "W4_LOCAL_ENGINE_URL not set";

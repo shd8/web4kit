@@ -12,6 +12,8 @@ const config: NextConfig = {
     "@web4kit/react",
     "@web4kit/solver",
   ],
+  // Optional in-process Laya (W4_ENGINE=laya) loads native ONNX Runtime: never bundle it.
+  serverExternalPackages: ["@web4kit/decider-laya", "@receptron/laya", "onnxruntime-node"],
   agentRules: false,
 };
 

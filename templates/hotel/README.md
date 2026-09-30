@@ -14,7 +14,7 @@ A complete [web4](https://github.com/shd8/web4) site: a boutique hotel in Porto 
 
 ```bash
 pnpm install
-cp .env.example .env    # optional: add JEV_API_KEY to plan with Jev
+cp .env.example .env    # optional: JEV_API_KEY for Jev, or W4_ENGINE=laya for free local Laya
 pnpm dev             # http://localhost:3010
 ```
 
@@ -31,7 +31,8 @@ web4/
   manifests.ts   the ten data sources: what, audience, business rules, trust, heuristics
   data.ts        content (rooms, breakfast, events, reviews)
   fixtures.ts    personas, a fixture grid, page invariants and labels
-  site.ts        createSite: Jev or rules, calibration, personas, booking enrichment
+  engine.ts      which engine plans pages: rules, Laya (W4_ENGINE=laya) or Jev (JEV_API_KEY)
+  site.ts        createSite: engine, calibration, personas, booking enrichment
 app/
   page.tsx       the site: PlanView inside your own header and footer
   stats/         planner stats

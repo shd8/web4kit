@@ -1,9 +1,9 @@
 import "server-only";
 import { resolve } from "node:path";
-import { createJevDecider, jevConfigFromEnv } from "@web4kit/decider";
 import { loadDotEnv } from "@web4kit/decider/node";
 import { createSite } from "@web4kit/next";
 import { loadCalibration } from "@web4kit/planner/node";
+import { engineFromEnv } from "./engine";
 import { PERSONAS } from "./fixtures";
 import { BOOKINGS } from "./hotel";
 import { manifests } from "./manifests";
@@ -11,8 +11,8 @@ import { RULES } from "./situation";
 
 loadDotEnv(resolve(process.cwd(), ".env"));
 
-const jev = jevConfigFromEnv();
-const decider = jev ? createJevDecider(jev) : undefined;
+// Jev with a JEV_API_KEY, rules without one; W4_ENGINE=laya plans with Laya locally (engine.ts).
+const decider = await engineFromEnv();
 // The planner ignores a profile measured against other manifests (site.planner.calibrationStatus).
 const calibration = decider
   ? loadCalibration(resolve(process.cwd(), "calibration"), decider.id)

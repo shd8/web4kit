@@ -30,6 +30,9 @@ importers:
       '@web4kit/decider':
         specifier: workspace:^
         version: link:packages/decider
+      '@web4kit/decider-laya':
+        specifier: workspace:^
+        version: link:packages/decider-laya
       '@web4kit/example-db-explorer':
         specifier: workspace:^
         version: link:examples/db-explorer
@@ -372,6 +375,10 @@ importers:
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
+    optionalDependencies:
+      '@web4kit/decider-laya':
+        specifier: workspace:*
+        version: link:../../packages/decider-laya
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.3.3
@@ -433,6 +440,10 @@ importers:
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
+    optionalDependencies:
+      '@web4kit/decider-laya':
+        specifier: workspace:*
+        version: link:../../packages/decider-laya
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.3.3

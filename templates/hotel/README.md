@@ -13,14 +13,14 @@ A complete [web4](https://github.com/shd8/web4) site: a boutique hotel in Porto 
 ## Run it
 
 ```bash
-npm install
+pnpm install
 cp .env.example .env    # optional: add JEV_API_KEY to plan with Jev
-npm run dev             # http://localhost:3010
+pnpm dev             # http://localhost:3010
 ```
 
 In development, the bar at the top previews each persona (`/?as=arriving-today`). A guest's booking comes from a confirmation-email link: `/?booking=CR-1042`. `/stats` shows the plan-cache hit rate, tokens and cost.
 
-In production (`npm run build && npm start`) only real request signals are used: `?src=`, referrer, device, language, CDN geo headers and local time.
+In production (`pnpm build && pnpm start`) only real request signals are used: `?src=`, referrer, device, language, CDN geo headers and local time.
 
 ## How it's built
 
@@ -43,8 +43,8 @@ scripts/
 
 1. **Change the content** in `web4/data.ts` and `web4/hotel.ts`.
 2. **Edit the manifests.** Say who each source is for with `audience: { stayPhase: ["researching"] }`, and put hard business rules in `mustInclude` / `mustExclude`. System One models read literally.
-3. **Keep the rules engine good:** `npm test` checks that every invariant holds with rules alone, because rules are the fallback.
-4. **Recalibrate** after changing what the model sees (`what`, `not_for`, `audience`, tags): `npm run calibrate`, about $0.05 of Jev. Headings, heuristics and defaults can change freely. Until you recalibrate, Jev's answers fall back to rules, and `/stats` says the profile is stale.
+3. **Keep the rules engine good:** `pnpm test` checks that every invariant holds with rules alone, because rules are the fallback.
+4. **Recalibrate** after changing what the model sees (`what`, `not_for`, `audience`, tags): `pnpm calibrate`, about $0.05 of Jev. Headings, heuristics and defaults can change freely. Until you recalibrate, Jev's answers fall back to rules, and `/stats` says the profile is stale.
 
 Measured on this starter (Jev 1.13, 105 fixtures, 3 repeats): **100% invariants, 100% relevance accuracy, ~8k input tokens and $0.00034 per uncached page**. A page served from the plan cache costs nothing.
 

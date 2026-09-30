@@ -18,7 +18,7 @@ const LINKS = [
   {
     href: "https://github.com/shd8/web4/tree/main/templates/hotel",
     title: "Hotel starter",
-    text: "A full site: npm create web4kit -- --template hotel",
+    text: "A full site: pnpm create web4kit --template hotel",
   },
   { href: "/stats", title: "Stats", text: "Cache hits, tokens and cost per page." },
 ];

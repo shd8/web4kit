@@ -5,8 +5,8 @@ A [web4](https://github.com/shd8/web4) starter. The home page isn't laid out by 
 ## Run it
 
 ```bash
-npm install
-npm run dev            # http://localhost:3000
+pnpm install
+pnpm dev            # http://localhost:3000
 ```
 
 Open it, then use the bar at the top to preview other visitors:
@@ -39,12 +39,12 @@ scripts/
 1. **Add a source** in `web4/sources.ts` with `defineSource({ id, shape, label, what, fields, fetch })`. Shapes: `list`, `record`, `schedule`, `media-list`, `geo`, `timeseries`, `graph`.
 2. **Say who it's for** with `audience: { device: ["mobile"] }`, and hard business rules with `mustInclude` / `mustExclude`.
 3. **Add situation labels** in `web4/situation.ts` (for example `distanceRule`, `openingHoursRule`, or your own).
-4. **Test**: `npm test` checks that the rules engine alone passes every page invariant (it is the fallback).
-5. **Calibrate**: `npm run calibrate` measures Jev on your personas (under $0.01) and writes `calibration/`. Until you re-run it after changing descriptions or audiences, Jev's answers fall back to rules.
+4. **Test**: `pnpm test` checks that the rules engine alone passes every page invariant (it is the fallback).
+5. **Calibrate**: `pnpm calibrate` measures Jev on your personas (under $0.01) and writes `calibration/`. Until you re-run it after changing descriptions or audiences, Jev's answers fall back to rules.
 
 Measured on this starter (Jev 1.13, 27 fixtures, 3 repeats): **100% invariants, 100% relevance accuracy, ~4k input tokens and $0.00017 per uncached page**. A page served from the plan cache costs nothing.
 
 ## Learn more
 
 - [Getting started guide](https://github.com/shd8/web4/blob/main/docs/getting-started.md)
-- A complete site: `npm create web4kit@latest my-hotel -- --template hotel`
+- A complete site: `pnpm create web4kit my-hotel --template hotel`

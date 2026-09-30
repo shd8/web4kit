@@ -19,7 +19,7 @@ This guide builds a small web4 site from scratch, **Rosa Bakery**, and takes it 
 ## 1. Install
 
 ```bash
-npm install @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react react react-dom
+pnpm add @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react react react-dom
 # Next.js sites: add @web4kit/next
 ```
 
@@ -169,7 +169,7 @@ return (
 );
 ```
 
-`?as=<persona>` works only when previews are on, which is by default outside production. `site.stats()` returns pages, cache hits, tokens, cost and calibration status. `npm create web4kit@latest` scaffolds a complete site like this.
+`?as=<persona>` works only when previews are on, which is by default outside production. `site.stats()` returns pages, cache hits, tokens, cost and calibration status. `pnpm create web4kit` scaffolds a complete site like this.
 
 ## 6. Plan with Jev
 

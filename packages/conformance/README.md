@@ -9,7 +9,7 @@ Part of [web4](https://github.com/shd8/web4): pages planned per visitor by Syste
 ## Install
 
 ```bash
-npm install @web4kit/conformance
+pnpm add @web4kit/conformance
 ```
 
 ## Usage

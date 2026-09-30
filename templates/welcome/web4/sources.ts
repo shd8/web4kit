@@ -55,8 +55,7 @@ export const manifests = defineManifests({
         {
           step: "Step 4",
           title: "Measure it",
-          detail:
-            "npm test checks your page rules; npm run calibrate measures Jev on your personas.",
+          detail: "pnpm test checks your page rules; pnpm calibrate measures Jev on your personas.",
         },
       ],
     }),

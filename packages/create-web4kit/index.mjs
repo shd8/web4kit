@@ -23,7 +23,7 @@ const flag = (name) => {
 };
 
 if (args.includes("--help") || args.includes("-h")) {
-  console.log(`Usage: npm create web4kit@latest [directory] [--template ${TEMPLATES.join("|")}]
+  console.log(`Usage: pnpm create web4kit [directory] [--template ${TEMPLATES.join("|")}]
 
 Scaffolds a web4 site (Next.js) whose pages are planned per visitor by System One models.
 
@@ -79,7 +79,8 @@ for (const field of ["dependencies", "devDependencies"]) {
 writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
 const agent = process.env.npm_config_user_agent ?? "";
-const pm = agent.startsWith("pnpm") ? "pnpm" : agent.startsWith("yarn") ? "yarn" : "npm";
+// pnpm is the default; follow npm or yarn when the scaffolder was started through them.
+const pm = agent.startsWith("npm") ? "npm" : agent.startsWith("yarn") ? "yarn" : "pnpm";
 const run = pm === "npm" ? "npm run" : pm;
 const port = templateName === "hotel" ? 3010 : 3000;
 const rel = relative(process.cwd(), target) || ".";

@@ -102,16 +102,17 @@ try {
       run(`node ${join(tool, "package/index.mjs")} ${site}${flags}`, work);
       const sitePkgPath = join(site, "package.json");
       const sitePkg = JSON.parse(readFileSync(sitePkgPath, "utf8"));
-      sitePkg.overrides = tarballs;
+      sitePkg.pnpm = { overrides: tarballs };
       for (const field of ["dependencies", "devDependencies"]) {
         for (const name of Object.keys(sitePkg[field] ?? {}))
           if (tarballs[name]) sitePkg[field][name] = tarballs[name];
       }
       writeFileSync(sitePkgPath, JSON.stringify(sitePkg, null, 2));
-      run("npm install --no-audit --no-fund --loglevel=error", site);
-      run("npx tsc --noEmit -p tsconfig.json", site);
-      run("npx vitest run", site);
-      run("npx next build", site);
+      // pnpm is the documented default for starters.
+      run("pnpm install --reporter=silent", site);
+      run("pnpm exec tsc --noEmit -p tsconfig.json", site);
+      run("pnpm test", site);
+      run("pnpm build", site);
       // tailwind.css must let the app's Tailwind build see the component library's classes.
       const cssDir = join(site, ".next/static");
       const css = readdirSync(cssDir, { recursive: true })
@@ -123,7 +124,7 @@ try {
           "built CSS lacks component classes: @web4kit/react/tailwind.css not applied",
         );
       const port = 3099 - i;
-      const server = spawn("npx", ["next", "start", "--port", String(port)], {
+      const server = spawn("pnpm", ["exec", "next", "start", "--port", String(port)], {
         cwd: site,
         stdio: "ignore",
         env: { ...process.env, JEV_API_KEY: "" },

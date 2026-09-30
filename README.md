@@ -60,15 +60,15 @@ renderer ────────── data fetched fresh at render time, fail-
 ## Start a site
 
 ```bash
-npm create web4kit@latest my-site    # once published
-cd my-site && npm install && npm run dev
+pnpm create web4kit my-site    # once published
+cd my-site && pnpm install && pnpm dev
 ```
 
 Until the packages are on npm, run the scaffolder from this checkout. It works from any folder and bundles the local packages into `my-site/.web4kit`:
 
 ```bash
 node /path/to/web4/packages/create-web4kit/index.mjs my-site
-cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm works too)
+cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm and yarn work too)
 ```
 
 | Template | |
@@ -79,7 +79,7 @@ cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm works too
 ## Use the packages
 
 ```bash
-npm install @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react react react-dom
+pnpm add @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react react react-dom
 ```
 
 **[Getting started →](docs/getting-started.md)** builds a small site from scratch: manifests, situation, plan, render, Jev and calibration.

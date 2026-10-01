@@ -1,4 +1,5 @@
 import { runEngine } from "@web4kit/conformance";
+import { situationHash } from "@web4kit/context";
 import { createManifestRuleDecider, lintPortability } from "@web4kit/planner";
 import { describe, expect, it } from "vitest";
 import { PERSONAS, suiteFixtures } from "./fixtures";
@@ -6,6 +7,13 @@ import { manifests } from "./manifests";
 import { BUCKETS, situationOf } from "./situation";
 
 describe("Casa Ribeira", () => {
+  it("keeps every fixture's situation hash", () => {
+    const hashes = Object.fromEntries(
+      suiteFixtures().map((f) => [f.name, situationHash(f.situation)]),
+    );
+    expect(situationHash(hashes)).toBe("619067b6f343fcc0");
+  });
+
   it("fits the portability contract", () => {
     expect(lintPortability(manifests, BUCKETS).stateTokens).toBeLessThan(512);
   });

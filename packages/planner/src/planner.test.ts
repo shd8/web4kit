@@ -498,3 +498,313 @@ describe("v1 polish: mustInclude always, no questions for excluded sources", () 
     expect(plan.excluded.find((e) => e.sourceId === "rooms")!.why[0]!.decidedBy).toBe("invariant");
   });
 });
+
+describe("per-source calibration (dx-dev-loop 2.1-2.2)", () => {
+  /** A profile measured on `measured`, used with possibly different manifests. */
+  const profileFor = (
+    measured: typeof manifests,
+    over: Partial<CalibrationProfile> = {},
+  ): CalibrationProfile => ({
+    ...calibratedFor(ALL_KINDS),
+    manifestVersion: measured.deciderVersion,
+    sourceVersions: measured.sourceDeciderVersions,
+    ...over,
+  });
+  const editedReviews = defineManifests({
+    site: "test-restaurant",
+    components,
+    sources: sources.map((s) =>
+      s.id === "reviews" ? { ...s, what: "What guests say about the restaurant" } : s,
+    ),
+  });
+
+  it("is active when every source matches", () => {
+    const planner = createPlanner({
+      manifests,
+      decider: fakeEngine([]),
+      calibration: profileFor(manifests),
+    });
+    expect(planner.calibrationStatus).toEqual({ status: "active", version: "cal-test" });
+  });
+
+  it("one source edited: partial, and only that source gates as uncalibrated", async () => {
+    const planner = createPlanner({
+      manifests: editedReviews,
+      decider: fakeEngine([]),
+      calibration: profileFor(manifests),
+    });
+    expect(planner.calibrationStatus).toEqual({
+      status: "partial",
+      version: "cal-test",
+      staleSources: ["reviews"],
+    });
+    const { plan } = await planner.plan({ situation: lunch });
+    const reviews = allBlocks(plan).find((b) => b.sourceId === "reviews")!;
+    for (const why of reviews.why.filter((w) => !w.question.startsWith("invariant."))) {
+      expect(why.decidedBy).toBe("rule");
+      expect(why.note).toBe("uncalibrated: stale source reviews");
+    }
+    const others = allBlocks(plan).filter((b) => b.sourceId !== "reviews");
+    expect(others.length).toBeGreaterThan(0);
+    for (const block of others)
+      for (const why of block.why.filter((w) => w.question === KINDS.relevance))
+        expect(why).toMatchObject({ decidedBy: "engine", threshold: 0.5 });
+  });
+
+  it("component description edited: exactly the sources offered it become stale", () => {
+    const editedComponent = defineManifests({
+      site: "test-restaurant",
+      sources,
+      components: components.map((c) => (c.id === "menu-list" ? { ...c, what: "Dish rows" } : c)),
+    });
+    const status = createPlanner({
+      manifests: editedComponent,
+      decider: fakeEngine([]),
+      calibration: profileFor(manifests),
+    }).calibrationStatus;
+    expect(status).toEqual({
+      status: "partial",
+      version: "cal-test",
+      staleSources: ["dinner-menu", "lunch-menu", "events", "reviews"],
+    });
+  });
+
+  it("a source the profile does not mention is stale", () => {
+    const { reviews: _gone, ...without } = manifests.sourceDeciderVersions;
+    const status = createPlanner({
+      manifests,
+      decider: fakeEngine([]),
+      calibration: profileFor(manifests, { sourceVersions: without }),
+    }).calibrationStatus;
+    expect(status).toMatchObject({ status: "partial", staleSources: ["reviews"] });
+  });
+
+  it("is stale when every source changed", () => {
+    const status = createPlanner({
+      manifests,
+      decider: fakeEngine([]),
+      calibration: profileFor(manifests, {
+        sourceVersions: Object.fromEntries(manifests.sources.map((s) => [s.id, "dec-old"])),
+      }),
+    }).calibrationStatus;
+    expect(status.status).toBe("stale");
+  });
+
+  it("older profile without per-source versions matches at site level", () => {
+    const { sourceVersions: _none, ...v1 } = profileFor(manifests);
+    expect(
+      createPlanner({ manifests, decider: fakeEngine([]), calibration: v1 }).calibrationStatus,
+    ).toEqual({ status: "active", version: "cal-test" });
+    expect(
+      createPlanner({ manifests: editedReviews, decider: fakeEngine([]), calibration: v1 })
+        .calibrationStatus.status,
+    ).toBe("stale");
+  });
+});
+
+describe("development gating (dx-dev-loop 2.4)", () => {
+  const editedReviews = defineManifests({
+    site: "test-restaurant",
+    components,
+    sources: sources.map((s) =>
+      s.id === "reviews" ? { ...s, what: "What guests say about the restaurant" } : s,
+    ),
+  });
+  const measured = (): CalibrationProfile => ({
+    ...calibratedFor(ALL_KINDS),
+    sourceVersions: manifests.sourceDeciderVersions,
+  });
+
+  it("stale source in development: engine answers are used and recorded as ungated", async () => {
+    const planner = createPlanner({
+      manifests: editedReviews,
+      decider: fakeEngine([]),
+      calibration: measured(),
+      gating: "development",
+    });
+    expect(planner.developmentGating).toBe(true);
+    const { plan } = await planner.plan({ situation: lunch });
+    expect(plan.calibrationVersion).toBe("cal-test+dev");
+    const reviews = allBlocks(plan).find((b) => b.sourceId === "reviews")!;
+    const region = reviews.why.find((w) => w.question === KINDS.region)!;
+    expect(region).toMatchObject({
+      decidedBy: "ungated",
+      answer: "primary",
+      threshold: null,
+      engine: "fake-2.0.0",
+    });
+    expect(region.confidence).toBeGreaterThan(0);
+    expect(region.probabilities).toBeDefined();
+    const hours = allBlocks(plan).find((b) => b.sourceId === "hours")!;
+    expect(hours.why.find((w) => w.question === KINDS.region)).toMatchObject({
+      decidedBy: "engine",
+      threshold: 0.5,
+    });
+  });
+
+  it("no profile and missing entries are ungated in development", async () => {
+    const noProfile = await createPlanner({
+      manifests,
+      decider: fakeEngine([]),
+      gating: "development",
+    }).plan({ situation: lunch });
+    expect(noProfile.plan.calibrationVersion).toBe("cal-none+dev");
+    for (const block of allBlocks(noProfile.plan))
+      for (const why of block.why.filter((w) => w.question.startsWith("A.")))
+        expect(why.decidedBy).toBe("ungated");
+
+    const profile = calibratedFor(ALL_KINDS.filter((k) => k !== KINDS.region));
+    const { plan } = await createPlanner({
+      manifests,
+      decider: fakeEngine([]),
+      calibration: profile,
+      gating: "development",
+    }).plan({ situation: lunch });
+    const hours = allBlocks(plan).find((b) => b.sourceId === "hours")!;
+    expect(hours.why.find((w) => w.question === KINDS.region)).toMatchObject({
+      decidedBy: "ungated",
+      note: `uncalibrated: ${KINDS.region}|english`,
+    });
+  });
+
+  it("measured as unreliable: development still uses the rules answer", async () => {
+    const profile = calibratedFor(ALL_KINDS);
+    profile.entries[calibrationKey(KINDS.region, "english")]!.uncalibrated = true;
+    const { plan } = await createPlanner({
+      manifests,
+      decider: fakeEngine([]),
+      calibration: profile,
+      gating: "development",
+    }).plan({ situation: lunch });
+    const hours = allBlocks(plan).find((b) => b.sourceId === "hours")!;
+    expect(hours.why.find((w) => w.question === KINDS.region)).toMatchObject({
+      decidedBy: "rule",
+      answer: "aside",
+    });
+  });
+
+  it("below a current threshold: development still uses the default", async () => {
+    const profile = calibratedFor(ALL_KINDS);
+    profile.entries[calibrationKey(KINDS.region, "english")]!.acceptThreshold = 0.99;
+    const { plan } = await createPlanner({
+      manifests,
+      decider: fakeEngine([]),
+      calibration: profile,
+      gating: "development",
+    }).plan({ situation: lunch });
+    const map = allBlocks(plan).find((b) => b.sourceId === "location")!;
+    expect(map.why.find((w) => w.question === KINDS.region)).toMatchObject({
+      decidedBy: "default",
+    });
+  });
+
+  it("production refuses development mode", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    try {
+      const planner = createPlanner({
+        manifests: editedReviews,
+        decider: fakeEngine([]),
+        calibration: measured(),
+        gating: "development",
+      });
+      expect(planner.developmentGating).toBe(false);
+      const { plan } = await planner.plan({ situation: lunch });
+      expect(plan.calibrationVersion).toBe("cal-test");
+      for (const block of allBlocks(plan))
+        for (const why of block.why) expect(why.decidedBy).not.toBe("ungated");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("is off by default and for the rules engine", () => {
+    expect(createPlanner({ manifests, decider: fakeEngine([]) }).developmentGating).toBe(false);
+    expect(createPlanner({ manifests, gating: "development" }).developmentGating).toBe(false);
+  });
+});
+
+describe("complete plan for crawlers (dx-dev-loop 3.2)", () => {
+  const site = defineManifests({
+    site: "test-hotel",
+    components,
+    sources: [
+      ...sources,
+      src("rooms", "list", {
+        audience: { stayPhase: ["researching"] },
+        mustExclude: { stayPhase: ["in-house"] },
+      }),
+      src("staff-notes", "list", { access: { roles: ["staff"] } }),
+    ],
+  });
+  const crawler = { ...lunch, arrival: "crawler", stayPhase: "in-house" };
+
+  it("includes every public source without calling the decider", async () => {
+    const calls: Array<{ state: State; questions: Questions }> = [];
+    const planner = createPlanner({
+      manifests: site,
+      decider: fakeEngine(calls),
+      calibration: { ...calibratedFor(ALL_KINDS), manifestVersion: site.deciderVersion },
+    });
+    const result = await planner.plan({ situation: crawler });
+    expect(calls).toHaveLength(0);
+    expect(result.usage).toEqual({ requests: 0, inputTokens: 0 });
+    expect(planner.stats().deciderRequests).toBe(0);
+    const planned = allBlocks(result.plan).map((b) => b.sourceId);
+    const publicIds = site.sources.filter((s) => s.access === "public").map((s) => s.id);
+    expect(planned.sort()).toEqual([...publicIds].sort());
+    for (const block of allBlocks(result.plan))
+      expect(block.why[0]).toMatchObject({
+        question: "invariant.crawler",
+        decidedBy: "invariant",
+        note: expect.stringContaining("crawler"),
+      });
+  });
+
+  it("includes sources hidden from humans by mustExclude, audience or default include", async () => {
+    const { plan } = await createPlanner({ manifests: site }).plan({ situation: crawler });
+    const planned = allBlocks(plan).map((b) => b.sourceId);
+    expect(planned).toContain("rooms");
+    expect(planned).toContain("lunch-menu");
+  });
+
+  it("lists role-restricted sources as excluded", async () => {
+    const { plan } = await createPlanner({ manifests: site }).plan({ situation: crawler });
+    expect(allBlocks(plan).map((b) => b.sourceId)).not.toContain("staff-notes");
+    expect(plan.excluded).toEqual([
+      {
+        sourceId: "staff-notes",
+        why: [
+          expect.objectContaining({
+            decidedBy: "invariant",
+            note: expect.stringContaining("staff"),
+          }),
+        ],
+      },
+    ]);
+  });
+
+  it("drops nothing when there are more sources than capacity", async () => {
+    const many = defineManifests({
+      site: "big",
+      components,
+      sources: Array.from({ length: 30 }, (_, i) => src(`list-${i}`, "list")),
+    });
+    const { plan } = await createPlanner({ manifests: many }).plan({ situation: crawler });
+    expect(allBlocks(plan)).toHaveLength(30);
+    expect(plan.layout.hero.length).toBeLessThanOrEqual(1);
+    expect(plan.excluded).toEqual([]);
+  });
+
+  it("gives every crawler the same plan for a device class", async () => {
+    const planner = createPlanner({ manifests: site });
+    const morning = await planner.plan({
+      situation: { ...crawler, mealWindow: "breakfast", openState: "open", visitor: "tourist" },
+    });
+    const night = await planner.plan({
+      situation: { ...crawler, mealWindow: "late", openState: "closed", language: "german" },
+    });
+    expect(night.plan).toEqual(morning.plan);
+    const desktop = await planner.plan({ situation: { ...crawler, device: "desktop" } });
+    expect(desktop.plan.device).toBe("desktop");
+  });
+});

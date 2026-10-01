@@ -1,0 +1,53 @@
+{
+  "name": "web4kit",
+  "version": "0.1.0",
+  "description": "web4 developer CLI: check calibration, add your own components.",
+  "license": "MIT",
+  "author": "Fernando G\u00f3mez Graciani",
+  "homepage": "https://github.com/shd8/web4/tree/main/packages/web4kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shd8/web4.git",
+    "directory": "packages/web4kit"
+  },
+  "bugs": "https://github.com/shd8/web4/issues",
+  "keywords": [
+    "web4",
+    "cli",
+    "system-one",
+    "jev",
+    "calibration"
+  ],
+  "type": "module",
+  "bin": {
+    "web4kit": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "typecheck": "node --check index.mjs && node --check lib/check.mjs && node --check lib/add-component.mjs && node --check lib/load.mjs && node --check lib/loader.mjs",
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "dependencies": {
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@web4kit/decider": "workspace:*",
+    "@web4kit/manifest": "workspace:*",
+    "@web4kit/next": "workspace:*",
+    "@web4kit/planner": "workspace:*",
+    "@web4kit/react": "workspace:*",
+    "react": "^19.3.0",
+    "server-only": "^0.0.1"
+  }
+}

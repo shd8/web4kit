@@ -167,6 +167,7 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
     engine: engineVersion,
     version: `cal-${stableHash(JSON.stringify({ engineVersion, manifests: manifests.deciderVersion, entries }), 10)}`,
     manifestVersion: manifests.deciderVersion,
+    sourceVersions: manifests.sourceDeciderVersions,
     createdAt: new Date().toISOString(),
     entries,
   };

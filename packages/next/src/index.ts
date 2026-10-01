@@ -1,6 +1,7 @@
 import type { RequestLike } from "@web4kit/context";
 import { createSiteCore, type Site, type SiteConfig, type SitePage } from "./site";
 
+export * from "./calibration-check";
 export * from "./preview-bar";
 export * from "./site";
 

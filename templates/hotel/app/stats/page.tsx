@@ -1,3 +1,4 @@
+import { calibrationReport } from "@web4kit/next";
 import { site } from "@/web4/site";
 
 export const dynamic = "force-dynamic";
@@ -5,14 +6,17 @@ export const dynamic = "force-dynamic";
 export default function Stats() {
   const s = site.stats();
   const hitRate = s.pages ? s.cacheHits / s.pages : 0;
+  const report = calibrationReport(site);
   const calibration =
     s.calibration.status === "active"
       ? s.calibration.version
-      : s.calibration.status === "stale"
-        ? `stale (${s.calibration.reason}): run pnpm calibrate`
-        : s.engineId === "rules"
-          ? "rules"
-          : "missing: every answer falls back to rules";
+      : report.status === "rules"
+        ? "rules"
+        : report.status === "partial"
+          ? `partial, stale for ${report.staleSources.join(", ")}: run ${report.fix}`
+          : s.calibration.status === "stale"
+            ? `stale (${s.calibration.reason}): run ${report.fix}`
+            : "missing: every answer falls back to rules";
   const rows: Array<[string, string]> = [
     ["Engine", s.engineId],
     ["Calibration", calibration],

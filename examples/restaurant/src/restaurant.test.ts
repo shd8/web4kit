@@ -1,4 +1,5 @@
 import { checkInvariants } from "@web4kit/conformance";
+import { situationHash } from "@web4kit/context";
 import { allBlocks } from "@web4kit/ir";
 import { buildQuestions, createPlanner, lintPortability } from "@web4kit/planner";
 import { describe, expect, it } from "vitest";
@@ -65,6 +66,13 @@ describe("core personas on rules (task 9.2)", () => {
 describe("conformance fixtures (task 11.1)", async () => {
   const { suiteFixtures } = await import("./suite");
   const { runEngine } = await import("@web4kit/conformance");
+
+  it("keeps every fixture's situation hash (crawler detection changed nothing, dx-dev-loop 3.1)", () => {
+    const hashes = Object.fromEntries(
+      suiteFixtures().map((f) => [f.name, situationHash(f.situation)]),
+    );
+    expect(situationHash(hashes)).toBe("ccb1c81d4725962d");
+  });
 
   it("expands to 164 fixtures with at least 100 labelled cases", () => {
     const fixtures = suiteFixtures();

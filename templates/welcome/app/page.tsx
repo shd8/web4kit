@@ -1,5 +1,7 @@
 import { PreviewBar } from "@web4kit/next";
-import { defaultRegistry, PlanView } from "@web4kit/react";
+import { PlanView } from "@web4kit/react";
+import { XRay } from "@web4kit/react/xray";
+import { registry } from "@/web4/components";
 import { site } from "@/web4/site";
 
 export const dynamic = "force-dynamic";
@@ -53,7 +55,7 @@ export default async function Home({
           plan={page.plan}
           data={page.data}
           manifests={site.manifests}
-          registry={defaultRegistry}
+          registry={registry}
         />
 
         <footer className="grid gap-3 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -74,6 +76,14 @@ export default async function Home({
           ))}
         </footer>
       </main>
+      {/* Development only: hover or tap a block to see why it is there. */}
+      <XRay
+        plan={page.plan}
+        data={page.data}
+        manifests={site.manifests}
+        registry={registry}
+        calibration={site.planner.calibrationStatus}
+      />
     </>
   );
 }

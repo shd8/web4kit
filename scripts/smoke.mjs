@@ -27,6 +27,7 @@ const PACKAGES = [
   "next",
   "decider-laya",
   "create-web4kit",
+  "web4kit",
 ];
 const work = mkdtempSync(join(tmpdir(), "web4kit-smoke-"));
 const packDir = join(work, "pack");
@@ -38,11 +39,16 @@ const run = (cmd, cwd) => execSync(cmd, { cwd, stdio: "inherit" });
 try {
   for (const p of PACKAGES)
     run(`pnpm pack --pack-destination ${packDir}`, join(root, "packages", p));
+  // Tarball per package name (pnpm names them <scope>-<name>-<version>.tgz).
   const tarballs = Object.fromEntries(
-    readdirSync(packDir).map((f) => [
-      `@web4kit/${f.replace(/^web4kit-/, "").replace(/-\d+\.\d+\.\d+.*\.tgz$/, "")}`,
-      `file:${join(packDir, f)}`,
-    ]),
+    PACKAGES.map((p) => {
+      const { name, version } = JSON.parse(
+        readFileSync(join(root, "packages", p, "package.json"), "utf8"),
+      );
+      const file = `${name.replace(/^@/, "").replace("/", "-")}-${version}.tgz`;
+      const key = name === "create-web4kit" ? "@web4kit/create-web4kit" : name;
+      return [key, `file:${join(packDir, file)}`];
+    }),
   );
   // Every file a packed package.json points at (main, types, exports, bin) must be in the tarball.
   for (const [name, spec] of Object.entries(tarballs)) {
@@ -70,7 +76,12 @@ try {
   const scaffolder = tarballs["@web4kit/create-web4kit"];
   delete tarballs["@web4kit/create-web4kit"];
   // decider-laya pulls onnxruntime and next needs a Next app: both are packed, not installed here.
-  const { "@web4kit/decider-laya": _laya, "@web4kit/next": _next, ...deps } = tarballs;
+  const {
+    "@web4kit/decider-laya": _laya,
+    "@web4kit/next": _next,
+    web4kit: _cli,
+    ...deps
+  } = tarballs;
   writeFileSync(
     join(app, "package.json"),
     JSON.stringify(

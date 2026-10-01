@@ -249,3 +249,39 @@ describe("first-party enrichment (v1 1.3)", () => {
     expect(calls).toBe(0);
   });
 });
+
+describe("crawler arrival (dx-dev-loop 3.1)", () => {
+  const GOOGLEBOT =
+    "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+  const CHROME =
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+  const situate = (url: string, ua: string) =>
+    deriveSituation(collectEnvelope({ url, headers: { "user-agent": ua } }).envelope, CORE_RULES);
+
+  it("labels Googlebot as crawler whatever the arrival source", () => {
+    const envelope = collectEnvelope({
+      url: "/?src=instagram",
+      headers: { "user-agent": GOOGLEBOT },
+    }).envelope;
+    expect(envelope.crawler).toBe("googlebot");
+    const situation = situate("/?src=instagram", GOOGLEBOT);
+    expect(situation).toMatchObject({ arrival: "crawler", device: "mobile" });
+    expect(() => assertSituation(situation, CORE_BUCKETS)).not.toThrow();
+  });
+
+  it("recognises the other major search engines", () => {
+    for (const ua of [
+      "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)",
+      "DuckDuckBot/1.1; (+http://duckduckgo.com/duckduckbot.html)",
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15 (Applebot/0.1; +http://www.apple.com/go/applebot)",
+    ])
+      expect(situate("/", ua).arrival).toBe("crawler");
+  });
+
+  it("labels an ordinary browser exactly as before", () => {
+    const envelope = collectEnvelope({ url: "/", headers: { "user-agent": CHROME } }).envelope;
+    expect(envelope.crawler).toBeUndefined();
+    expect(situate("/", CHROME).arrival).toBe("direct");
+    expect(situate("/?src=instagram", CHROME).arrival).toBe("visual");
+  });
+});

@@ -2,41 +2,15 @@
 
 import { type Plan, REGIONS, type Why } from "@web4kit/ir";
 import type { RenderedBlock } from "@web4kit/react";
+import { DECIDED_BY, formatAnswer, whyDetails, whyLabel } from "@web4kit/react/why";
 import type { PlanResponse } from "@/lib/examples";
 import { Chip, cx } from "./ui";
 
-const DECIDED_TONE = {
-  engine: "green",
-  rule: "blue",
-  default: "amber",
-  invariant: "orange",
-} as const;
-
 function WhyChip({ why }: { why: Why }) {
-  const answer = typeof why.answer === "number" ? why.answer.toFixed(2) : String(why.answer);
-  const label = why.question.replace(/^invariant\./, "");
   return (
-    <span
-      className="group relative inline-flex"
-      title={[
-        `${why.question} → ${answer}`,
-        why.confidence !== undefined ? `confidence ${why.confidence.toFixed(2)}` : "",
-        why.threshold !== undefined && why.threshold !== null
-          ? `threshold ${why.threshold.toFixed(2)}`
-          : "",
-        `decided by ${why.decidedBy}${why.engine ? ` (${why.engine})` : ""}`,
-        why.note ?? "",
-        why.probabilities
-          ? `p: ${Object.entries(why.probabilities)
-              .map(([k, v]) => `${k}=${v.toFixed(2)}`)
-              .join(" ")}`
-          : "",
-      ]
-        .filter(Boolean)
-        .join("\n")}
-    >
-      <Chip tone={DECIDED_TONE[why.decidedBy]}>
-        <span className="opacity-60">{label}</span> {answer}
+    <span className="group relative inline-flex" title={whyDetails(why).join("\n")}>
+      <Chip tone={DECIDED_BY[why.decidedBy].tone}>
+        <span className="opacity-60">{whyLabel(why)}</span> {formatAnswer(why)}
         {why.confidence !== undefined && (
           <span className="opacity-60">·{why.confidence.toFixed(2)}</span>
         )}
@@ -73,9 +47,9 @@ export function WhyPanel({
         />
         <Stat label="situation" value={plan.situationHash} />
         <div className="ml-auto flex flex-wrap gap-1.5">
-          {(["engine", "rule", "default", "invariant"] as const).map((d) => (
-            <Chip key={d} tone={DECIDED_TONE[d]}>
-              {d}
+          {(["engine", "rule", "default", "invariant", "ungated"] as const).map((d) => (
+            <Chip key={d} tone={DECIDED_BY[d].tone}>
+              {DECIDED_BY[d].label}
             </Chip>
           ))}
         </div>

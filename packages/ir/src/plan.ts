@@ -10,7 +10,11 @@ export const DEVICES = ["mobile", "tablet", "desktop"] as const;
 export const DeviceSchema = z.enum(DEVICES);
 export type Device = z.infer<typeof DeviceSchema>;
 
-export const DecidedBySchema = z.enum(["engine", "default", "rule", "invariant"]);
+/**
+ * `ungated`: an engine answer used without a current calibration threshold. Only plans made in
+ * development mode contain it (spec: page-planning, development gating).
+ */
+export const DecidedBySchema = z.enum(["engine", "default", "rule", "invariant", "ungated"]);
 export type DecidedBy = z.infer<typeof DecidedBySchema>;
 
 /** One recorded decision that affected a block or an excluded source. */
@@ -22,7 +26,10 @@ export const WhySchema = z.object({
   confidence: z.number().min(0).max(1).optional(),
   threshold: z.number().min(0).max(1).nullable().optional(),
   decidedBy: DecidedBySchema,
-  /** Exact engine version when decidedBy is "engine" (or the engine whose answer was overridden). */
+  /**
+   * Exact engine version when decidedBy is "engine" or "ungated" (or the engine whose answer was
+   * overridden).
+   */
   engine: z.string().optional(),
   note: z.string().optional(),
 });

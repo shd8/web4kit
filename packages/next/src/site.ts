@@ -20,6 +20,12 @@ import {
   type PlanResult,
 } from "@web4kit/planner";
 import { type PlanData, resolvePlanData } from "@web4kit/react";
+import {
+  type CalibrationCheck,
+  type CalibrationReport,
+  calibrationReport,
+  checkCalibrationAtBuild,
+} from "./calibration-check";
 
 /** A named envelope a developer can preview with `?as=<name>` (fixtures qualify). */
 export interface Persona {
@@ -58,6 +64,17 @@ export interface SiteConfig {
   viewer?: (request: RequestLike) => { roles: string[] } | Promise<{ roles: string[] }>;
   /** Envelope collection options (e.g. a geo lookup). */
   collect?: Omit<CollectOptions, "now">;
+  /**
+   * Development gating: outside production, decisions without a current calibration threshold
+   * use the engine's answer, recorded as ungated. Defaults to on outside production; always off
+   * in production.
+   */
+  developmentGating?: boolean;
+  /**
+   * What `next build` does when calibration is not active for the configured engine: `warn`
+   * (default), `error` (fail the build; also `W4_STRICT_CALIBRATION=1`) or `off`.
+   */
+  calibrationCheck?: CalibrationCheck;
 }
 
 export interface SitePage extends PlanResult {
@@ -81,6 +98,8 @@ export interface Site {
   /** Framework-agnostic entry: plan and resolve the page for one request. */
   handle(request: RequestLike, options?: { now?: Date }): Promise<SitePage>;
   stats(): SiteStats;
+  /** Is calibration current for the configured engine? (`web4kit check` reads this.) */
+  calibrationReport(): CalibrationReport;
 }
 
 const isProduction = () => typeof process !== "undefined" && process.env?.NODE_ENV === "production";
@@ -94,7 +113,9 @@ export function createSiteCore(config: SiteConfig): Site {
       ...(config.calibration ? { calibration: config.calibration } : {}),
       ...(config.cache === false ? {} : { cache: config.cache ?? new LruPlanCache(1000) }),
       ...(config.onPlan ? { onPlan: config.onPlan } : {}),
+      gating: (config.developmentGating ?? !isProduction()) ? "development" : "production",
     });
+  checkCalibrationAtBuild({ planner }, config.calibrationCheck);
   const situationOf =
     typeof config.situation === "function"
       ? config.situation
@@ -110,6 +131,7 @@ export function createSiteCore(config: SiteConfig): Site {
     previews,
     previewParam,
     stats: () => planner.stats(),
+    calibrationReport: () => calibrationReport({ planner }),
     async handle(request, options = {}) {
       // 1. Persona preview (development only).
       const url = new URL(request.url, "http://localhost");

@@ -16,6 +16,11 @@ export const CalibrationProfileSchema = z.object({
   engine: z.string(),
   version: z.string(),
   manifestVersion: z.string(),
+  /**
+   * Decider version of each source when measured. A source whose current version differs is
+   * stale; the rest keep using the profile. Absent in v1 profiles (matched per site).
+   */
+  sourceVersions: z.record(z.string(), z.string()).optional(),
   createdAt: z.string(),
   /** Keyed by `${questionKind}|${language}`. */
   entries: z.record(z.string(), CalibrationEntrySchema),

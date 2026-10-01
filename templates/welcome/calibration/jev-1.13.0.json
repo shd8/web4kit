@@ -1,15 +1,23 @@
 {
   "engine": "jev-1.13.0",
-  "version": "cal-a8021dcfa3",
+  "version": "cal-601da35a93",
   "manifestVersion": "dec-99dc793b3faa",
-  "createdAt": "2026-09-30T08:08:11.256Z",
+  "sourceVersions": {
+    "welcome": "dec-36da367dff91",
+    "get-started": "dec-b75cb8cf13a4",
+    "your-situation": "dec-7e772caacc74",
+    "from-social": "dec-384d42d1f48f",
+    "on-mobile": "dec-eaba1c165fe8",
+    "late-night": "dec-457d9239a2c4"
+  },
+  "createdAt": "2026-10-01T12:35:28.317Z",
   "entries": {
     "A.relevance|english": {
       "accuracy": 1,
       "overlap": 0,
       "sampleSize": 324,
-      "flipRate": 0.05555555555555555,
-      "acceptThreshold": 0.45,
+      "flipRate": 0.037037037037037035,
+      "acceptThreshold": 0.4,
       "uncalibrated": false
     }
   }

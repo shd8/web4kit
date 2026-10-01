@@ -174,6 +174,8 @@ export interface ManifestSet {
   version: string;
   /** Version of the decider-visible surface only (calibration profiles match on it). */
   deciderVersion: string;
+  /** Decider version per source id (calibration staleness is tracked per source). */
+  sourceDeciderVersions: Record<string, string>;
   sources: DataSourceManifest[];
   components: ComponentManifest[];
 }

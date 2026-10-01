@@ -22,15 +22,15 @@ Do these in order; each one has a way to check it worked.
 - [ ] **Try it as a stranger:** in an empty folder, `pnpm create web4kit my-site && cd my-site && pnpm install && pnpm dev`.
 - [ ] **Re-read the thesis numbers** against `reports/` and `bench/leaderboard/`, if either was regenerated.
 - [ ] **Post the thesis discussion:** the text of `apps/site/content/thesis.mdx` with absolute links, in the *Thesis* category. Pin it.
-- [ ] **The 15-second cut** from `launch-video` is rendered and uploaded.
+- [ ] **The cuts** are rendered with the voiceover and published: the full 85 s cut everywhere: `main-16x9` on the site (`apps/site/public/media/`), in the README (its 720p copy, under GitHub's 10 MB limit) and on X; `main-1x1` (square) for LinkedIn. The video sources and the post texts are kept privately.
 
 ## 2. Launch day
 
 Morning (US East), in this order, an hour or so apart, so the first questions get answered:
 
-1. **Show HN:** "Show HN: web4kit – pages planned per visitor by small decision models, not LLMs". Link the site; post the first comment yourself, with what it is, the ablation result as measured, and the benchmark challenge.
-2. **X thread:** the 15-second cut first, then the playground link, the cost line, the ablation line (as measured), the benchmark challenge, and the repository.
-3. **LinkedIn:** a short post with the video and the thesis link.
+1. **Show HN:** "Show HN: web4kit – web pages that pick what to show each visitor". Link the site; post the first comment yourself, with what it is, the ablation result as measured, and the benchmark challenge.
+2. **X thread:** the full video first, then the playground link, the cost line, the ablation line (as measured), the benchmark challenge, and the repository.
+3. **LinkedIn:** "Web 4 is here." with the full video, square.
 4. **Communities:** r/webdev and r/nextjs (a "how it works" post, not an announcement), and the Next.js discussions. One post each; don't cross-post the same text.
 
 Spend the rest of the day answering. The prepared answers are below.

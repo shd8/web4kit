@@ -18,7 +18,8 @@
       "!**/calibration/report.md",
       "!apps/site/out",
       "!apps/site/.source",
-      "!apps/site/public/playground"
+      "!apps/site/public/playground",
+      "!apps/video"
     ]
   },
   "formatter": {

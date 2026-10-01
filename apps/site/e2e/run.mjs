@@ -308,7 +308,7 @@ checks.conceptsEmbeds = async (browser) => {
   return { ok, evening: evening.replace(/\n/g, " "), late: late.replace(/\n/g, " "), why, ...seen };
 };
 
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 
 checks.routes = async (browser) => {
@@ -398,6 +398,29 @@ checks.benchPage = async (browser) => {
     shown,
     reportedOnly,
     ...seen,
+  };
+};
+
+/** The published launch video plays on the home page, with captions (launch-video 8.3). */
+checks.launchVideo = async (browser) => {
+  const published = existsSync(resolve(import.meta.dirname, "../out/media/web4kit-launch.mp4"));
+  const page = await browser.newPage();
+  const seen = watch(page);
+  await page.goto(url("/"), { waitUntil: "networkidle" });
+  const count = await page.locator("[data-launch-video]").count();
+  if (!published) return { ok: count === 0 && !seen.errors.length, published, count };
+  const state = await page.locator("[data-launch-video]").evaluate(async (v) => {
+    if (v.readyState < 1)
+      await new Promise((r) => v.addEventListener("loadedmetadata", r, { once: true }));
+    const track = v.textTracks[0];
+    if (track) track.mode = "showing";
+    await new Promise((r) => setTimeout(r, 500));
+    return { duration: v.duration, track: track?.kind, cues: track?.cues?.length ?? 0 };
+  });
+  return {
+    ok: state.duration > 60 && state.track === "captions" && state.cues > 10 && !seen.errors.length,
+    published,
+    ...state,
   };
 };
 

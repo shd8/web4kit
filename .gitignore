@@ -11,3 +11,7 @@ coverage/
 # OpenSpec planning artifacts stay local: never commit them.
 openspec/
 packages/web4kit/.tmp/
+# The launch video's sources are kept in a private repository cloned here; only rendered
+# videos are published, in apps/site/public/media.
+apps/video/
+.DS_Store

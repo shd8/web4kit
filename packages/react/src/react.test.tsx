@@ -459,6 +459,13 @@ describe("X-ray overlay (dx-dev-loop 4.2)", async () => {
     expect(together.slice(alone.length)).not.toContain("data-w4-block");
   });
 
+  it("exports the block card from @web4kit/react/xray", async () => {
+    const xray = await import("./xray");
+    expect(xray.BlockCard).toBe(BlockCard);
+    const html = renderToStaticMarkup(<xray.BlockCard block={withWhy().layout.primary[0]!} />);
+    expect(html).toContain('data-w4-xray-card="menu"');
+  });
+
   it("lists every record of a block, marks ungated, and shows a rendered fallback", () => {
     const b = withWhy().layout.primary[0]!;
     const html = renderToStaticMarkup(

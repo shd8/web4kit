@@ -1,5 +1,7 @@
 import { PreviewBar } from "@web4kit/next";
-import { defaultRegistry, PlanView } from "@web4kit/react";
+import { PlanView } from "@web4kit/react";
+import { XRay } from "@web4kit/react/xray";
+import { registry } from "@/web4/components";
 import { HOTEL } from "@/web4/hotel";
 import { site } from "@/web4/site";
 
@@ -31,9 +33,17 @@ export default async function Home({
           plan={page.plan}
           data={page.data}
           manifests={site.manifests}
-          registry={defaultRegistry}
+          registry={registry}
         />
       </main>
+      {/* Development only: hover or tap a block to see why it is there. */}
+      <XRay
+        plan={page.plan}
+        data={page.data}
+        manifests={site.manifests}
+        registry={registry}
+        calibration={site.planner.calibrationStatus}
+      />
       <footer className="border-t border-border px-4 py-8 text-center text-sm text-muted-foreground">
         {HOTEL.address} · {HOTEL.phone}
         <br />

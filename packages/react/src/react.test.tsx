@@ -1,7 +1,7 @@
-import { DEVICES, type Plan } from "@web4kit/ir";
+import { DEVICES, type Plan, type Why } from "@web4kit/ir";
 import { type DataSourceManifestInput, defineManifests } from "@web4kit/manifest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   type BlockContext,
   defaultRegistry,
@@ -368,5 +368,130 @@ describe("row filling", () => {
     expect(fillRows([8, 6, 6])).toEqual([12, 6, 6]);
     expect(fillRows([4, 4, 8])).toEqual([4, 8, 12]);
     expect(fillRows([])).toEqual([]);
+  });
+});
+
+describe("X-ray overlay (dx-dev-loop 4.2)", async () => {
+  const { XRay } = await import("./xray");
+  const { BlockCard, SummaryPanel, XRayClient } = await import("./xray-client");
+  const why: Why[] = [
+    {
+      question: "A.relevance",
+      answer: true,
+      probabilities: { true: 0.91, false: 0.09 },
+      confidence: 0.82,
+      threshold: 0.4,
+      decidedBy: "engine" as const,
+      engine: "jev-1.13.0",
+    },
+    {
+      question: "A.salience",
+      answer: 2,
+      confidence: 0.7,
+      threshold: null,
+      decidedBy: "rule" as const,
+    },
+    {
+      question: "B.component",
+      answer: "menu-list",
+      probabilities: { "menu-list": 0.8, "card-grid": 0.2 },
+      confidence: 0.6,
+      threshold: null,
+      decidedBy: "ungated" as const,
+      engine: "jev-1.13.0",
+    },
+    { question: "C.region", answer: "primary", decidedBy: "default" as const },
+    { question: "invariant.must-include", answer: true, decidedBy: "invariant" as const },
+  ];
+  const withWhy = (): Plan => ({
+    ...plan(),
+    layout: { ...plan().layout, primary: [{ ...plan().layout.primary[0]!, why }] },
+    excluded: [
+      {
+        sourceId: "reviews",
+        why: [
+          {
+            question: "A.relevance",
+            answer: false,
+            confidence: 0.9,
+            threshold: 0.5,
+            decidedBy: "engine",
+          },
+        ],
+      },
+    ],
+  });
+
+  it("renders nothing in production and passes no plan to the client", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    try {
+      expect(XRay({ plan: withWhy() })).toBeNull();
+      expect(renderToStaticMarkup(<XRay plan={withWhy()} />)).toBe("");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("renders with the explicit opt-in in production, and by default in development", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    try {
+      const forced = XRay({ plan: withWhy(), force: true });
+      expect(forced?.type).toBe(XRayClient);
+      expect(renderToStaticMarkup(<XRay plan={withWhy()} force />)).toContain("X-ray off");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+    expect(XRay({ plan: withWhy() })?.type).toBe(XRayClient);
+  });
+
+  it("leaves the page's block markup unchanged", async () => {
+    const p = withWhy();
+    const data = await resolvePlanData(p, manifests, ctx);
+    const view = <PlanView plan={p} data={data} manifests={manifests} registry={defaultRegistry} />;
+    const alone = renderToStaticMarkup(view);
+    const together = renderToStaticMarkup(
+      <>
+        {view}
+        <XRay plan={p} />
+      </>,
+    );
+    expect(together.startsWith(alone)).toBe(true);
+    expect(together.slice(alone.length)).not.toContain("data-w4-block");
+  });
+
+  it("lists every record of a block, marks ungated, and shows a rendered fallback", () => {
+    const b = withWhy().layout.primary[0]!;
+    const html = renderToStaticMarkup(
+      <BlockCard
+        block={b}
+        rendered={{
+          sourceId: "menu",
+          componentId: "card-grid",
+          fallback: "menu-list failed validation or render",
+        }}
+      />,
+    );
+    for (const w of why) expect(html).toContain(`data-w4-why="${w.question}"`);
+    expect(html).toContain("ungated in dev");
+    expect(html).toContain('data-w4-decided-by="ungated"');
+    expect(html).toContain("0.91"); // probability of the chosen answer
+    expect(html).toContain("0.82"); // confidence
+    expect(html).toContain("0.40"); // threshold
+    expect(html).toContain("jev-1.13.0");
+    expect(html).toContain("<s>menu-list</s> → card-grid");
+    expect(html).toContain("menu-list failed validation or render");
+  });
+
+  it("lists excluded sources and stale sources", () => {
+    const html = renderToStaticMarkup(
+      <SummaryPanel
+        plan={withWhy()}
+        calibration={{ status: "partial", staleSources: ["reviews"] }}
+        engine="jev-1.13.0"
+      />,
+    );
+    expect(html).toContain('data-w4-excluded="reviews"');
+    expect(html).toContain("partial");
+    expect(html).toContain("stale: reviews");
   });
 });

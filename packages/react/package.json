@@ -34,6 +34,8 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./why": "./src/why.ts",
+    "./xray": "./src/xray.tsx",
     "./styles.css": "./src/styles.css",
     "./tokens.css": "./src/tokens.css",
     "./tailwind.css": "./src/tailwind.css"
@@ -46,6 +48,14 @@
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
+      },
+      "./why": {
+        "types": "./dist/why.d.ts",
+        "import": "./dist/why.js"
+      },
+      "./xray": {
+        "types": "./dist/xray.d.ts",
+        "import": "./dist/xray.js"
       },
       "./styles.css": "./dist/styles.css",
       "./tokens.css": "./dist/tokens.css",

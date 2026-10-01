@@ -11,7 +11,7 @@ export const UNKNOWN = "unknown";
 
 /** Declared closed sets of labels per bucket. "unknown" is always allowed. */
 export const CORE_BUCKETS = {
-  arrival: ["visual", "transactional", "evaluating", "direct"],
+  arrival: ["visual", "transactional", "evaluating", "direct", "crawler"],
   device: ["mobile", "tablet", "desktop"],
   mediaBudget: ["high", "low"],
   familiarity: ["new", "returning", "regular"],
@@ -66,7 +66,11 @@ const TRANSACTIONAL = /maps|waze|citymapper|uber/;
 const EVALUATING =
   /tripadvisor|yelp|thefork|opentable|booking|expedia|hotels|kayak|trivago|google|bing|duckduckgo|michelin/;
 
+/** Arrival label of known search-engine crawlers; the planner gives them a complete page. */
+export const CRAWLER_ARRIVAL = "crawler";
+
 export const arrivalRule: SituationRule = (env) => {
+  if (env.crawler) return { arrival: CRAWLER_ARRIVAL };
   const source = env.src ?? env.utm.utm_source;
   if (source) {
     if (VISUAL.test(source)) return { arrival: "visual" };

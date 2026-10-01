@@ -45,6 +45,8 @@ export interface ContextEnvelope {
   firstParty?: Record<string, string>;
   /** Only present with consent. */
   visit?: VisitMemory;
+  /** Name of the known search-engine crawler the user agent identifies, if any. */
+  crawler?: string;
 }
 
 export interface RequestLike {
@@ -99,6 +101,8 @@ export function collectEnvelope(request: RequestLike, options: CollectOptions = 
   if (geo) envelope.geo = geo;
   const timezone = geo?.timezone ?? header("x-vercel-ip-timezone");
   if (timezone) envelope.timezone = timezone;
+  const crawler = detectCrawler(header("user-agent"));
+  if (crawler) envelope.crawler = crawler;
 
   let setCookie: string | undefined;
   if (consent) {
@@ -151,6 +155,27 @@ export function parseAcceptLanguage(value: string | undefined): string[] {
     .filter((l) => l.tag && l.tag !== "*" && Number.isFinite(l.q) && l.q > 0)
     .sort((a, b) => b.q - a.q)
     .map((l) => l.tag);
+}
+
+/**
+ * Known search-engine crawlers, matched on the user agent. They are given a complete, neutral
+ * page (spec: page-planning, complete plan for crawlers). Data: extend as engines appear.
+ */
+export const KNOWN_CRAWLERS: ReadonlyArray<{ name: string; pattern: RegExp }> = [
+  { name: "googlebot", pattern: /Googlebot|Google-InspectionTool/i },
+  { name: "bingbot", pattern: /bingbot/i },
+  { name: "duckduckbot", pattern: /DuckDuckBot/i },
+  { name: "yandexbot", pattern: /YandexBot/i },
+  { name: "baiduspider", pattern: /Baiduspider/i },
+  { name: "applebot", pattern: /Applebot/i },
+  { name: "slurp", pattern: /Yahoo! Slurp/i },
+  { name: "seznambot", pattern: /SeznamBot/i },
+  { name: "yeti", pattern: /Yeti\//i },
+];
+
+export function detectCrawler(userAgent: string | undefined): string | undefined {
+  if (!userAgent) return undefined;
+  return KNOWN_CRAWLERS.find((c) => c.pattern.test(userAgent))?.name;
 }
 
 function detectDevice(header: HeaderReader): DeviceClass {

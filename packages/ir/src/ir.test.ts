@@ -81,6 +81,21 @@ describe("plan schema (task 2.1)", () => {
     const schema = planJsonSchema();
     expect(schema.$schema).toContain("2020-12");
     expect(JSON.stringify(schema)).toContain("web4.plan/v1");
+    expect(JSON.stringify(schema)).toContain('"ungated"');
+  });
+
+  it("validates an ungated record (development plans, dx-dev-loop 2.3)", () => {
+    const plan = structuredClone(samplePlan);
+    plan.layout.primary[0]!.why.push({
+      question: "C.region",
+      answer: "primary",
+      probabilities: { primary: 0.9, aside: 0.1 },
+      confidence: 0.8,
+      threshold: null,
+      decidedBy: "ungated",
+      engine: "jev-1.13.0",
+    });
+    expect(validatePlan(plan)).toEqual(plan);
   });
 });
 

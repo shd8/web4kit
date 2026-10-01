@@ -24,6 +24,17 @@ In development, the bar at the top previews each persona (`/?as=arriving-today`)
 
 In production (`pnpm build && pnpm start`) only real request signals are used: `?src=`, referrer, device, language, CDN geo headers and local time.
 
+## The dev loop
+
+Edit a source's `what` or `audience` in `web4/manifests.ts`, save, reload: the page re-plans.
+
+- **Ungated in dev.** Under `pnpm dev`, a decision with no current calibration uses Jev's answer directly and is marked *ungated*. That happens when you edited the source since calibrating, or when a question kind has too few samples. In production those decisions go to rules until you recalibrate. Only the edited sources become stale.
+- **X-ray.** Switch it on at the bottom right. Hover or tap a block to see every decision: answer, probability, confidence, threshold and who decided. Its summary lists the excluded sources (for example `rooms` for a staying guest) and any stale ones. It never renders in production.
+- **Before you deploy.** `pnpm web4kit check` names the stale sources, and `pnpm build` warns about them too. In CI, run `pnpm web4kit check --strict`.
+- **Your own components.** `pnpm web4kit add component <name> --shape <shape>` scaffolds one in `web4/components/` with a test, and registers it. See [Your own components](https://github.com/shd8/web4/blob/main/docs/components.md).
+
+Search engines get every public source in a neutral order instead of a personalised page. See [SEO and crawlers](https://github.com/shd8/web4/blob/main/docs/seo.md).
+
 ## How it's built
 
 ```
@@ -34,9 +45,10 @@ web4/
   data.ts        content (rooms, breakfast, events, reviews)
   fixtures.ts    personas, a fixture grid, page invariants and labels
   engine.ts      which engine plans pages: rules, Laya (W4_ENGINE=laya) or Jev (JEV_API_KEY)
+  components/    your own components next to the library's (web4kit add component)
   site.ts        createSite: engine, calibration, personas, booking enrichment
 app/
-  page.tsx       the site: PlanView inside your own header and footer
+  page.tsx       the site: PlanView inside your own header and footer, plus the X-ray
   stats/         planner stats
 scripts/
   calibrate.ts   measure the engine on your fixtures and write calibration/
@@ -47,9 +59,9 @@ scripts/
 1. **Change the content** in `web4/data.ts` and `web4/hotel.ts`.
 2. **Edit the manifests.** Say who each source is for with `audience: { stayPhase: ["researching"] }`, and put hard business rules in `mustInclude` / `mustExclude`. System One models read literally.
 3. **Keep the rules engine good:** `pnpm test` checks that every invariant holds with rules alone, because rules are the fallback.
-4. **Recalibrate** after changing what the model sees (`what`, `not_for`, `audience`, tags): `pnpm calibrate`, about $0.05 of Jev. Headings, heuristics and defaults can change freely. Until you recalibrate, Jev's answers fall back to rules, and `/stats` says the profile is stale.
+4. **Recalibrate** after changing what the model sees (`what`, `not_for`, `audience`, tags): `pnpm calibrate`, about $0.05 of Jev. Headings, heuristics and defaults can change freely. Until you recalibrate, the edited sources' answers fall back to rules in production (ungated in dev), and `/stats` and `pnpm web4kit check` name them.
 
-Measured on this starter (Jev 1.13, 105 fixtures, 3 repeats): **100% invariants, 100% relevance accuracy, ~8k input tokens and $0.00034 per uncached page**. A page served from the plan cache costs nothing.
+Measured on this starter (Jev 1.13, 105 fixtures, 3 repeats): **100% invariants, 100% relevance accuracy, ~7.7k input tokens and $0.00032 per uncached page**. A page served from the plan cache costs nothing.
 
 ## Styles
 

@@ -17,6 +17,7 @@ export * from "./data";
 export * from "./primitives";
 export * from "./registry";
 export * from "./render";
+export * from "./why";
 
 /** The curated component library (design D9). */
 export const LIBRARY = [

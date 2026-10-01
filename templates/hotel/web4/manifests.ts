@@ -6,7 +6,7 @@ import {
   owner,
   thirdParty,
 } from "@web4kit/manifest";
-import { libraryManifests } from "@web4kit/react";
+import { componentManifests } from "./components";
 import { ARRIVAL_STEPS, BREAKFAST, EVENTS, OFFER, PHOTOS, REVIEWS, ROOMS } from "./data";
 import { forecastFor, HOTEL, hotelClock } from "./hotel";
 
@@ -307,5 +307,5 @@ export const sources: DataSourceManifestInput[] = [
 export const manifests = defineManifests({
   site: "casa-ribeira",
   sources,
-  components: libraryManifests,
+  components: componentManifests,
 });

@@ -87,6 +87,7 @@ export function defineManifests(input: {
     site: input.site,
     version: manifestVersion(input.site, sources, components),
     deciderVersion: deciderVersion(input.site, sources, components),
+    sourceDeciderVersions: sourceDeciderVersions(input.site, sources, components),
     sources,
     components,
   };
@@ -131,24 +132,54 @@ export function deciderVersion(
   const surface = {
     site,
     template: QUESTION_TEMPLATE_VERSION,
-    sources: sources.map((s) => ({
-      id: s.id,
-      shape: s.shape,
-      what: s.what,
-      not_for: s.not_for ?? null,
-      tags: s.tags,
-      audience: s.audience ? describeAudience(s.audience) : null,
-      roles: Object.keys(s.fields).sort(),
-    })),
-    components: components.map((c) => ({
-      id: c.id,
-      what: c.what,
-      category: c.category ?? null,
-      accepts: c.accepts,
-    })),
+    sources: sources.map(sourceSurface),
+    components: components.map(componentSurface),
   };
   return `dec-${stableHash(JSON.stringify(surface), 12)}`;
 }
+
+/**
+ * Decider version per source: everything that source's questions contain (its own surface and
+ * the components it can be shown with). Editing one source, or a component, marks only the
+ * sources whose questions changed as stale.
+ */
+export function sourceDeciderVersions(
+  site: string,
+  sources: DataSourceManifest[],
+  components: ComponentManifest[],
+): Record<string, string> {
+  return Object.fromEntries(
+    sources.map((s) => {
+      const surface = {
+        site,
+        template: QUESTION_TEMPLATE_VERSION,
+        source: sourceSurface(s),
+        components: compatibleComponents(s, components).map((c) => ({
+          ...componentSurface(c),
+          accepts: c.accepts.filter((a) => a.shape === s.shape),
+        })),
+      };
+      return [s.id, `dec-${stableHash(JSON.stringify(surface), 12)}`];
+    }),
+  );
+}
+
+const sourceSurface = (s: DataSourceManifest) => ({
+  id: s.id,
+  shape: s.shape,
+  what: s.what,
+  not_for: s.not_for ?? null,
+  tags: s.tags,
+  audience: s.audience ? describeAudience(s.audience) : null,
+  roles: Object.keys(s.fields).sort(),
+});
+
+const componentSurface = (c: ComponentManifest) => ({
+  id: c.id,
+  what: c.what,
+  category: c.category ?? null,
+  accepts: c.accepts,
+});
 
 function sameCondition(a: Record<string, string[]>, b: Record<string, string[]>) {
   const norm = (c: Record<string, string[]>) =>

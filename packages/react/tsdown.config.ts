@@ -1,7 +1,7 @@
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
+  entry: ["src/index.ts", "src/why.ts", "src/xray.tsx", "src/xray-client.tsx"],
   format: "esm",
   dts: true,
   clean: true,

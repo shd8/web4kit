@@ -228,3 +228,47 @@ describe("decider version (task 2.2)", () => {
     expect(renamed.deciderVersion).not.toBe(base.deciderVersion);
   });
 });
+
+describe("per-source decider versions (dx-dev-loop 1.1)", () => {
+  const hours: DataSourceManifestInput = {
+    ...menu,
+    id: "hours",
+    shape: "schedule",
+    what: "Opening hours",
+    fields: {},
+  };
+  const base = defineManifests({ site: "t", sources: [menu, hours], components });
+
+  it("has one version per source", () => {
+    expect(Object.keys(base.sourceDeciderVersions).sort()).toEqual(["hours", "menu"]);
+  });
+
+  it("changes only the edited source's version", () => {
+    const next = defineManifests({
+      site: "t",
+      sources: [{ ...menu, what: "Tonight's dinner dishes" }, hours],
+      components,
+    });
+    expect(next.sourceDeciderVersions.menu).not.toBe(base.sourceDeciderVersions.menu);
+    expect(next.sourceDeciderVersions.hours).toBe(base.sourceDeciderVersions.hours);
+  });
+
+  it("changes exactly the sources compatible with an edited component", () => {
+    const next = defineManifests({
+      site: "t",
+      sources: [menu, hours],
+      components: components.map((c) => (c.id === "menu-list" ? { ...c, what: "Dish rows" } : c)),
+    });
+    expect(next.sourceDeciderVersions.menu).not.toBe(base.sourceDeciderVersions.menu);
+    expect(next.sourceDeciderVersions.hours).toBe(base.sourceDeciderVersions.hours);
+  });
+
+  it("keeps every version across a label edit", () => {
+    const next = defineManifests({
+      site: "t",
+      sources: [{ ...menu, label: "Dinner" }, hours],
+      components,
+    });
+    expect(next.sourceDeciderVersions).toEqual(base.sourceDeciderVersions);
+  });
+});

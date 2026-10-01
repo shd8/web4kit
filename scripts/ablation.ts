@@ -32,6 +32,7 @@ import {
   deciderVersion,
   type ManifestSet,
   manifestVersion,
+  sourceDeciderVersions,
 } from "@web4kit/manifest";
 import { buildQuestions, createManifestRuleDecider } from "@web4kit/planner";
 import * as explorer from "../examples/db-explorer/src/index";
@@ -122,6 +123,7 @@ function withSources(m: ManifestSet, sources: DataSourceManifest[]): ManifestSet
     sources,
     version: manifestVersion(m.site, sources, m.components),
     deciderVersion: deciderVersion(m.site, sources, m.components),
+    sourceDeciderVersions: sourceDeciderVersions(m.site, sources, m.components),
   };
 }
 

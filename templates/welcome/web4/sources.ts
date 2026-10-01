@@ -1,5 +1,5 @@
 import { defineManifests, defineSource, owner, system } from "@web4kit/manifest";
-import { libraryManifests } from "@web4kit/react";
+import { componentManifests } from "./components";
 
 /**
  * Your data sources. web4 decides, per visitor, which of these to show, with which component,
@@ -10,7 +10,7 @@ import { libraryManifests } from "@web4kit/react";
  */
 export const manifests = defineManifests({
   site: "my-web4-site",
-  components: libraryManifests,
+  components: componentManifests,
   sources: [
     defineSource({
       id: "welcome",

@@ -112,8 +112,9 @@ hand-written heuristics (a fallback, not web4 itself). In .env (cp .env.example 
 `);
 
 /**
- * Pack every @web4kit library into <target>/.web4kit and point the app at the tarballs,
- * including transitive @web4kit dependencies (overrides), so install works without npm.
+ * Pack every @web4kit library and the web4kit CLI into <target>/.web4kit and point the app
+ * at the tarballs, including transitive @web4kit dependencies (overrides), so install works
+ * without npm.
  */
 function packLocal(repo, target, pkg) {
   const out = join(target, ".web4kit");
@@ -123,7 +124,7 @@ function packLocal(repo, target, pkg) {
     const file = join(repo, "packages", d, "package.json");
     if (!existsSync(file)) return false;
     const p = JSON.parse(readFileSync(file, "utf8"));
-    return p.name.startsWith("@web4kit/");
+    return p.name.startsWith("@web4kit/") || p.name === "web4kit";
   });
   for (const dir of libs) {
     process.stdout.write(`  packing ${dir}…\n`);

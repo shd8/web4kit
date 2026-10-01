@@ -9,14 +9,24 @@ const idle = "bg-card text-foreground";
 /**
  * Why the page isn't planned by a calibrated model, if it isn't. The rules engine is the right
  * fallback, but it only replays hand-written heuristics: say so rather than let it pass for web4.
+ * With development gating, uncalibrated answers are used (ungated) here but not in production.
  */
-export function engineNotice(engine: string, calibration: CalibrationStatus): string | undefined {
+export function engineNotice(
+  engine: string,
+  calibration: CalibrationStatus,
+  developmentGating = false,
+): string | undefined {
   if (engine === "rules")
     return "Planned by the rules engine: your hand-written heuristics, not a model. Set JEV_API_KEY or W4_ENGINE=laya in .env to have a System One model plan this page.";
+  const fallback = developmentGating
+    ? "are used ungated here (marked in the X-ray) but fall back to rules in production"
+    : "fall back to rules";
   if (calibration.status === "none")
-    return `${engine} has no calibration profile, so every answer falls back to rules. Measure it with pnpm calibrate.`;
+    return `${engine} has no calibration profile, so every answer ${developmentGating ? "is used ungated here (marked in the X-ray) but falls back to rules in production" : "falls back to rules"}. Measure it with pnpm calibrate.`;
   if (calibration.status === "stale")
-    return `${engine}'s calibration is stale (${calibration.reason}), so every answer falls back to rules. Re-run pnpm calibrate.`;
+    return `${engine}'s calibration is stale (${calibration.reason}), so all its answers ${fallback}. Re-run pnpm calibrate.`;
+  if (calibration.status === "partial")
+    return `${engine}'s calibration is stale for ${calibration.staleSources.join(", ")}, so their answers ${fallback}. Re-run pnpm calibrate.`;
   return undefined;
 }
 
@@ -32,14 +42,19 @@ export function PreviewBar({
   statsHref,
 }: {
   site: Pick<Site, "personas" | "previews" | "previewParam"> & {
-    planner: Pick<Site["planner"], "calibrationStatus">;
+    planner: Pick<Site["planner"], "calibrationStatus"> &
+      Partial<Pick<Site["planner"], "developmentGating">>;
   };
   page: Pick<SitePage, "persona" | "plan" | "cacheHit" | "planningMs">;
   path?: string;
   statsHref?: string;
 }): ReactElement | null {
   if (!site.previews) return null;
-  const notice = engineNotice(page.plan.engine, site.planner.calibrationStatus);
+  const notice = engineNotice(
+    page.plan.engine,
+    site.planner.calibrationStatus,
+    site.planner.developmentGating,
+  );
   return (
     <nav
       data-w4-preview-bar=""

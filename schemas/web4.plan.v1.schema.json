@@ -108,7 +108,7 @@
                     },
                     "decidedBy": {
                       "type": "string",
-                      "enum": ["engine", "default", "rule", "invariant"]
+                      "enum": ["engine", "default", "rule", "invariant", "ungated"]
                     },
                     "engine": {
                       "type": "string"
@@ -212,7 +212,7 @@
                     },
                     "decidedBy": {
                       "type": "string",
-                      "enum": ["engine", "default", "rule", "invariant"]
+                      "enum": ["engine", "default", "rule", "invariant", "ungated"]
                     },
                     "engine": {
                       "type": "string"
@@ -316,7 +316,7 @@
                     },
                     "decidedBy": {
                       "type": "string",
-                      "enum": ["engine", "default", "rule", "invariant"]
+                      "enum": ["engine", "default", "rule", "invariant", "ungated"]
                     },
                     "engine": {
                       "type": "string"
@@ -420,7 +420,7 @@
                     },
                     "decidedBy": {
                       "type": "string",
-                      "enum": ["engine", "default", "rule", "invariant"]
+                      "enum": ["engine", "default", "rule", "invariant", "ungated"]
                     },
                     "engine": {
                       "type": "string"
@@ -524,7 +524,7 @@
                     },
                     "decidedBy": {
                       "type": "string",
-                      "enum": ["engine", "default", "rule", "invariant"]
+                      "enum": ["engine", "default", "rule", "invariant", "ungated"]
                     },
                     "engine": {
                       "type": "string"
@@ -600,7 +600,7 @@
                 },
                 "decidedBy": {
                   "type": "string",
-                  "enum": ["engine", "default", "rule", "invariant"]
+                  "enum": ["engine", "default", "rule", "invariant", "ungated"]
                 },
                 "engine": {
                   "type": "string"

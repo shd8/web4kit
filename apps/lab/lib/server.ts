@@ -122,9 +122,11 @@ async function plannerFor(
       ? "rules"
       : status.status === "active"
         ? status.version
-        : status.status === "stale"
-          ? `stale ${status.version} (re-run conformance) → rules`
-          : "none (uncalibrated → rules)",
+        : status.status === "partial"
+          ? `${status.version}, stale for ${status.staleSources.join(", ")} → rules`
+          : status.status === "stale"
+            ? `stale ${status.version} (re-run conformance) → rules`
+            : "none (uncalibrated → rules)",
   };
 }
 

@@ -6,6 +6,7 @@ import {
   type Questions,
 } from "@web4kit/decider";
 import { defineManifests, defineSource, owner } from "@web4kit/manifest";
+import { CalibrationProfileSchema } from "@web4kit/planner";
 import { describe, expect, it } from "vitest";
 import {
   createRecordingDecider,
@@ -124,5 +125,26 @@ describe("recording and replay (task 1.3)", () => {
     const run = await runEngine({ manifests, fixtures, decider: countingEngine().decider });
     expect(run.byKind["A.relevance|english"]?.accuracy).toBe(1);
     expect(run.decisionAccuracy["A.relevance|english"]).toEqual({ samples: 2, accuracy: 0 });
+  });
+});
+
+describe("per-source versions in profiles (dx-dev-loop 1.2)", () => {
+  it("records every source's decider version", async () => {
+    const run = await runEngine({ manifests, fixtures, decider: countingEngine().decider });
+    expect(run.profile?.sourceVersions).toEqual(manifests.sourceDeciderVersions);
+    expect(Object.keys(run.profile?.sourceVersions ?? {})).toEqual(
+      manifests.sources.map((s) => s.id),
+    );
+  });
+
+  it("still parses a v1 profile without per-source versions", () => {
+    const v1 = {
+      engine: "fake-1.0.0",
+      version: "cal-x",
+      manifestVersion: manifests.deciderVersion,
+      createdAt: "2026-01-01T00:00:00.000Z",
+      entries: {},
+    };
+    expect(CalibrationProfileSchema.parse(v1).sourceVersions).toBeUndefined();
   });
 });

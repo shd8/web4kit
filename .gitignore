@@ -10,3 +10,4 @@ coverage/
 .claude/
 # OpenSpec planning artifacts stay local: never commit them.
 openspec/
+packages/web4kit/.tmp/

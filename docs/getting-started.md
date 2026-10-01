@@ -167,10 +167,14 @@ const page = await site.page({ searchParams });
 return (
   <>
     <PreviewBar site={site} page={page} statsHref="/stats" />
-    <PlanView plan={page.plan} data={page.data} manifests={site.manifests} registry={defaultRegistry} />
+    <PlanView plan={page.plan} data={page.data} manifests={site.manifests} registry={registry} />
+    {/* development only: renders nothing in production */}
+    <XRay plan={page.plan} data={page.data} manifests={site.manifests} registry={registry} calibration={site.planner.calibrationStatus} />
   </>
 );
 ```
+
+`registry` comes from `web4/components/index.ts` in the starters: the library's components plus your own (see [Your own components](components.md)). `XRay` comes from `@web4kit/react/xray`.
 
 `?as=<persona>` works only when previews are on, which is by default outside production. The bar also says when a page was planned by rules alone, or by an engine without a valid calibration profile. `site.stats()` returns pages, cache hits, tokens, cost and calibration status. `pnpm create web4kit` scaffolds a complete site like this.
 
@@ -192,7 +196,7 @@ const planner = createPlanner({
 
 - **One round per page.** The planner sends every stage question for every source in one logical round. Requests that exceed an engine's limits are split into parallel requests. On the Casa Lumbre example that's about 6.7k input tokens, **≈ $0.0003 per uncached page**, with p50 ≈ 280 ms.
 - **Failures fall back to rules.** If Jev fails, times out or is rate-limited, those questions are answered by rules, and the reason is recorded in each block's `why`.
-- **No calibration, no trust.** Without a calibration profile, every Jev answer is gated to rules ("uncalibrated"). That is deliberate: an unmeasured engine is never trusted.
+- **No calibration, no trust.** In production, without a calibration profile every Jev answer is gated to rules ("uncalibrated"). That is deliberate: an unmeasured engine is never trusted. In development, `@web4kit/next` uses those answers anyway and marks them *ungated* (see [step 8](#8-the-development-loop)).
 
 Other engines behind the same `Decider` interface: `createSystemOneHttpDecider` (any `/v1/systemone` endpoint, e.g. Ollaya serving Laya), `@web4kit/decider-laya` (in-process ONNX), and `createCascadeDecider` (a cheap engine first, escalating to Jev on low confidence).
 
@@ -217,11 +221,22 @@ writeFileSync("calibration/jev-1.13.0.json", JSON.stringify(run.profile, null, 2
 
 Load it with `loadCalibration("calibration", decider.id)` from `@web4kit/planner/node` and pass it as `calibration`. For each question kind and language, the profile holds the threshold above which the engine's answers are trusted. Combinations where the engine is as confident on wrong answers as on right ones are marked **uncalibrated** and answered by rules. That's how web4 catches silent failures.
 
-A profile is tied to what the decider can see (`manifests.deciderVersion`: descriptions, audience, tags, shapes, components). Editing a heading, a heuristic or a default keeps it valid. Editing the prompt makes it **stale**: the planner ignores it (every answer falls back to rules) and reports `planner.calibrationStatus.status === "stale"` until you re-run calibration.
+A profile is tied to what the decider can see, **source by source** (`manifests.sourceDeciderVersions`): each source's description, audience, tags, shape and the components it can be shown with. Editing a heading, a heuristic or a default keeps it valid. Editing one source's prompt makes the profile stale **for that source only**: `planner.calibrationStatus` becomes `{ status: "partial", staleSources: ["reviews"] }`. That source's answers fall back to rules in production, and every other source keeps its thresholds until you re-run calibration. Editing a component's `what` marks the sources offered that component. Profiles made before per-source versions existed match per site, as before.
 
 Iterate like a designer: when an invariant fails, sharpen the `what` / `audience` wording, re-run, and watch the numbers.
 
-## 8. Go further
+## 8. The development loop
+
+Edit a description in `web4/sources.ts`, save, reload: the page re-plans. Under `pnpm dev`, a decision with no current calibration (no profile, a source edited since calibrating, or a question kind with too few samples) uses the engine's answer directly and records it as **ungated**. You see what the model really thinks of your new wording. Production never does this: there those decisions go to rules. Answers the suite *measured* as unreliable, and answers below a current threshold, gate the same way in both.
+
+- **See why.** Switch on the X-ray (bottom right). Hover a block, or tap it on a phone, to see every decision: answer, probability, confidence, threshold and who decided (engine, rule, default, invariant, or *ungated in dev*). Excluded sources and stale sources are listed in its summary. It renders nothing in production.
+- **Know when to calibrate.** `pnpm web4kit check` reports active, partial (naming the stale sources), stale or missing, without calling the engine. `next build` prints the same warning. Run `pnpm calibrate` when you're happy with the wording, before you deploy.
+- **Make CI strict.** `pnpm web4kit check --strict` (or `W4_STRICT_CALIBRATION=1 next build`) fails unless calibration is active, so stale answers never silently become rules answers in production.
+- **Add components.** `pnpm web4kit add component <name>` scaffolds one and registers it: [Your own components](components.md).
+
+Search engines get a complete, neutral page instead of a personalised one: [SEO and crawlers](seo.md).
+
+## 9. Go further
 
 - Read `examples/restaurant` (Casa Lumbre) and `examples/db-explorer` (Meridian Supply) for complete sites with fixtures, labels and invariants.
 - Run the lab (`cd apps/lab && W4_LAB_MODE=1 pnpm dev`) to see every decision in the Why panel.

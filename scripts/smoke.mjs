@@ -148,18 +148,20 @@ try {
     mkdirSync(tool);
     if (!published) run(`tar -xzf ${scaffolder.replace("file:", "")} -C ${tool}`, work);
     const STARTERS = [
-      // Production must ignore ?as= previews: the real request (?src=instagram) is planned.
+      // Production must ignore ?as= previews: the page with a preview persona must be the same
+      // page as without it (the real request is planned). Compared, not asserted by block names,
+      // because the real request's plan depends on the time of day the smoke test runs.
       {
         template: "welcome",
-        query: "?src=instagram&as=night-owl",
+        query: "?src=instagram",
+        preview: "&as=night-owl",
         want: ["welcome", "get-started", "from-social"],
-        never: ["late-night"],
       },
       {
         template: "hotel",
-        query: "?src=instagram&as=arriving-today",
+        query: "?src=instagram",
+        preview: "&as=arriving-today",
         want: ["hero-photos", "rooms"],
-        never: ["arrival-guide"],
       },
     ];
     for (const [i, starter] of STARTERS.entries()) {
@@ -209,14 +211,30 @@ try {
             () => "",
           );
         }
-        const blocks = [...html.matchAll(/data-w4-block="([a-z-]+)"/g)].map((m) => m[1]);
+        const blocksOf = (page) =>
+          [...page.matchAll(/data-w4-block="([a-z-]+)"/g)].map((m) => m[1]);
+        const blocks = blocksOf(html);
         const missing = starter.want.filter((b) => !blocks.includes(b));
         if (missing.length)
           throw new Error(
             `${starter.template} page missing blocks ${missing}: ${blocks.join(", ")}`,
           );
-        if (starter.never.some((b) => blocks.includes(b)))
-          throw new Error(`${starter.template}: production must ignore ?as= persona previews`);
+        // Same page with a preview persona; retried once in case the minute (and so the local
+        // time of day) changed between the two requests.
+        let previewed = [];
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const [plain, withPreview] = await Promise.all(
+            [starter.query, `${starter.query}${starter.preview}`].map((q) =>
+              fetch(`http://localhost:${port}/${q}`).then((r) => r.text()),
+            ),
+          );
+          previewed = blocksOf(withPreview);
+          if (blocksOf(plain).join() === previewed.join()) break;
+          if (attempt === 1)
+            throw new Error(
+              `${starter.template}: production must ignore ?as= persona previews (${blocksOf(plain).join(", ")} vs ${previewed.join(", ")})`,
+            );
+        }
         if (html.includes("Preview as"))
           throw new Error(`${starter.template}: production must not render the dev persona bar`);
         console.log(

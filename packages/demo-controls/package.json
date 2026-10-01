@@ -1,0 +1,17 @@
+{
+  "name": "@web4kit/demo-controls",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Envelope helpers shared by the lab and the site's playground (not published).",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@web4kit/context": "workspace:^"
+  }
+}

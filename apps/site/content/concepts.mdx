@@ -1,0 +1,36 @@
+---
+title: Concepts
+description: Situations, manifests, the three questions, calibration and invariants.
+---
+
+A web4 page isn't laid out by hand. For each visitor, web4 asks a System One decision model what to show, with which component, and where. It answers with typed choices, never generated text. Five ideas make that safe.
+
+## The situation
+
+The request is turned, in code, into a handful of English labels: how the visitor arrived, their device, the time of day, how far away they are, whether they've booked. `arrival: visual`, `device: mobile`, `mealWindow: dinner`. All the arithmetic (distance, opening hours, time zones) happens in these rules. The model only ever sees the labels: no coordinates, no timestamps, no cookies.
+
+Here is the restaurant, for a tourist arriving from Instagram on a Tuesday. Change the time and watch the labels and the page change together:
+
+<SituationEmbed site="restaurant" persona="tourist-insta" control="time" options={["20:30", "23:40"]} showSituation />
+
+## Manifests
+
+Each **data source** says what it is in one sentence (`what`), who it's for (`audience`), and its default placement. Each **component** says what it shows and which data shapes it accepts. Those descriptions are the prompt: the model reads them literally. The data itself is fetched at render time and never reaches the model.
+
+## The three questions
+
+For every source, in one round:
+
+1. **What to show:** is it relevant, and how important?
+2. **How to show it:** which compatible component?
+3. **Where:** which region, and how prominent?
+
+## Calibration
+
+No answer is trusted until it's measured. `pnpm calibrate` runs the engine on fixtures and records, per question kind and language, the confidence above which its answers are right. In production, an answer below that threshold uses the manifest default, and an unmeasured question uses rules. Every decision records who made it: engine, rule, default or invariant. These are the recorded decisions for the dish photos, from the arrival the visitor came by:
+
+<SituationEmbed site="restaurant" persona="tourist-insta" control="arrival" options={["instagram", "maps"]} focus="dish-photos" showWhy />
+
+## Invariants
+
+Some things are never left to a model. At most one hero. Every source is rendered by exactly one component. A source is always shown when its `mustInclude` holds and never when its `mustExclude` holds. Media-heavy components are swapped out when data saving is on. Whatever the model answers, the page is complete.

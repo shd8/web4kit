@@ -124,7 +124,7 @@ function packLocal(repo, target, pkg) {
     const file = join(repo, "packages", d, "package.json");
     if (!existsSync(file)) return false;
     const p = JSON.parse(readFileSync(file, "utf8"));
-    return p.name.startsWith("@web4kit/") || p.name === "web4kit";
+    return !p.private && (p.name.startsWith("@web4kit/") || p.name === "web4kit");
   });
   for (const dir of libs) {
     process.stdout.write(`  packing ${dir}…\n`);

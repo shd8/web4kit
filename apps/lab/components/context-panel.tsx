@@ -20,7 +20,7 @@ import {
   setVisits,
   sliderToKm,
   VISITS,
-} from "@/lib/controls";
+} from "@web4kit/demo-controls";
 import type { LabExample } from "@/lib/examples";
 import { cx, Field, Section, Segmented, Slider } from "./ui";
 

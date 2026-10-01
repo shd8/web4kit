@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+/* The web4 component library: tokens, and lets Tailwind see its classes (playground, embeds). */
+@import "@web4kit/react/tailwind.css";

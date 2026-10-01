@@ -12,6 +12,9 @@ const fraunces = Fraunces({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
+/** The public demo (spec: lab-showcase). The domain is set in launch-go-public. */
+const PLAYGROUND_URL = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://web4kit.dev"}/playground/`;
+
 export const metadata: Metadata = {
   title: "web4 lab",
   description: "Pages planned per visitor by System One decision models.",
@@ -27,6 +30,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${fraunces.variable} ${inter.variable} ${mono.variable}`}
     >
       <body suppressHydrationWarning>
+        <p
+          data-lab-banner=""
+          className="border-b border-zinc-200 bg-zinc-50 px-4 py-1.5 text-center text-xs text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400"
+        >
+          This is the local web4 lab: live engines and arbitrary situations, for working on web4. It
+          isn't deployed. The public demo is the{" "}
+          <a href={PLAYGROUND_URL} className="underline">
+            playground
+          </a>
+          .
+        </p>
         <Providers>{children}</Providers>
       </body>
     </html>

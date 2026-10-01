@@ -13,7 +13,10 @@
       "!.w4-cache",
       "!reports/ablation",
       "!packages/create-web4kit/template",
-      "!**/calibration/report.md"
+      "!**/calibration/report.md",
+      "!apps/site/out",
+      "!apps/site/.source",
+      "!apps/site/public/playground"
     ]
   },
   "formatter": {

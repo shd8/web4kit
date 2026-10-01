@@ -12,10 +12,11 @@ Do these in order; each one has a way to check it worked.
 - [ ] **Enable Discussions**, with a *Thesis* category (Settings → General → Features). Check: the category uses `.github/DISCUSSION_TEMPLATE/thesis.yml`.
 - [ ] **Enable private vulnerability reporting** (Settings → Code security), which `SECURITY.md` points to.
 - [ ] **Pages:** Settings → Pages → Source: *GitHub Actions*. Then run the Pages workflow (Actions → Pages → Run workflow). Check: <https://shd8.github.io/web4kit/> serves the site, and the playground switches plans.
-- [ ] **npm token:** a granular token with publish rights on the `@web4kit` scope **and** on `create-web4kit` and `web4kit`, with 2FA bypass for automation. Check the token's package list on npmjs.com; `npm publish --dry-run` doesn't check rights.
+- [ ] **npm token:** a granular token with *Read and write (stage only)* on **All packages** (new names can't be selected), with 2FA bypass, so CI can stage versions but never publish them on its own. The `web4kit` npm organization must exist for `@web4kit/*`.
 - [ ] **Secrets:** add `NPM_TOKEN` (Settings → Secrets → Actions) and the variable `RELEASE_ENABLED=true`.
-- [ ] **Release 0.2.0:** merge the *Version Packages* pull request the Release workflow opens.
-  - Check: the workflow's "Smoke test the published packages" step passes.
+- [ ] **Release 0.2.0:** merge the *Version Packages* pull request the Release workflow opens. The workflow stages all 12 packages.
+  - Approve each with 2FA: `npm stage list`, then `npm stage approve <stage-id>`.
+  - Run *Smoke test npm* with version `0.2.0`, and check that it passes.
   - Check: `npm view @web4kit/planner version` prints `0.2.0`, and the npm page shows provenance.
 - [ ] **Deprecate the placeholder:** `npm deprecate web4kit@0.0.1 "Placeholder; use web4kit@latest"`. Check: `npx web4kit@latest --help` prints the CLI's help with no warning.
 - [ ] **Try it as a stranger:** in an empty folder, `pnpm create web4kit my-site && cd my-site && pnpm install && pnpm dev`.

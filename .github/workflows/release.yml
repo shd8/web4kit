@@ -13,7 +13,8 @@ permissions:
 
 jobs:
   release:
-    # Opt-in: set the repository variable RELEASE_ENABLED=true (and the NPM_TOKEN secret) to publish.
+    # Opt-in: set the repository variable RELEASE_ENABLED=true and the NPM_TOKEN secret (a
+    # stage-only granular token). New versions are staged, then approved by a maintainer with 2FA.
     if: vars.RELEASE_ENABLED == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -21,29 +22,25 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # npm >= 12 (for `npm stage`) needs Node >= 22.22.
+          node-version: 24
           cache: pnpm
           registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@12
       - run: pnpm install --frozen-lockfile
       - run: node scripts/ci.mjs
-      # Opens a "Version Packages" PR from pending changesets; when that PR is merged,
-      # publishes every @web4kit/* version not yet on npm.
+      # Opens a "Version Packages" PR from pending changesets; when that PR is merged, stages
+      # every public package version not yet on npm (scripts/stage-release.mjs).
       - uses: changesets/action@v1
         id: changesets
         with:
           version: pnpm version-packages
-          publish: pnpm release
+          publish: pnpm release:stage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # Provenance requires a public repository; enabled automatically once the repo is public.
           NPM_CONFIG_PROVENANCE: ${{ github.event.repository.private == false }}
-      # Every public package shares one version (fixed group), so the first entry names it.
-      # Installs that version from npm, type-checks and runs it, and builds both starters made
-      # with `pnpm create web4kit@<version>` (spec: public-release).
-      - name: Smoke test the published packages
-        if: steps.changesets.outputs.published == 'true'
-        run: node scripts/smoke.mjs --from-npm "$VERSION"
-        env:
-          VERSION: ${{ fromJSON(steps.changesets.outputs.publishedPackages)[0].version }}
+      # Staged versions aren't installable until approved, so the npm smoke test runs from the
+      # "Smoke test npm" workflow once they are (spec: public-release).

@@ -144,11 +144,16 @@ Use the **engine switcher** (Rules / Jev) and the **Why** panel to see each deci
 
 ### Releasing
 
-Versions are managed with [Changesets](https://github.com/changesets/changesets). Every public package (`@web4kit/*`, `create-web4kit` and the `web4kit` CLI) shares one version. On `main`, the Release workflow opens a *Version Packages* PR. Merging it publishes to npm with provenance, then installs that version from npm and smoke-tests it (`node scripts/smoke.mjs --from-npm <version>`), starters included.
+Versions are managed with [Changesets](https://github.com/changesets/changesets). Every public package (`@web4kit/*`, `create-web4kit` and the `web4kit` CLI) shares one version.
 
-Publishing is opt-in. Set the repository variable `RELEASE_ENABLED=true` and add an `NPM_TOKEN` secret: a granular npm token with publish rights on the `@web4kit` scope **and** on the unscoped `create-web4kit` and `web4kit` packages, with 2FA bypass for automation.
+1. On `main`, the Release workflow opens a *Version Packages* PR.
+2. Merging it **stages** every new version on npm, with provenance (`scripts/stage-release.mjs`, using `npm stage publish`). Staged versions aren't installable yet.
+3. A maintainer approves each one with 2FA: `npm stage list`, then `npm stage approve <stage-id>`.
+4. Run the **Smoke test npm** workflow (Actions → Smoke test npm → Run workflow) with the version. It installs that version from npm and runs the smoke test (`node scripts/smoke.mjs --from-npm <version>`), starters included.
 
-The `web4kit` name first held a 0.0.1 placeholder. The owner deprecates that version once, by hand (it needs 2FA): `npm deprecate web4kit@0.0.1 "Placeholder; use web4kit@latest"`. Later versions are never deprecated.
+Release is opt-in. Set the repository variable `RELEASE_ENABLED=true` and add an `NPM_TOKEN` secret. The secret is a granular npm token with *Read and write (stage only)* on all packages (new names such as `create-web4kit` need "All packages") and 2FA bypass, so CI can stage but never publish on its own.
+
+The `web4kit` name first held a 0.0.1 placeholder. The owner deprecates that version once, by hand: `npm deprecate web4kit@0.0.1 "Placeholder; use web4kit@latest"`. Later versions are never deprecated.
 
 ### Repository layout
 

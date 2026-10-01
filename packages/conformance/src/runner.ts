@@ -1,6 +1,6 @@
 import type { Situation } from "@web4kit/context";
 import type { AnswerOrUnanswered, AnswerSet, Decider, Questions, State } from "@web4kit/decider";
-import { stableHash } from "@web4kit/ir";
+import { type Plan, REGIONS, stableHash } from "@web4kit/ir";
 import type { ManifestSet } from "@web4kit/manifest";
 import {
   buildQuestions,
@@ -27,6 +27,11 @@ export interface EngineRun {
   engineFailures: number;
   repeats: number;
   byKind: Record<string, KindStats>;
+  /**
+   * Labels scored against what the final plan decided (after gating, defaults, invariants and
+   * fallbacks): what a visitor actually gets. Keyed by `${kind}|${language}`.
+   */
+  decisionAccuracy: Record<string, { samples: number; accuracy: number }>;
   invariantPassRate: number;
   invariantFailures: Array<{ fixture: string; detail: string }>;
   latencyMs: { p50: number; p95: number };
@@ -74,7 +79,14 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
   await pool(jobs, options.concurrency ?? 4, async ({ f }) => {
     const qp = buildQuestions(manifests, f.situation, f.intent ? { intent: f.intent } : {});
     const started = performance.now();
-    const answers = await decider.decide(qp.state, qp.questions);
+    let answers: AnswerSet;
+    try {
+      answers = await decider.decide(qp.state, qp.questions);
+    } catch (e) {
+      throw new Error(`fixture ${f.name}: ${e instanceof Error ? e.message : String(e)}`, {
+        cause: e,
+      });
+    }
     latencies.push(performance.now() - started);
     tokens += answers.usage.inputTokens;
     const list = recorded.get(f.name) ?? [];
@@ -161,6 +173,7 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
 
   // Phase 3: invariants, planning with the generated profile and the recorded first answers.
   const failures: EngineRun["invariantFailures"] = [];
+  const decisions = new Map<string, { met: number; total: number }>();
   let checks = 0;
   for (const f of fixtures) {
     const first = recorded.get(f.name)?.[0];
@@ -179,6 +192,14 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
       checks++;
       if (!result.ok) failures.push({ fixture: f.name, detail: result.detail });
     }
+    const language = f.intent?.language ?? "english";
+    for (const expected of f.expected ?? []) {
+      const key = calibrationKey(expected.kind, language);
+      const stat = decisions.get(key) ?? { met: 0, total: 0 };
+      stat.total++;
+      if (decisionMeets(plan, expected)) stat.met++;
+      decisions.set(key, stat);
+    }
   }
 
   const plans = fixtures.length * repeats;
@@ -191,6 +212,12 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
     engineFailures,
     repeats,
     byKind,
+    decisionAccuracy: Object.fromEntries(
+      [...decisions].map(([key, { met, total }]) => [
+        key,
+        { samples: total, accuracy: met / total },
+      ]),
+    ),
     invariantPassRate: checks ? (checks - failures.length) / checks : 1,
     invariantFailures: failures,
     latencyMs: { p50: percentile(latencies, 0.5), p95: percentile(latencies, 0.95) },
@@ -220,6 +247,40 @@ export function isCorrect(
       return expected.accept.includes(answer.value >= 0.5);
     case "score":
       return expected.accept.includes(Math.round(answer.value));
+  }
+}
+
+/**
+ * Whether the final plan meets a label. Relevance is judged by what the visitor sees (the
+ * source is placed or not); the other kinds by the placed block's decision. A label about a
+ * source that is not placed is unmet for every kind except "not relevant".
+ */
+export function decisionMeets(plan: Plan, expected: ExpectedAnswer): boolean {
+  let region: string | undefined;
+  let block: Plan["layout"]["primary"][number] | undefined;
+  for (const r of REGIONS) {
+    const found = plan.layout[r].find((b) => b.sourceId === expected.source);
+    if (found) {
+      region = r;
+      block = found;
+      break;
+    }
+  }
+  switch (expected.kind) {
+    case "A.relevance":
+      return expected.accept.includes(block !== undefined);
+    case "A.salience": {
+      const why = block?.why.find((w) => w.question === "A.salience");
+      return typeof why?.answer === "number" && expected.accept.includes(Math.round(why.answer));
+    }
+    case "B.component":
+      return block !== undefined && expected.accept.includes(block.componentId);
+    case "C.region":
+      return region !== undefined && expected.accept.includes(region);
+    case "C.prominence":
+      return block !== undefined && expected.accept.includes(Math.round(block.prominence));
+    default:
+      return false;
   }
 }
 

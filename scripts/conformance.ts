@@ -153,6 +153,7 @@ function skipped(engine: string, reason: string): EngineRun {
     labelled: 0,
     repeats: 0,
     byKind: {},
+    decisionAccuracy: {},
     invariantPassRate: 0,
     invariantFailures: [],
     latencyMs: { p50: 0, p95: 0 },

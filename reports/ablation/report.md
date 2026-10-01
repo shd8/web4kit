@@ -1,6 +1,8 @@
 # Heuristic ablation: descriptions vs hand-written rules
 
-Generated 2026-10-01T11:46:46.622Z · engine jev-1.13.0 · seed 7 · Jev spent on recordings $0.68 (16,177,920 input tokens; this run $0.000)
+> A follow-up registered after this study tests the explorer's failure cause: [F1, placement labels](followup-placement/report.md).
+
+Generated 2026-10-01T11:52:56.820Z · engine jev-1.13.0 · seed 7 · Jev spent on recordings $0.68 (16,177,920 input tokens; this run $0.000)
 
 ## Verdict
 

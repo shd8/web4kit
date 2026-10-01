@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/context",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "web4 Context Envelope: Tier 0 request signals turned into named situation labels for deciders.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

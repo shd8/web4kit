@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/ir",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "web4 Page Plan IR: the versioned, language-neutral plan schema, validation, privacy check and stable hashing.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/conformance",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "web4 conformance suite: persona fixtures, invariants, per-engine evaluation and calibration profiles.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

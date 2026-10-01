@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/next",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "web4 for Next.js: one call from a server component plans, resolves and previews a page per visitor.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

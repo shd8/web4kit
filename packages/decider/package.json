@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/decider",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "web4 Decider: an engine-agnostic interface over System One (Jev-like) decision models, with rules, HTTP and cascade adapters.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

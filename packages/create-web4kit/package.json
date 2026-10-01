@@ -1,6 +1,6 @@
 {
   "name": "create-web4kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scaffold a web4 site: pages planned per visitor by System One decision models.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

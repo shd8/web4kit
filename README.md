@@ -151,6 +151,8 @@ Versions are managed with [Changesets](https://github.com/changesets/changesets)
 3. A maintainer approves each one with 2FA: `npm stage list`, then `npm stage approve <stage-id>`.
 4. Run the **Smoke test npm** workflow (Actions → Smoke test npm → Run workflow) with the version. It installs that version from npm and runs the smoke test (`node scripts/smoke.mjs --from-npm <version>`), starters included.
 
+npm can only stage versions of packages that already exist, so a package name that has never been published is published directly (with provenance) and needs a token that can publish. Use one for a release that adds a package, then go back to stage only.
+
 Release is opt-in. Set the repository variable `RELEASE_ENABLED=true` and add an `NPM_TOKEN` secret. The secret is a granular npm token with *Read and write (stage only)* on all packages (new names such as `create-web4kit` need "All packages") and 2FA bypass, so CI can stage but never publish on its own.
 
 The `web4kit` name first held a 0.0.1 placeholder. The owner deprecates that version once, by hand: `npm deprecate web4kit@0.0.1 "Placeholder; use web4kit@latest"`. Later versions are never deprecated.

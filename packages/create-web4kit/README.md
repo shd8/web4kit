@@ -1,6 +1,6 @@
 # create-web4kit
 
-Scaffold a [web4](https://github.com/shd8/web4) site: a Next.js app whose pages are planned for each visitor's situation by a System One decision model (TypeSafe Jev), or by the offline rules engine.
+Scaffold a [web4](https://github.com/shd8/web4kit) site: a Next.js app whose pages are planned for each visitor's situation by a System One decision model (TypeSafe Jev), or by the offline rules engine.
 
 ```bash
 pnpm create web4kit my-site

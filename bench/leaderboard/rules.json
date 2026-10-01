@@ -1,0 +1,217 @@
+{
+  "id": "rules",
+  "published": true,
+  "measuredAt": "2026-10-01T16:20:45.824Z",
+  "score": {
+    "dataset": {
+      "version": "v1",
+      "contentHash": "cd35b17ca8b0aa78513119e26ac3176e0236edb86708e3abc08b63555fb2ecce"
+    },
+    "submission": {
+      "engine": "rules",
+      "openWeights": true,
+      "weightsGB": 0,
+      "offline": true,
+      "trainingData": "none: the manifests' hand-written heuristics and defaults",
+      "engineVersion": "rules",
+      "dataset": "v1",
+      "repeats": 1,
+      "createdAt": "2026-10-01T16:20:45.824Z"
+    },
+    "answers": {
+      "total": 17287,
+      "invalid": 0,
+      "missing": 0
+    },
+    "usage": {
+      "inputTokensPerItem": 0,
+      "latencyMsP50": 0
+    },
+    "splits": {
+      "dev": {
+        "sites": [
+          "restaurant",
+          "explorer"
+        ],
+        "items": 277,
+        "rawAccuracy": 0.827243,
+        "decisionAccuracy": 0.803446,
+        "invariantPassRate": 1,
+        "labelledAnswers": 1204,
+        "uncalibrated": [
+          "restaurant:A.relevance|english",
+          "restaurant:B.component|english",
+          "restaurant:C.region|english",
+          "explorer:A.relevance|english"
+        ]
+      },
+      "test": {
+        "sites": [
+          "hotel",
+          "welcome"
+        ],
+        "items": 132,
+        "rawAccuracy": 1,
+        "decisionAccuracy": 1,
+        "invariantPassRate": 1,
+        "labelledAnswers": 555,
+        "uncalibrated": []
+      }
+    },
+    "sites": {
+      "restaurant": {
+        "split": "dev",
+        "items": 164,
+        "rawAccuracy": 0.912473,
+        "decisionAccuracy": 0.87538,
+        "invariantPassRate": 1,
+        "invariantChecks": 280,
+        "invariantFailures": 0,
+        "kinds": {
+          "A.relevance|english": {
+            "raw": {
+              "samples": 479,
+              "accuracy": 0.941545
+            },
+            "decision": {
+              "samples": 552,
+              "accuracy": 0.949275
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 1,
+            "uncalibrated": true
+          },
+          "A.salience|english": {
+            "raw": {
+              "samples": 177,
+              "accuracy": 1
+            },
+            "decision": {
+              "samples": 177,
+              "accuracy": 0.909605
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 0,
+            "uncalibrated": false,
+            "threshold": 1
+          },
+          "B.component|english": {
+            "raw": {
+              "samples": 101,
+              "accuracy": 0.940594
+            },
+            "decision": {
+              "samples": 101,
+              "accuracy": 0.732673
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 1,
+            "uncalibrated": true
+          },
+          "C.region|english": {
+            "raw": {
+              "samples": 157,
+              "accuracy": 0.707006
+            },
+            "decision": {
+              "samples": 157,
+              "accuracy": 0.66879
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 1,
+            "uncalibrated": true
+          }
+        }
+      },
+      "explorer": {
+        "split": "dev",
+        "items": 113,
+        "rawAccuracy": 0.558621,
+        "decisionAccuracy": 0.558621,
+        "invariantPassRate": 1,
+        "invariantChecks": 23,
+        "invariantFailures": 0,
+        "kinds": {
+          "A.relevance|english": {
+            "raw": {
+              "samples": 290,
+              "accuracy": 0.558621
+            },
+            "decision": {
+              "samples": 290,
+              "accuracy": 0.558621
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 1,
+            "uncalibrated": true
+          }
+        }
+      },
+      "hotel": {
+        "split": "test",
+        "items": 105,
+        "rawAccuracy": 1,
+        "decisionAccuracy": 1,
+        "invariantPassRate": 1,
+        "invariantChecks": 171,
+        "invariantFailures": 0,
+        "kinds": {
+          "A.relevance|english": {
+            "raw": {
+              "samples": 415,
+              "accuracy": 1
+            },
+            "decision": {
+              "samples": 462,
+              "accuracy": 1
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 0,
+            "uncalibrated": false,
+            "threshold": 1
+          },
+          "B.component|english": {
+            "raw": {
+              "samples": 32,
+              "accuracy": 1
+            },
+            "decision": {
+              "samples": 32,
+              "accuracy": 1
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 0,
+            "uncalibrated": false,
+            "threshold": 1
+          }
+        }
+      },
+      "welcome": {
+        "split": "test",
+        "items": 27,
+        "rawAccuracy": 1,
+        "decisionAccuracy": 1,
+        "invariantPassRate": 1,
+        "invariantChecks": 86,
+        "invariantFailures": 0,
+        "kinds": {
+          "A.relevance|english": {
+            "raw": {
+              "samples": 108,
+              "accuracy": 1
+            },
+            "decision": {
+              "samples": 108,
+              "accuracy": 1
+            },
+            "meanConfidenceCorrect": 1,
+            "meanConfidenceIncorrect": 0,
+            "uncalibrated": false,
+            "threshold": 1
+          }
+        }
+      }
+    }
+  },
+  "submission": "submissions/rules.jsonl.gz"
+}

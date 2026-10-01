@@ -130,6 +130,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.104.0
         version: 5.104.0(react@19.3.0)
+      '@web4kit/bench':
+        specifier: workspace:^
+        version: link:../../bench
       '@web4kit/conformance':
         specifier: workspace:^
         version: link:../../packages/conformance
@@ -212,6 +215,49 @@ importers:
       vitest:
         specifier: ^5.0.2
         version: 5.0.2(@types/node@22.20.4)(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  bench:
+    dependencies:
+      '@web4kit/conformance':
+        specifier: workspace:^
+        version: link:../packages/conformance
+      '@web4kit/context':
+        specifier: workspace:^
+        version: link:../packages/context
+      '@web4kit/decider':
+        specifier: workspace:^
+        version: link:../packages/decider
+      '@web4kit/decider-laya':
+        specifier: workspace:^
+        version: link:../packages/decider-laya
+      '@web4kit/example-db-explorer':
+        specifier: workspace:^
+        version: link:../examples/db-explorer
+      '@web4kit/example-restaurant':
+        specifier: workspace:^
+        version: link:../examples/restaurant
+      '@web4kit/ir':
+        specifier: workspace:^
+        version: link:../packages/ir
+      '@web4kit/manifest':
+        specifier: workspace:^
+        version: link:../packages/manifest
+      '@web4kit/planner':
+        specifier: workspace:^
+        version: link:../packages/planner
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.3
+        version: 26.6.3
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.0.2
+        version: 5.0.2(@types/node@26.6.3)(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
   examples/db-explorer:
     dependencies:

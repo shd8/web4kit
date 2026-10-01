@@ -4,13 +4,13 @@
   "description": "web4 conformance suite: persona fixtures, invariants, per-engine evaluation and calibration profiles.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",
-  "homepage": "https://github.com/shd8/web4/tree/main/packages/conformance#readme",
+  "homepage": "https://github.com/shd8/web4kit/tree/main/packages/conformance#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shd8/web4.git",
+    "url": "git+https://github.com/shd8/web4kit.git",
     "directory": "packages/conformance"
   },
-  "bugs": "https://github.com/shd8/web4/issues",
+  "bugs": "https://github.com/shd8/web4kit/issues",
   "keywords": [
     "web4",
     "system-one",

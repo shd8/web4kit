@@ -1,0 +1,102 @@
+---
+title: "System One for UI: pages that decide themselves"
+description: Selection instead of generation, what the ablation did and didn't show, calibration as the safety layer, cost, crawlers, limits, and a challenge.
+---
+
+A web page is usually decided once, at build time: every visitor gets the same content in the same order. web4 makes that decision per visitor, at request time. For each visitor's *situation* (how they arrived, their device, the local time, how far away they are), a decision model chooses **what** to show, **with which component** and **where**. Deterministic code then lays the page out and renders it.
+
+Same URL, different page. None of these pages were designed. They were decided.
+
+This post makes the case for doing that with **System One models**, says plainly where the evidence stops, and ends with a challenge.
+
+## Selection, not generation
+
+System One models, such as TypeSafe Jev and small open models like Laya, don't write text. They answer typed questions with probabilities:
+
+- **choice:** pick one of the options you offered.
+- **score:** place it on the scale you defined.
+- **noul:** say whether a statement is true.
+
+That turns page planning into **selection**. You declare data sources (what each one is and who it's for) and components (what each one shows and which data it accepts). For every source, web4 asks in one round: is it relevant, and how important; which compatible component; which region, and how prominent.
+
+The answers can only be things you declared. Nothing is generated: no copy, no markup, no layout the code didn't allow. Data is fetched at render time and never reaches the model, so third-party text such as reviews or social captions can't steer it. The model sees the situation's labels (`arrival: visual`, `mealWindow: dinner`), never coordinates, timestamps or cookies.
+
+The model decides meaning, and code decides mechanics. That split makes the rest possible.
+
+## What the ablation did, and didn't, show
+
+The obvious objection: isn't this just if/else with extra steps? A site author can write rules for every situation. So we tested it, and fixed the success criteria before seeing any data.
+
+**The question.** Does a calibrated model plan good pages from the sources' descriptions alone, where a rules engine needs hand-written heuristics?
+
+**The method.** On four sites, we removed the hand-written heuristics in steps (100%, 75%, 50%, 25%, 0%). One arm kept each source's `audience` line, and the other removed it too. Then we compared Jev with the rules engine on the final pages.
+
+**The verdict: not shown.**
+
+- **Accuracy gap.** With every heuristic removed, Jev's decision accuracy was **25.4 points** above the rules engine's on average, and **25.0 points** above it with audiences removed too.
+- **Invariants.** The pre-registered rule also required Jev to keep at least 99% of page invariants on every site without audiences. It didn't: **65.2%** on the database explorer and **97.7%** on the hotel.
+- **Follow-up.** It added placement labels for those two sites, was registered separately, and was also not shown: **19.8 points** of gap, with invariants at **91.3%** and **97.7%**.
+
+Sources: the [ablation report](https://github.com/shd8/web4kit/blob/main/reports/ablation/report.md) and the [follow-up report](https://github.com/shd8/web4kit/blob/main/reports/ablation/followup-placement/report.md).
+
+So we don't claim the model replaces your rules. Descriptions alone get you much further than rules alone. Without the `audience` lines, though, the model sometimes breaks business rules on some sites. With audiences, heuristics and invariants in place, which is how web4 is meant to be used, every site keeps 100% of its invariants.
+
+The case for web4 rests on cost, safety and explainability, and on the gap above, not on a claim that rules are obsolete.
+
+## Calibration is the safety layer
+
+A model that is confidently wrong is worse than no model. So web4 trusts no answer until it has been measured.
+
+The conformance suite plans hundreds of persona fixtures per engine. For each question kind and language, it records how confident the engine is when it's right and when it's wrong, and sets the threshold where the two stop overlapping.
+
+- **In production,** an answer below the threshold falls back to the manifest default.
+- **Uncalibrated kinds** fall back to rules: a kind where wrong answers are as confident as right ones never gets a threshold.
+- **Every block** records who decided it: the engine, a rule, a default or an invariant.
+
+On the restaurant, Jev's relevance answers are right 99.9% of the time. Its mean confidence is 0.72 when right and 0.02 when wrong ([report](https://github.com/shd8/web4kit/blob/main/reports/conformance-casa-lumbre.md)). On the database explorer they're right 96.1% of the time, at 0.77 against 0.11 ([report](https://github.com/shd8/web4kit/blob/main/reports/conformance-meridian-ops.md)). That separation is what makes a threshold possible.
+
+## Cost and latency
+
+One decider round plans a whole page:
+
+| | Restaurant | Database explorer |
+|---|---|---|
+| Input tokens per uncached page | 6,795 | 7,302 |
+| Cost per uncached page (Jev) | $0.00029 | $0.00031 |
+| Latency p50 / p95 | 271 / 341 ms | 278 / 354 ms |
+| Invariants kept | 100% | 100% |
+
+Measured with Jev 1.13.0, 3 repeats, in the [restaurant](https://github.com/shd8/web4kit/blob/main/reports/conformance-casa-lumbre.md) and [explorer](https://github.com/shd8/web4kit/blob/main/reports/conformance-meridian-ops.md) conformance reports.
+
+Plans contain decisions only, no user data, so they're cached per situation. A cached page costs nothing to plan. The [playground](/playground/) goes further: every situation of three demo sites is planned once ahead of time, and serving it costs $0.
+
+## What search engines see
+
+Personalising for people is the point, and it's wrong for crawlers: an index should see everything a site offers.
+
+When a known crawler visits, web4 makes a **complete, neutral plan**:
+
+- every public source is on the page, in manifest order
+- each source uses its default component and placement
+- nothing depends on time, place or history
+- no model is asked
+
+Every crawler gets the same page per device class, and data is still fresh at render time. See [SEO and crawlers](/docs/seo/).
+
+## Limitations
+
+- **Read-only pages.** v0 plans pages that show things. Forms and actions, such as booking a table, aren't planned yet ([roadmap](https://github.com/shd8/web4kit/blob/main/ROADMAP.md)).
+- **Engine vendor.** Today the engine accurate enough to plan pages alone is hosted Jev. Laya runs offline and free, and is useful for iterating on wording, but it isn't accurate enough to plan alone ([engines](/docs/engines/)). The `Decider` interface keeps engines interchangeable, and the challenge below aims to close the gap.
+- **Hand-written manifests.** Someone writes each source's description and audience. Importing them from the places businesses already maintain is the path to real adoption.
+- **English labels.** Owner-written labels are English; content is localised by the data layer.
+- **The ablation.** As above: descriptions alone aren't enough on every site.
+
+## The challenge
+
+We published web4-bench: every situation, question, label and invariant from the conformance suites, with a scorer that replays an engine's answers through the real planner. It has a development split and a held-out test split of sites. It ships labels only.
+
+**The challenge: make a small open System One engine, at most 2 GB of weights and able to run offline, that matches Jev's decision accuracy and invariant pass rate on the test split.** Distillation is the obvious route.
+
+If that happens, the vendor dependence above goes away, and pages can decide themselves anywhere, even on the visitor's device.
+
+[See web4-bench and the leaderboard →](/bench/)

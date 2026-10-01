@@ -1,0 +1,48 @@
+---
+title: FAQ
+description: Straight answers to the questions people ask first, with the evidence behind each.
+---
+
+## Isn't this just if/else?
+
+Partly, and we measured how much. A rules engine replaying hand-written heuristics is web4's fallback, and with complete heuristics it plans well.
+
+The [heuristic ablation](https://github.com/shd8/web4kit/blob/main/reports/ablation/report.md) removed those heuristics step by step:
+
+- **With none left,** Jev's decision accuracy was 25.4 points above the rules engine's on average across four sites, or 25.0 points with the `audience` lines removed too.
+- **The pre-registered verdict was nonetheless "not shown".** Without audiences, Jev kept only 65.2% of page invariants on the database explorer and 97.7% on the hotel, below the 99% the rule required.
+
+So the model covers situations nobody wrote a rule for, but it doesn't make business rules optional. The [thesis](/thesis/) has the details.
+
+## What does Google see?
+
+A complete, neutral page. Known crawlers get every public source, in manifest order, with default components and placement. Nothing depends on time, place or history, and no model is asked. Every crawler gets the same page per device class, so it isn't cloaking. See [SEO and crawlers](/docs/seo/).
+
+## Isn't this vendor lock-in?
+
+The engine is behind one `Decider` interface. You can use:
+
+- hosted Jev
+- Laya in your own process, free and offline
+- any System One HTTP endpoint
+- a cascade that escalates to a stronger engine on low confidence
+- the rules engine, which needs nothing
+
+See [engines](/docs/engines/).
+
+Today hosted Jev is the engine accurate enough to plan alone. [web4-bench](/bench/) exists to change that. It's an open benchmark, with a challenge to make a small open engine reach Jev's accuracy.
+
+## Can it be used for dark patterns?
+
+Less than a hand-built page:
+
+- **No generated text.** The model chooses among sources and components you declared; it writes no copy and invents no claims.
+- **Business rules are applied in code.** Sources a rule requires (`mustInclude`) or forbids (`mustExclude`) are placed or left out by the planner, not asked of the model. The conformance suite checks page invariants on hundreds of situations and reports every plan that breaks one.
+- **Third-party text never reaches the model.** Reviews and social captions can't steer it.
+- **Every decision is recorded.** Each block says who decided it and with what confidence, so a page can be audited ([concepts](/concepts/)).
+
+Choosing what each visitor sees is still a choice, and the owner is responsible for the sources and audiences they declare.
+
+## Does it do forms?
+
+Not yet. v0 plans read-only pages: what to show, how and where. Forms and actions (booking, ordering, signing up) are first on the [roadmap](https://github.com/shd8/web4kit/blob/main/ROADMAP.md), followed by learning from clicks and distilling small engines.

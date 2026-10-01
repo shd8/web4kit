@@ -1,0 +1,31 @@
+name: Bug report
+description: Something in web4kit doesn't work as documented.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: The smallest steps or code that show it. A situation (`?as=` persona or envelope) helps for planning bugs.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: web4kit package version, Node, Next.js, and the engine (rules, Jev version, Laya).
+      placeholder: "@web4kit/next 0.2.0 · Node 22 · Next 16 · jev-1.13.0"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: The Why record or X-ray
+      description: For a planning bug, paste the block's decision record (Why panel or X-ray). Remove any personal data first.

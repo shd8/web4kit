@@ -2,7 +2,7 @@
 
 web4 for Next.js (App Router). One call from a server component resolves the visitor's context, derives the situation, plans the page (one System One round or a plan-cache hit), and fetches the data with the planned situation. Development-only persona previews come built in.
 
-Part of [web4](https://github.com/shd8/web4): pages planned per visitor by System One decision models.
+Part of [web4](https://github.com/shd8/web4kit): pages planned per visitor by System One decision models.
 
 > Experimental (0.x): APIs may change between minor versions.
 

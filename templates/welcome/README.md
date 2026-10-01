@@ -1,6 +1,6 @@
 # My web4 site
 
-A [web4](https://github.com/shd8/web4) starter. The home page isn't laid out by hand: for every visitor, web4 asks a System One decision model (TypeSafe Jev, or Laya for free local development) **what** to show, **with which component**, and **where**, from the visitor's situation alone.
+A [web4](https://github.com/shd8/web4kit) starter. The home page isn't laid out by hand: for every visitor, web4 asks a System One decision model (TypeSafe Jev, or Laya for free local development) **what** to show, **with which component**, and **where**, from the visitor's situation alone.
 
 ## Run it
 
@@ -36,7 +36,7 @@ Edit a `what` or an `audience` in `web4/sources.ts`, save, reload: the page re-p
 - **Ungated in dev.** Under `pnpm dev`, a decision with no current calibration uses the engine's answer directly and is marked *ungated*. That happens when you edited the source since calibrating, or when a question kind has too few samples. You see what the model makes of your new wording. In production those decisions go to rules until you run `pnpm calibrate`. Only the sources you edited become stale; the rest keep their calibration.
 - **X-ray.** Switch it on with the button at the bottom right. Hover a block, or tap it on a phone, to see each decision: answer, probability, confidence, threshold and who decided (engine, rule, default, invariant, or *ungated in dev*). Its summary lists the excluded sources and any stale ones. It never renders in production.
 - **When to calibrate.** `pnpm web4kit check` says whether the profile matches your sources (active, partial with the stale sources named, stale, or missing). `pnpm build` prints the same warning. Calibrate once the wording is right, before you deploy. In CI, run `pnpm web4kit check --strict`, which fails unless calibration is active.
-- **Your own components.** `pnpm web4kit add component quote-card --shape record` writes `web4/components/quote-card.tsx` and its test, and registers it. The planner can choose it for every `record` source on the next reload. See [Your own components](https://github.com/shd8/web4/blob/main/docs/components.md).
+- **Your own components.** `pnpm web4kit add component quote-card --shape record` writes `web4/components/quote-card.tsx` and its test, and registers it. The planner can choose it for every `record` source on the next reload. See [Your own components](https://github.com/shd8/web4kit/blob/main/docs/components.md).
 
 ## Where things are
 
@@ -74,5 +74,5 @@ Laya is a much smaller model: use it to develop without spending tokens, and Jev
 
 ## Learn more
 
-- [Getting started guide](https://github.com/shd8/web4/blob/main/docs/getting-started.md)
+- [Getting started guide](https://github.com/shd8/web4kit/blob/main/docs/getting-started.md)
 - A complete site: `pnpm create web4kit my-hotel --template hotel`

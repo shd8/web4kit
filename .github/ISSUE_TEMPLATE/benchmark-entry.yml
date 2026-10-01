@@ -1,0 +1,53 @@
+name: web4-bench entry
+description: Submit an engine to the web4-bench leaderboard (then open the pull request).
+labels: [benchmark]
+body:
+  - type: input
+    id: engine
+    attributes:
+      label: Engine and exact version
+      placeholder: my-engine-0.3.1
+    validations:
+      required: true
+  - type: dropdown
+    id: open
+    attributes:
+      label: Open weights?
+      options: ["yes", "no"]
+    validations:
+      required: true
+  - type: input
+    id: size
+    attributes:
+      label: Size of the weights (GB)
+  - type: dropdown
+    id: offline
+    attributes:
+      label: Answers offline on a laptop CPU?
+      options: ["yes", "no"]
+    validations:
+      required: true
+  - type: textarea
+    id: training
+    attributes:
+      label: Training data
+      description: What the engine was trained or tuned on. Training on, or tuning against, the test split disqualifies an entry.
+    validations:
+      required: true
+  - type: dropdown
+    id: published
+    attributes:
+      label: Can the answers be published?
+      description: Published submissions are re-scored in CI. Otherwise the entry is marked "reported only".
+      options: ["yes, committed with --publish", "no, reported only"]
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: The submission answers the current dataset version (`pnpm bench score` accepts it).
+          required: true
+        - label: I ran `pnpm bench leaderboard add` and `pnpm bench check` passes.
+          required: true

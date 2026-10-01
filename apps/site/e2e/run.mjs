@@ -308,7 +308,7 @@ checks.conceptsEmbeds = async (browser) => {
   return { ok, evening: evening.replace(/\n/g, " "), late: late.replace(/\n/g, " "), why, ...seen };
 };
 
-import { readdirSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 
 checks.routes = async (browser) => {
@@ -340,6 +340,63 @@ checks.routes = async (browser) => {
     ok: failed.length === 0 && seen.foreign.length === 0 && !seen.errors.length,
     routes,
     failed,
+    ...seen,
+  };
+};
+
+/** The thesis, the FAQ and web4-bench are one click from the home page (launch-go-public 5.4). */
+checks.homeLinks = async (browser) => {
+  const page = await browser.newPage();
+  const seen = watch(page);
+  const reached = {};
+  for (const [name, path, want] of [
+    ["The thesis", "/thesis/", "System One for UI: pages that decide themselves"],
+    ["web4-bench", "/bench/", "web4-bench"],
+    ["FAQ", "/faq/", "FAQ"],
+  ]) {
+    await page.goto(url("/"), { waitUntil: "networkidle" });
+    await page
+      .locator("[data-home-more]")
+      .getByRole("link", { name: new RegExp(name) })
+      .click();
+    await page.waitForURL(url(path));
+    const h1 = page.locator("main h1", { hasText: want });
+    reached[name] = await h1
+      .first()
+      .waitFor({ timeout: 10_000 })
+      .then(() => true)
+      .catch(async () => page.locator("h1").allInnerTexts());
+  }
+  const nav = await page.getByRole("link", { name: "Thesis" }).count();
+  return {
+    ok: Object.values(reached).every((r) => r === true) && nav > 0 && !seen.errors.length,
+    reached,
+    nav,
+    ...seen,
+  };
+};
+
+/** The benchmark page shows every leaderboard entry committed in bench/ (launch-go-public 5.2). */
+checks.benchPage = async (browser) => {
+  const dir = resolve(import.meta.dirname, "../../../bench/leaderboard");
+  const entries = readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")));
+  const page = await browser.newPage();
+  const seen = watch(page);
+  await page.goto(url("/bench/"), { waitUntil: "networkidle" });
+  const shown = await page
+    .locator("[data-bench-entry]")
+    .evaluateAll((els) => els.map((e) => e.getAttribute("data-bench-entry")));
+  const reportedOnly = await page.locator('[data-bench-published="false"]').count();
+  const want = entries.map((e) => e.id).sort();
+  return {
+    ok:
+      JSON.stringify([...shown].sort()) === JSON.stringify(want) &&
+      reportedOnly === entries.filter((e) => !e.published).length &&
+      !seen.errors.length,
+    shown,
+    reportedOnly,
     ...seen,
   };
 };

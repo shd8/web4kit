@@ -1,0 +1,50 @@
+{
+  "name": "web4-bench",
+  "version": "v1",
+  "contentHash": "cd35b17ca8b0aa78513119e26ac3176e0236edb86708e3abc08b63555fb2ecce",
+  "license": "MIT",
+  "splits": {
+    "dev": {
+      "sites": [
+        "restaurant",
+        "explorer"
+      ],
+      "items": 277,
+      "labels": 1277
+    },
+    "test": {
+      "sites": [
+        "hotel",
+        "welcome"
+      ],
+      "items": 132,
+      "labels": 602
+    }
+  },
+  "sites": {
+    "restaurant": {
+      "split": "dev",
+      "title": "Casa Lumbre (restaurant)",
+      "items": 164,
+      "labels": 987
+    },
+    "explorer": {
+      "split": "dev",
+      "title": "Meridian Supply (database explorer)",
+      "items": 113,
+      "labels": 290
+    },
+    "hotel": {
+      "split": "test",
+      "title": "Casa Ribeira (hotel starter)",
+      "items": 105,
+      "labels": 494
+    },
+    "welcome": {
+      "split": "test",
+      "title": "Welcome starter",
+      "items": 27,
+      "labels": 108
+    }
+  }
+}

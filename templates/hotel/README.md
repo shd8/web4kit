@@ -1,6 +1,6 @@
 # Casa Ribeira: a web4 starter
 
-A complete [web4](https://github.com/shd8/web4) site: a boutique hotel in Porto whose home page is **planned for each visitor's situation** by a System One decision model (TypeSafe Jev, or Laya for free local development).
+A complete [web4](https://github.com/shd8/web4kit) site: a boutique hotel in Porto whose home page is **planned for each visitor's situation** by a System One decision model (TypeSafe Jev, or Laya for free local development).
 
 | Situation | What the page leads with |
 |---|---|
@@ -31,9 +31,9 @@ Edit a source's `what` or `audience` in `web4/manifests.ts`, save, reload: the p
 - **Ungated in dev.** Under `pnpm dev`, a decision with no current calibration uses Jev's answer directly and is marked *ungated*. That happens when you edited the source since calibrating, or when a question kind has too few samples. In production those decisions go to rules until you recalibrate. Only the edited sources become stale.
 - **X-ray.** Switch it on at the bottom right. Hover or tap a block to see every decision: answer, probability, confidence, threshold and who decided. Its summary lists the excluded sources (for example `rooms` for a staying guest) and any stale ones. It never renders in production.
 - **Before you deploy.** `pnpm web4kit check` names the stale sources, and `pnpm build` warns about them too. In CI, run `pnpm web4kit check --strict`.
-- **Your own components.** `pnpm web4kit add component <name> --shape <shape>` scaffolds one in `web4/components/` with a test, and registers it. See [Your own components](https://github.com/shd8/web4/blob/main/docs/components.md).
+- **Your own components.** `pnpm web4kit add component <name> --shape <shape>` scaffolds one in `web4/components/` with a test, and registers it. See [Your own components](https://github.com/shd8/web4kit/blob/main/docs/components.md).
 
-Search engines get every public source in a neutral order instead of a personalised page. See [SEO and crawlers](https://github.com/shd8/web4/blob/main/docs/seo.md).
+Search engines get every public source in a neutral order instead of a personalised page. See [SEO and crawlers](https://github.com/shd8/web4kit/blob/main/docs/seo.md).
 
 ## How it's built
 

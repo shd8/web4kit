@@ -12,8 +12,9 @@ const fraunces = Fraunces({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
-/** The public demo (spec: lab-showcase). The domain is set in launch-go-public. */
-const PLAYGROUND_URL = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://web4kit.dev"}/playground/`;
+/** The public site (spec: public-release); NEXT_PUBLIC_SITE_URL overrides it, without a trailing slash. */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shd8.github.io/web4kit";
+const PLAYGROUND_URL = `${SITE_URL}/playground/`;
 
 export const metadata: Metadata = {
   title: "web4 lab",

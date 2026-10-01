@@ -4,13 +4,13 @@
   "description": "web4 Page Plan IR: the versioned, language-neutral plan schema, validation, privacy check and stable hashing.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",
-  "homepage": "https://github.com/shd8/web4/tree/main/packages/ir#readme",
+  "homepage": "https://github.com/shd8/web4kit/tree/main/packages/ir#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shd8/web4.git",
+    "url": "git+https://github.com/shd8/web4kit.git",
     "directory": "packages/ir"
   },
-  "bugs": "https://github.com/shd8/web4/issues",
+  "bugs": "https://github.com/shd8/web4kit/issues",
   "keywords": [
     "web4",
     "system-one",

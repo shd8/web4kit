@@ -2,7 +2,7 @@
 
 The Page Plan intermediate representation: `web4.plan/v1` schema (Zod + JSON Schema), validation, a privacy check that rejects user or fetched data in plans, and a portable stable hash.
 
-Part of [web4](https://github.com/shd8/web4): pages planned per visitor by System One decision models.
+Part of [web4](https://github.com/shd8/web4kit): pages planned per visitor by System One decision models.
 
 > Experimental (0.x): APIs may change between minor versions.
 
@@ -21,7 +21,7 @@ const plan = validatePlan(json);         // throws on unknown versions or invali
 assertNoUserData(plan, { data: [...] }); // plans must never contain user or fetched data
 ```
 
-See the [getting started guide](https://github.com/shd8/web4/blob/main/docs/getting-started.md).
+See the [getting started guide](https://github.com/shd8/web4kit/blob/main/docs/getting-started.md).
 
 ## License
 

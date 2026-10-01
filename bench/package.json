@@ -1,0 +1,33 @@
+{
+  "name": "@web4kit/bench",
+  "version": "0.0.0",
+  "private": true,
+  "description": "web4-bench: an open benchmark for System One engines that plan pages.",
+  "exports": {
+    "./leaderboard": "./src/leaderboard.ts",
+    "./format": "./src/format.ts"
+  },
+  "type": "module",
+  "scripts": {
+    "bench": "tsx src/cli.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@web4kit/conformance": "workspace:^",
+    "@web4kit/context": "workspace:^",
+    "@web4kit/decider": "workspace:^",
+    "@web4kit/decider-laya": "workspace:^",
+    "@web4kit/example-db-explorer": "workspace:^",
+    "@web4kit/example-restaurant": "workspace:^",
+    "@web4kit/ir": "workspace:^",
+    "@web4kit/manifest": "workspace:^",
+    "@web4kit/planner": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  }
+}

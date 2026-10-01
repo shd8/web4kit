@@ -1,0 +1,48 @@
+---
+title: web4-bench
+description: An open benchmark for System One engines that plan pages, and a challenge to make a small open engine as good as Jev.
+---
+
+web4-bench is every situation, question, label and invariant from web4's conformance suites, published as a dataset with a scorer. It measures an engine exactly the way web4 does: it replays the engine's answers through the real planner and checks the page a visitor would get.
+
+## The challenge
+
+**Make a small open System One engine plan pages as well as Jev.** An entry meets the challenge when both of these hold:
+
+- **Small and open:** open weights, at most 2 GB of them, and it answers offline on a laptop CPU.
+- **As good as Jev on the held-out test split:** its decision accuracy and its invariant pass rate are each at least those of the best Jev entry.
+
+Distillation is one route: ask Jev the dev-split questions with your own key, then train a small model on its answers. The dataset itself ships **labels only**, with no Jev answers.
+
+## Leaderboard
+
+<BenchLeaderboard />
+
+- **Decision accuracy** scores labels against the final page: after confidence gating, defaults, invariants and the rules fallback. It is what a visitor actually gets.
+- **Raw accuracy** scores the engine's answers before any gating.
+- **Invariants** are page properties every plan must keep, such as "never offer rooms to a guest who is already staying".
+
+The rules engine replays each site's hand-written heuristics. Those cover the starter sites' fixtures completely, which is why it scores 100% on the test split. It is the floor web4 falls back to, not a System One engine, so it can't meet the challenge. The [heuristic ablation](https://github.com/shd8/web4kit/blob/main/reports/ablation/report.md) measures what happens without those heuristics.
+
+Jev's entry is **reported only**: its answers aren't redistributed, so CI can't re-score it. It was measured with Jev 1.13.0, 3 repeats, from the ablation's recordings.
+
+## The dataset
+
+| | |
+|---|---|
+| **Dev split** | The two example sites: Casa Lumbre (a restaurant) and Meridian Supply (a database explorer). |
+| **Test split** | The two starters: Casa Ribeira (a hotel) and the welcome page. They are held out by site, so an engine is measured on sites it wasn't tuned on. |
+| **Format** | One item per situation: the state and questions in the System One wire format, ready to send, plus labels and invariants. |
+| **Rules** | The test labels are public. Training on them, or tuning against test scores, disqualifies an entry. |
+
+## Run it
+
+The dataset lives in [`bench/data/v1`](https://github.com/shd8/web4kit/tree/main/bench/data/v1) in the repository. Everything below runs from a clone:
+
+```bash
+git clone https://github.com/shd8/web4kit && cd web4kit && pnpm install
+pnpm bench run --engine laya                      # or rules, jev (estimates spend first), local
+pnpm bench score /tmp/web4-bench-*.jsonl.gz
+```
+
+`--engine local` sends the questions to any System One endpoint on your machine (`W4_LOCAL_ENGINE_URL`). The [bench README](https://github.com/shd8/web4kit/blob/main/bench/README.md) has the item and submission formats, the scoring method, and how to add an entry with a pull request.

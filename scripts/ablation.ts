@@ -17,12 +17,14 @@ import {
   createRecordingDecider,
   createReplayDecider,
   type EngineRun,
+  type ExpectedAnswer,
+  label,
   type Recordings,
   recordingKey,
   runEngine,
   type SituatedFixture,
 } from "@web4kit/conformance";
-import type { BucketSpec } from "@web4kit/context";
+import type { BucketSpec, Situation } from "@web4kit/context";
 import { type Decider, estimateTokens, remoteEnginesFromEnv } from "@web4kit/decider";
 import { loadDotEnv } from "@web4kit/decider/node";
 import {
@@ -55,7 +57,8 @@ const { values } = parseArgs({
     engines: { type: "string", default: "rules,jev" },
     yes: { type: "boolean", default: false },
     record: { type: "boolean", default: false },
-    out: { type: "string", default: "reports/ablation" },
+    study: { type: "string", default: "main" },
+    out: { type: "string" },
     cache: { type: "string", default: ".w4-cache/ablation" },
   },
 });
@@ -388,10 +391,60 @@ ${lines}${legend}
 }
 
 // ---------------------------------------------------------------------------------------------
+// Follow-up F1: placement labels (registered 2026-10-01, after the main study; design F1)
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * Placement labels written from the situation, the way the sites' invariants describe a good
+ * page. Used only by `--study followup`; the main study's fixtures are frozen. Written after the
+ * main study's results were known, which is why F1 is reported separately.
+ */
+const F1_LABELS: Record<string, (s: Situation) => ExpectedAnswer[]> = {
+  explorer: (s) =>
+    s.role === "ops-manager"
+      ? [
+          label.region("kpis", "hero", "primary"),
+          label.region("late-shipments", "hero", "primary"),
+          label.salience("late-shipments", "standard", "featured"),
+        ]
+      : s.role === "executive"
+        ? [
+            label.region("briefing", "hero"),
+            label.region("kpis", "hero", "primary"),
+            label.salience("briefing", "featured"),
+          ]
+        : s.role === "analyst"
+          ? [
+              label.region("on-time-trend", "hero", "primary"),
+              label.region("supplier-status", "hero", "primary"),
+            ]
+          : [],
+  hotel: (s) =>
+    s.stayPhase === "in-house"
+      ? [label.region("today", "hero"), label.salience("today", "featured")]
+      : s.stayPhase === "arriving-today"
+        ? [label.region("arrival-guide", "hero"), label.salience("arrival-guide", "featured")]
+        : s.stayPhase === "researching"
+          ? [label.region("hero-photos", "hero")]
+          : [],
+};
+/** F1 rule, fixed before the run: holds iff gap(ha) >= 10 points and Jev invariants >= 99% on both sites. */
+const F1_RULE =
+  "gap = mean over the explorer and the hotel, at 0% kept with heuristics and audiences removed, of Jev's minus the rules' pooled decision accuracy. holds: gap >= 10 points and Jev invariants >= 99% on both sites; otherwise not-shown. The heuristics-only arm is reported but not part of the rule.";
+
+// ---------------------------------------------------------------------------------------------
 // Run
 // ---------------------------------------------------------------------------------------------
 
-const siteKeys = values.site === "all" ? Object.keys(SITES) : values.site!.split(",");
+const followup = values.study === "followup";
+if (!followup && values.study !== "main") throw new Error(`unknown study ${values.study}`);
+const siteKeys = followup
+  ? Object.keys(F1_LABELS)
+  : values.site === "all"
+    ? Object.keys(SITES)
+    : values.site!.split(",");
+const outRel =
+  values.out ?? (followup ? "reports/ablation/followup-placement" : "reports/ablation");
 const arms = values.arms!.split(",") as Arm[];
 const engines = values.engines!.split(",");
 const seed = Number(values.seed);
@@ -404,7 +457,16 @@ if (useJev && !remote.jev) {
 const sites = siteKeys.map((k) => {
   const make = SITES[k];
   if (!make) throw new Error(`unknown site ${k}`);
-  return make();
+  const site = make();
+  if (!followup) return site;
+  const extra = F1_LABELS[k]!;
+  return {
+    ...site,
+    fixtures: site.fixtures.map((f) =>
+      // Typed-question fixtures are judged by their question, not their role: no F1 labels.
+      f.intent ? f : { ...f, expected: [...(f.expected ?? []), ...extra(f.situation)] },
+    ),
+  };
 });
 
 // Spend estimate: only question sets not already recorded cost anything.
@@ -429,14 +491,16 @@ if (useJev) {
   console.log(
     `Jev spend to record what is missing: ~${Math.round(tokens).toLocaleString("en")} input tokens, ~$${usd.toFixed(2)}`,
   );
-  if (usd > 0 && !values.yes) {
-    console.log(
-      "Nothing was spent. Re-run with --yes to record, or --engines rules for rules only.",
-    );
+  if (!values.yes) {
+    console.log("Nothing was run. Re-run with --yes (also when the estimate is $0).");
     process.exit(0);
   }
 }
 
+if (!useJev && !values.yes) {
+  console.log("Nothing was run. Re-run with --yes.");
+  process.exit(0);
+}
 mkdirSync(cacheDir, { recursive: true });
 let spentTokens = 0;
 const results: Record<string, Record<string, LevelResult[]>> = {};
@@ -519,7 +583,11 @@ const gapH = arms.includes("h") ? gap("h") : null;
 const gapHA = arms.includes("ha") ? gap("ha") : null;
 const jevInvariantsHA = sites.map((s) => atZero(s.key, "ha", "jev")?.invariantPassRate ?? null);
 const invariantsOk = jevInvariantsHA.every((v) => v !== null && v >= 0.99);
-const complete = useJev && arms.includes("h") && arms.includes("ha") && siteKeys.length === 4;
+const complete =
+  useJev &&
+  arms.includes("h") &&
+  arms.includes("ha") &&
+  siteKeys.length === (followup ? Object.keys(F1_LABELS).length : 4);
 const failingInvariants = sites
   .map((s, i) => ({ site: s.key, rate: jevInvariantsHA[i] }))
   .filter((x) => x.rate === null || x.rate < 0.99);
@@ -535,7 +603,9 @@ const why = [
 ].join("; ");
 // Pre-registered rules (design D6), applied literally.
 const holds = gapHA !== null && gapHA >= 0.1 && invariantsOk;
-const partially = !holds && gapH !== null && gapH >= 0.1 && !(gapHA !== null && gapHA >= 0.1);
+// F1 has no "partially" outcome (design F1).
+const partially =
+  !followup && !holds && gapH !== null && gapH >= 0.1 && !(gapHA !== null && gapHA >= 0.1);
 const verdict = !useJev
   ? { outcome: "not-computed", reason: "Jev not measured (rules-only run)." }
   : holds
@@ -557,7 +627,7 @@ const verdict = !useJev
 // Outputs
 // ---------------------------------------------------------------------------------------------
 
-const outDir = resolve(root, values.out!);
+const outDir = resolve(root, outRel);
 mkdirSync(outDir, { recursive: true });
 const spendUsd = useJev ? (spentTokens / 1e6) * remote.jev!.capabilities.costPerMTok : 0;
 // What recording cost in total, from the token usage stored with every recorded answer set.
@@ -583,8 +653,9 @@ const data = {
     gapHeuristics: gapH,
     gapHeuristicsAndAudiences: gapHA,
     jevInvariantsAtZeroHA: Object.fromEntries(sites.map((s, i) => [s.key, jevInvariantsHA[i]])),
-    rules:
-      "gap = mean over sites, at 0% kept, of Jev's minus the rules' pooled decision accuracy. holds: gap(ha) >= 10 points and Jev invariants >= 99% on every site at 0% ha; holds-partially: gap(h) >= 10 points while gap(ha) < 10 points; otherwise not-shown.",
+    rules: followup
+      ? F1_RULE
+      : "gap = mean over sites, at 0% kept, of Jev's minus the rules' pooled decision accuracy. holds: gap(ha) >= 10 points and Jev invariants >= 99% on every site at 0% ha; holds-partially: gap(h) >= 10 points while gap(ha) < 10 points; otherwise not-shown.",
   },
   sites: Object.fromEntries(
     sites.map((s) => [
@@ -688,7 +759,7 @@ writeFileSync(
 
 writeFileSync(resolve(outDir, "report.md"), renderMarkdown());
 console.log(
-  `\nWrote ${values.out}/report.md, data.json and ${sites.length * 2 + 1} charts. Jev spend this run: $${spendUsd.toFixed(3)}. Verdict: ${verdict.outcome}`,
+  `\nWrote ${outRel}/report.md, data.json and ${sites.length * 2 + 1} charts. Jev spend this run: $${spendUsd.toFixed(3)}. Verdict: ${verdict.outcome}`,
 );
 
 function renderMarkdown(): string {
@@ -696,8 +767,23 @@ function renderMarkdown(): string {
     v === null || v === undefined ? "–" : `${(v * 100).toFixed(1)}%`;
   const pts = (v: number | null) => (v === null ? "–" : `${(v * 100).toFixed(1)} points`);
   const L: string[] = [
-    "# Heuristic ablation: descriptions vs hand-written rules",
+    followup
+      ? "# Ablation follow-up F1: placement labels"
+      : "# Heuristic ablation: descriptions vs hand-written rules",
     "",
+    ...(followup
+      ? [
+          "> Registered after the main study (see [the main report](../report.md)) and reported separately; it never changes the main verdict. It adds region and salience labels for the explorer and the hotel and replays the main study's Jev recordings, so no new engine answers were sampled.",
+          ">",
+          "> Disclosure: one run happened by mistake before the registration was committed (a $0 dry run did not stop for confirmation). Only its one-line verdict (not-shown) was seen; the labels and the rule were not changed afterwards.",
+          "",
+        ]
+      : existsSync(resolve(root, "reports/ablation/followup-placement/report.md"))
+        ? [
+            "> A follow-up registered after this study tests the explorer's failure cause: [F1, placement labels](followup-placement/report.md).",
+            "",
+          ]
+        : []),
     `Generated ${data.generatedAt} · engine ${data.engine} · seed ${seed} · Jev spent on recordings $${recordedUsd.toFixed(2)} (${recordedTokens.toLocaleString("en")} input tokens; this run $${spendUsd.toFixed(3)})${complete ? "" : " · **partial run**"}`,
     "",
     "## Verdict",

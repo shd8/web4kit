@@ -1,0 +1,33 @@
+---
+title: Sources and audience
+description: How a data source says what it is and who it's for, and how the planner uses it.
+---
+
+A data source is a promise about one block of your page: what it holds, who it's for, and where it goes by default. The model reads the first two literally, so write them from the visitor's side.
+
+## `what`, `not_for` and tags
+
+`what` is one sentence describing the source to someone who has never seen your site. "The room types with photo, size and nightly price, for guests who have not booked yet" works. "Rooms block" doesn't. `not_for` names who it's wrong for, and tags add vocabulary.
+
+## `audience`
+
+`audience` states, in situation labels, who the source is for:
+
+```ts
+defineSource({
+  id: "rooms",
+  what: "The room types with photo, size and nightly price, for guests who have not booked yet",
+  audience: { stayPhase: ["researching"] },
+  // Business rule: a guest who is already here never sees room prices.
+  mustExclude: { stayPhase: ["arriving-today", "in-house"] },
+  // …
+});
+```
+
+The planner renders `audience` into the same sentence in every question about the source, so it can't drift. The rules engine applies it too, and heuristics can't override it. `mustExclude` is different: it isn't a hint to the model but a business rule the planner enforces.
+
+A guest at Casa Ribeira on a Friday morning, before booking and during their stay. Switch the stay and watch `rooms`:
+
+<SituationEmbed site="hotel" persona="in-house-morning" control="stay" options={["researching", "in-house"]} focus="rooms" />
+
+Edit a `what` or an `audience`, and only that source's calibration goes stale. In development you see the model's answer straight away, marked *ungated*. Run `pnpm calibrate` before you deploy.

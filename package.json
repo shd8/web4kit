@@ -18,7 +18,8 @@
     "version-packages": "changeset version",
     "release": "pnpm -r --filter \"./packages/*\" build && changeset publish",
     "smoke": "node scripts/smoke.mjs",
-    "ablation": "tsx scripts/ablation.ts"
+    "ablation": "tsx scripts/ablation.ts",
+    "precompute": "pnpm --filter @web4kit/site precompute"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",

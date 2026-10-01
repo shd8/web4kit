@@ -8,6 +8,7 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
+    "@web4kit/demo-controls",
     "@web4kit/example-db-explorer",
     "@web4kit/example-restaurant",
     "@web4kit/lab",

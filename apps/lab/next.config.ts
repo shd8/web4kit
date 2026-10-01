@@ -4,6 +4,7 @@ const config: NextConfig = {
   transpilePackages: [
     "@web4kit/context",
     "@web4kit/decider",
+    "@web4kit/demo-controls",
     "@web4kit/ir",
     "@web4kit/manifest",
     "@web4kit/planner",

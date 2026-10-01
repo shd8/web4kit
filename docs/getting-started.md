@@ -198,7 +198,7 @@ const planner = createPlanner({
 - **Failures fall back to rules.** If Jev fails, times out or is rate-limited, those questions are answered by rules, and the reason is recorded in each block's `why`.
 - **No calibration, no trust.** In production, without a calibration profile every Jev answer is gated to rules ("uncalibrated"). That is deliberate: an unmeasured engine is never trusted. In development, `@web4kit/next` uses those answers anyway and marks them *ungated* (see [step 8](#8-the-development-loop)).
 
-Other engines behind the same `Decider` interface: `createSystemOneHttpDecider` (any `/v1/systemone` endpoint, e.g. Ollaya serving Laya), `@web4kit/decider-laya` (in-process ONNX), and `createCascadeDecider` (a cheap engine first, escalating to Jev on low confidence).
+Other engines behind the same `Decider` interface: `createSystemOneHttpDecider` (any `/v1/systemone` endpoint, e.g. Ollaya serving Laya), `@web4kit/decider-laya` (in-process ONNX), and `createCascadeDecider` (a cheap engine first, escalating to Jev on low confidence). [Engines](engines.md) compares them.
 
 ## 7. Calibrate with the conformance suite
 
@@ -234,10 +234,10 @@ Edit a description in `web4/sources.ts`, save, reload: the page re-plans. Under 
 - **Make CI strict.** `pnpm web4kit check --strict` (or `W4_STRICT_CALIBRATION=1 next build`) fails unless calibration is active, so stale answers never silently become rules answers in production.
 - **Add components.** `pnpm web4kit add component <name>` scaffolds one and registers it: [Your own components](components.md).
 
-Search engines get a complete, neutral page instead of a personalised one: [SEO and crawlers](seo.md).
+Search engines get a complete, neutral page instead of a personalised one: [SEO and crawlers](seo.md). To ship it, see [Deploying](deploying.md).
 
 ## 9. Go further
 
 - Read `examples/restaurant` (Casa Lumbre) and `examples/db-explorer` (Meridian Supply) for complete sites with fixtures, labels and invariants.
-- Run the lab (`cd apps/lab && W4_LAB_MODE=1 pnpm dev`) to see every decision in the Why panel.
+- Run the lab locally (`cd apps/lab && W4_LAB_MODE=1 pnpm dev`) to switch engines live and see every decision in the Why panel. It's a developer tool and isn't deployed; the public demo is the site's playground.
 - JSON Schemas for the Page Plan and decider types are in [`schemas/`](../schemas). Other languages can implement parts of web4 against them.

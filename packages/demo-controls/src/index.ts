@@ -1,6 +1,9 @@
 import { type ContextEnvelope, distanceKm, localClock, pointAtDistance } from "@web4kit/context";
 
-/** Lab controls read from and write to a Context Envelope, so presets and controls share one state. */
+/**
+ * Demo controls (lab and site playground) read from and write to a Context Envelope, so presets
+ * and controls share one state.
+ */
 
 export const ARRIVALS = [
   { id: "instagram", label: "Instagram" },

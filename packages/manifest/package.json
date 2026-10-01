@@ -4,13 +4,13 @@
   "description": "web4 manifests: declarative data-source and component descriptions that replace hand-written pages.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",
-  "homepage": "https://github.com/shd8/web4/tree/main/packages/manifest#readme",
+  "homepage": "https://github.com/shd8/web4kit/tree/main/packages/manifest#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shd8/web4.git",
+    "url": "git+https://github.com/shd8/web4kit.git",
     "directory": "packages/manifest"
   },
-  "bugs": "https://github.com/shd8/web4/issues",
+  "bugs": "https://github.com/shd8/web4kit/issues",
   "keywords": [
     "web4",
     "system-one",

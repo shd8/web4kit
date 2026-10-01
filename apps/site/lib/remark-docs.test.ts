@@ -11,9 +11,9 @@ describe("remark plugin for the repository docs (launch-site 3.3)", () => {
   it("rewrites relative links outside docs to GitHub and keeps doc links", () => {
     expect(rewriteDocsUrl("components.md")).toBe("/docs/components/");
     expect(rewriteDocsUrl("seo.md#what-crawlers-get")).toBe("/docs/seo/#what-crawlers-get");
-    expect(rewriteDocsUrl("../schemas")).toBe("https://github.com/shd8/web4/tree/main/schemas");
+    expect(rewriteDocsUrl("../schemas")).toBe("https://github.com/shd8/web4kit/tree/main/schemas");
     expect(rewriteDocsUrl("../examples/restaurant")).toBe(
-      "https://github.com/shd8/web4/tree/main/examples/restaurant",
+      "https://github.com/shd8/web4kit/tree/main/examples/restaurant",
     );
     expect(rewriteDocsUrl("https://example.com/x")).toBe("https://example.com/x");
     expect(rewriteDocsUrl("#8-the-development-loop")).toBe("#8-the-development-loop");

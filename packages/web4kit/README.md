@@ -1,6 +1,6 @@
 # web4kit
 
-The developer CLI of a [web4](https://github.com/shd8/web4) site. Starters made with `pnpm create web4kit` already include it.
+The developer CLI of a [web4](https://github.com/shd8/web4kit) site. Starters made with `pnpm create web4kit` already include it.
 
 ```bash
 pnpm web4kit check                    # is the calibration profile current for my sources?

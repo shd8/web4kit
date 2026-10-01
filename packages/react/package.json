@@ -4,13 +4,13 @@
   "description": "web4 React renderer and curated component library: fail-soft, server-renderable, container-query based.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",
-  "homepage": "https://github.com/shd8/web4/tree/main/packages/react#readme",
+  "homepage": "https://github.com/shd8/web4kit/tree/main/packages/react#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shd8/web4.git",
+    "url": "git+https://github.com/shd8/web4kit.git",
     "directory": "packages/react"
   },
-  "bugs": "https://github.com/shd8/web4/issues",
+  "bugs": "https://github.com/shd8/web4kit/issues",
   "keywords": [
     "web4",
     "system-one",

@@ -12,6 +12,8 @@
       "!.claude",
       "!.w4-cache",
       "!reports/ablation",
+      "!bench/data",
+      "!bench/leaderboard",
       "!packages/create-web4kit/template",
       "!**/calibration/report.md",
       "!apps/site/out",

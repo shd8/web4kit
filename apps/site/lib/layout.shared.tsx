@@ -3,7 +3,9 @@ import { GITHUB_URL } from "./links";
 import { sitePages } from "./source";
 
 /** Site-only pages in navigation order; only those whose content exists are linked. */
-const PAGE_ORDER = ["concepts", "sources-and-audience", "thesis"];
+const PAGE_ORDER = ["concepts", "sources-and-audience", "thesis", "bench", "faq"];
+/** Short navigation labels where the page title is long. */
+const NAV_LABEL: Record<string, string> = { thesis: "Thesis" };
 
 export function siteLinks() {
   const pages = sitePages
@@ -12,7 +14,7 @@ export function siteLinks() {
   return [
     { text: "Playground", url: "/playground" },
     { text: "Docs", url: "/docs/getting-started" },
-    ...pages.map((p) => ({ text: p.data.title, url: p.url })),
+    ...pages.map((p) => ({ text: NAV_LABEL[p.slugs[0]!] ?? p.data.title, url: p.url })),
   ];
 }
 

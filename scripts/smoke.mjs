@@ -1,6 +1,14 @@
 // Publishability smoke test: pack every library package exactly as `npm publish` would, install
 // the tarballs into a clean project outside the workspace, type-check it with TypeScript 5.9
 // and run it with plain Node. Fails if exports, types or dependencies are broken.
+//
+//   node scripts/smoke.mjs                         local tarballs (CI)
+//   node scripts/smoke.mjs --from-npm 0.2.0        the published version, after a release
+//   options: --registry <url> (default: npm's)  --no-starter
+//
+// With --from-npm every package comes from the registry (waiting up to 5 minutes for the version
+// to appear) and starters are made with `pnpm create web4kit@<version>`. Every check after the
+// install is shared with the tarball mode.
 import { execSync, spawn } from "node:child_process";
 import {
   cpSync,
@@ -13,6 +21,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { parseArgs } from "node:util";
 
 const root = resolve(import.meta.dirname, "..");
 const PACKAGES = [
@@ -29,6 +38,15 @@ const PACKAGES = [
   "create-web4kit",
   "web4kit",
 ];
+const { values: args } = parseArgs({
+  options: {
+    "from-npm": { type: "string" },
+    registry: { type: "string" },
+    "no-starter": { type: "boolean", default: false },
+  },
+});
+const published = args["from-npm"];
+if (args.registry) process.env.npm_config_registry = args.registry;
 const work = mkdtempSync(join(tmpdir(), "web4kit-smoke-"));
 const packDir = join(work, "pack");
 const app = join(work, "app");
@@ -37,16 +55,24 @@ mkdirSync(app);
 const run = (cmd, cwd) => execSync(cmd, { cwd, stdio: "inherit" });
 
 try {
-  for (const p of PACKAGES)
-    run(`pnpm pack --pack-destination ${packDir}`, join(root, "packages", p));
-  // Tarball per package name (pnpm names them <scope>-<name>-<version>.tgz).
+  const manifests = PACKAGES.map((p) =>
+    JSON.parse(readFileSync(join(root, "packages", p, "package.json"), "utf8")),
+  );
+  if (published) {
+    await waitForRegistry(manifests.map((m) => `${m.name}@${published}`));
+    // The registry's own tarballs: the entry-point check below then inspects what npm serves.
+    for (const { name } of manifests)
+      run(`npm pack ${name}@${published} --pack-destination ${packDir} --silent`, work);
+  } else {
+    for (const p of PACKAGES)
+      run(`pnpm pack --pack-destination ${packDir}`, join(root, "packages", p));
+  }
+  const version = (m) => published ?? m.version;
+  // Tarball per package name (both tools name them <scope>-<name>-<version>.tgz).
   const tarballs = Object.fromEntries(
-    PACKAGES.map((p) => {
-      const { name, version } = JSON.parse(
-        readFileSync(join(root, "packages", p, "package.json"), "utf8"),
-      );
-      const file = `${name.replace(/^@/, "").replace("/", "-")}-${version}.tgz`;
-      const key = name === "create-web4kit" ? "@web4kit/create-web4kit" : name;
+    manifests.map((m) => {
+      const file = `${m.name.replace(/^@/, "").replace("/", "-")}-${version(m)}.tgz`;
+      const key = m.name === "create-web4kit" ? "@web4kit/create-web4kit" : m.name;
       return [key, `file:${join(packDir, file)}`];
     }),
   );
@@ -82,6 +108,10 @@ try {
     web4kit: _cli,
     ...deps
   } = tarballs;
+  // From npm the app depends on the published version and resolves everything from the registry.
+  const specs = published
+    ? Object.fromEntries(Object.keys(deps).map((name) => [name, published]))
+    : deps;
   writeFileSync(
     join(app, "package.json"),
     JSON.stringify(
@@ -89,8 +119,8 @@ try {
         name: "web4kit-smoke",
         private: true,
         type: "module",
-        dependencies: { ...deps, react: "^19.3.0", "react-dom": "^19.3.0" },
-        overrides: tarballs,
+        dependencies: { ...specs, react: "^19.3.0", "react-dom": "^19.3.0" },
+        ...(published ? {} : { overrides: tarballs }),
         devDependencies: {
           typescript: "~5.9.2",
           "@types/react": "^19.3.0",
@@ -107,14 +137,16 @@ try {
   run("npm install --no-audit --no-fund --loglevel=error", app);
   run("npx tsc -p tsconfig.json", app);
   run("node site.ts", app);
-  console.log("\n✓ library smoke passed: packed packages install, type-check (TS 5.9) and run");
+  console.log(
+    `\n✓ library smoke passed: ${published ? `npm ${published}` : "packed"} packages install, type-check (TS 5.9) and run`,
+  );
 
   // Starters: scaffold each template from the packed create-web4kit, install the tarballs,
   // build and serve in production mode.
-  if (!process.argv.includes("--no-starter")) {
+  if (!args["no-starter"]) {
     const tool = join(work, "tool");
     mkdirSync(tool);
-    run(`tar -xzf ${scaffolder.replace("file:", "")} -C ${tool}`, work);
+    if (!published) run(`tar -xzf ${scaffolder.replace("file:", "")} -C ${tool}`, work);
     const STARTERS = [
       // Production must ignore ?as= previews: the real request (?src=instagram) is planned.
       {
@@ -133,15 +165,20 @@ try {
     for (const [i, starter] of STARTERS.entries()) {
       const site = join(work, `site-${starter.template}`);
       const flags = starter.template === "welcome" ? "" : ` --template ${starter.template}`;
-      run(`node ${join(tool, "package/index.mjs")} ${site}${flags}`, work);
-      const sitePkgPath = join(site, "package.json");
-      const sitePkg = JSON.parse(readFileSync(sitePkgPath, "utf8"));
-      sitePkg.pnpm = { overrides: tarballs };
-      for (const field of ["dependencies", "devDependencies"]) {
-        for (const name of Object.keys(sitePkg[field] ?? {}))
-          if (tarballs[name]) sitePkg[field][name] = tarballs[name];
+      if (published) {
+        // What a stranger runs; the site's @web4kit ranges resolve from the registry.
+        run(`pnpm create web4kit@${published} ${site}${flags}`, work);
+      } else {
+        run(`node ${join(tool, "package/index.mjs")} ${site}${flags}`, work);
+        const sitePkgPath = join(site, "package.json");
+        const sitePkg = JSON.parse(readFileSync(sitePkgPath, "utf8"));
+        sitePkg.pnpm = { overrides: tarballs };
+        for (const field of ["dependencies", "devDependencies"]) {
+          for (const name of Object.keys(sitePkg[field] ?? {}))
+            if (tarballs[name]) sitePkg[field][name] = tarballs[name];
+        }
+        writeFileSync(sitePkgPath, JSON.stringify(sitePkg, null, 2));
       }
-      writeFileSync(sitePkgPath, JSON.stringify(sitePkg, null, 2));
       // pnpm is the documented default for starters.
       run("pnpm install --reporter=silent", site);
       run("pnpm exec tsc --noEmit -p tsconfig.json", site);
@@ -192,4 +229,26 @@ try {
   }
 } finally {
   rmSync(work, { recursive: true, force: true });
+}
+
+/** Wait until every `name@version` is visible on the registry (it can lag a publish by minutes). */
+async function waitForRegistry(specs, timeoutMs = 5 * 60_000) {
+  const deadline = Date.now() + timeoutMs;
+  let missing = specs;
+  while (missing.length) {
+    missing = missing.filter((spec) => {
+      try {
+        execSync(`npm view ${spec} version`, { stdio: "pipe" });
+        return false;
+      } catch {
+        return true;
+      }
+    });
+    if (!missing.length) break;
+    if (Date.now() > deadline)
+      throw new Error(`not on the registry after ${timeoutMs / 60_000} min: ${missing.join(", ")}`);
+    console.log(`waiting for the registry: ${missing.join(", ")}`);
+    await new Promise((r) => setTimeout(r, 15_000));
+  }
+  console.log(`✓ on the registry: ${specs.length} packages`);
 }

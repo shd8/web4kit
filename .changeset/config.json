@@ -8,10 +8,12 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
+    "@web4kit/bench",
     "@web4kit/demo-controls",
     "@web4kit/example-db-explorer",
     "@web4kit/example-restaurant",
     "@web4kit/lab",
+    "@web4kit/site",
     "web4kit-hotel-starter",
     "web4kit-welcome-starter"
   ]

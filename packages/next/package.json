@@ -4,13 +4,13 @@
   "description": "web4 for Next.js: one call from a server component plans, resolves and previews a page per visitor.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",
-  "homepage": "https://github.com/shd8/web4/tree/main/packages/next#readme",
+  "homepage": "https://github.com/shd8/web4kit/tree/main/packages/next#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shd8/web4.git",
+    "url": "git+https://github.com/shd8/web4kit.git",
     "directory": "packages/next"
   },
-  "bugs": "https://github.com/shd8/web4/issues",
+  "bugs": "https://github.com/shd8/web4kit/issues",
   "keywords": [
     "web4",
     "system-one",

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.0",
+    "@web4kit/bench": "workspace:^",
     "@web4kit/conformance": "workspace:^",
     "@web4kit/context": "workspace:^",
     "@web4kit/decider": "workspace:^",

@@ -1,6 +1,20 @@
 import Link from "next/link";
 import { TryIt } from "@/components/try-it";
 
+const MORE = [
+  {
+    href: "/thesis",
+    title: "The thesis",
+    text: "System One for UI: why selection beats generation, and what the evidence does and doesn't show.",
+  },
+  {
+    href: "/bench",
+    title: "web4-bench",
+    text: "The open benchmark, and a challenge: a small open engine as good as Jev.",
+  },
+  { href: "/faq", title: "FAQ", text: "If/else? Google? Lock-in? Dark patterns? Forms?" },
+];
+
 export default function Home() {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-16">
@@ -28,6 +42,18 @@ export default function Home() {
           Read the docs
         </Link>
       </div>
+      <nav aria-label="Read more" data-home-more="" className="grid gap-3 sm:grid-cols-3">
+        {MORE.map((m) => (
+          <Link
+            key={m.href}
+            href={m.href}
+            className="rounded-xl border border-fd-border p-4 hover:bg-fd-accent"
+          >
+            <span className="block font-semibold">{m.title}</span>
+            <span className="text-sm text-fd-muted-foreground">{m.text}</span>
+          </Link>
+        ))}
+      </nav>
       <TryIt />
     </main>
   );

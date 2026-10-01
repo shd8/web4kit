@@ -8,17 +8,17 @@ export const dynamic = "force-dynamic";
 
 const LINKS = [
   {
-    href: "https://github.com/shd8/web4/blob/main/docs/getting-started.md",
+    href: "https://github.com/shd8/web4kit/blob/main/docs/getting-started.md",
     title: "Docs",
     text: "Sources, situations, calibration.",
   },
   {
-    href: "https://github.com/shd8/web4/tree/main/examples",
+    href: "https://github.com/shd8/web4kit/tree/main/examples",
     title: "Examples",
     text: "A restaurant and a database explorer.",
   },
   {
-    href: "https://github.com/shd8/web4/tree/main/templates/hotel",
+    href: "https://github.com/shd8/web4kit/tree/main/templates/hotel",
     title: "Hotel starter",
     text: "A full site: pnpm create web4kit --template hotel",
   },

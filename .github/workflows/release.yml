@@ -29,6 +29,7 @@ jobs:
       # Opens a "Version Packages" PR from pending changesets; when that PR is merged,
       # publishes every @web4kit/* version not yet on npm.
       - uses: changesets/action@v1
+        id: changesets
         with:
           version: pnpm version-packages
           publish: pnpm release
@@ -38,3 +39,11 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # Provenance requires a public repository; enabled automatically once the repo is public.
           NPM_CONFIG_PROVENANCE: ${{ github.event.repository.private == false }}
+      # Every public package shares one version (fixed group), so the first entry names it.
+      # Installs that version from npm, type-checks and runs it, and builds both starters made
+      # with `pnpm create web4kit@<version>` (spec: public-release).
+      - name: Smoke test the published packages
+        if: steps.changesets.outputs.published == 'true'
+        run: node scripts/smoke.mjs --from-npm "$VERSION"
+        env:
+          VERSION: ${{ fromJSON(steps.changesets.outputs.publishedPackages)[0].version }}

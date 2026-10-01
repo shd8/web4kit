@@ -1,0 +1,20 @@
+title: "[Thesis] "
+labels: [thesis]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Discussion of "System One for UI: pages that decide themselves" (https://shd8.github.io/web4kit/thesis/).
+        Disagreement is welcome, especially with evidence. Every number in the post links to the report it comes from.
+  - type: textarea
+    id: point
+    attributes:
+      label: Your point
+      description: Which claim you're discussing, and what you think.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Data, a reproduction, or a link, if you have one.

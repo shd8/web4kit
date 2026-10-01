@@ -1,0 +1,20 @@
+name: Feature request
+description: Something web4kit should do.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you're trying to do, and why it's hard today.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you'd like
+      description: web4 selects among declared sources and components with System One models; ideas that fit that model are the most likely to land. See ROADMAP.md.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered

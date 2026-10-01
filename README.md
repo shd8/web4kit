@@ -1,6 +1,12 @@
-# web4
+# web4kit
 
-**Pages planned per visitor by System One decision models.**
+[![CI](https://github.com/shd8/web4kit/actions/workflows/ci.yml/badge.svg)](https://github.com/shd8/web4kit/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@web4kit/planner?label=npm)](https://www.npmjs.com/package/@web4kit/planner)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+**Pages planned per visitor by System One decision models.** web4 is the idea; web4kit is the toolkit.
+
+[Site](https://shd8.github.io/web4kit/) · [Playground](https://shd8.github.io/web4kit/playground/) · [Docs](https://shd8.github.io/web4kit/docs/getting-started/) · [The thesis](https://shd8.github.io/web4kit/thesis/) · [web4-bench](https://shd8.github.io/web4kit/bench/) · [FAQ](https://shd8.github.io/web4kit/faq/)
 
 Traditional web pages are decided at build time: every visitor gets the same content, components and layout. web4 moves those decisions to request time. For each visitor's *situation* (how they arrived, where from, on what device, at what local time), a System One model such as [TypeSafe Jev](https://docs.typesafe.ai) decides **what** to show, **how** to show it and **where** to put it. Deterministic code then lays the page out and renders it.
 
@@ -60,23 +66,23 @@ renderer ────────── data fetched fresh at render time, fail-
 ## Start a site
 
 ```bash
-pnpm create web4kit my-site    # once published
-cd my-site && pnpm install && pnpm dev
+pnpm create web4kit my-site            # or: npm create web4kit@latest my-site
+cd my-site && pnpm install && pnpm dev  # http://localhost:3000
 ```
 
-Until the packages are on npm, run the scaffolder from this checkout. It works from any folder and bundles the local packages into `my-site/.web4kit`:
+Then pick an engine in `.env`: `JEV_API_KEY` for TypeSafe Jev, or `W4_ENGINE=laya` for the open Laya model in-process (free and offline: `pnpm add @web4kit/decider-laya`, or scaffold with `--laya`). Until you do, pages are planned by the rules engine, which replays your hand-written heuristics. It is the fallback that keeps the site up, not web4 itself, and the development bar says so.
+
+Starters include the developer CLI, which is also on npm as `web4kit`:
 
 ```bash
-node /path/to/web4/packages/create-web4kit/index.mjs my-site
-cd my-site && pnpm install && pnpm dev    # http://localhost:3000 (npm and yarn work too)
+npx web4kit check                                   # is the calibration current for my sources?
+npx web4kit add component quote-card --shape record  # scaffold and register a component
 ```
-
-Then pick an engine in `.env`: `JEV_API_KEY` for TypeSafe Jev, or `W4_ENGINE=laya` for the open Laya model in-process (free and offline; scaffold with `--laya` or `pnpm add @web4kit/decider-laya`). Until you do, pages are planned by the rules engine, which replays your hand-written heuristics. It is the fallback that keeps the site up, not web4 itself, and the development bar says so.
 
 | Template | |
 |---|---|
 | `welcome` (default) | A welcome page planned by web4 itself: get-started steps, the situation it was planned from, notes that only some visitors see. Three personas, calibrated on Jev (100% invariants and relevance, $0.00017 per uncached page). See [`templates/welcome`](templates/welcome). |
-| `hotel` (`--template hotel`) | **Casa Ribeira**, a boutique hotel in Porto: five personas (dreaming, comparing, arriving today, staying in the morning, staying on a rainy evening), business rules, a conformance suite and a `/stats` page. Calibrated on Jev: 100% invariants, 100% relevance, $0.00034 per uncached page. See [`templates/hotel`](templates/hotel). |
+| `hotel` (`--template hotel`) | **Casa Ribeira**, a boutique hotel in Porto: five personas (dreaming, comparing, arriving today, staying in the morning, staying on a rainy evening), business rules, a conformance suite and a `/stats` page. Calibrated on Jev: 100% invariants, 100% relevance, $0.00032 per uncached page. See [`templates/hotel`](templates/hotel). |
 
 ## Use the packages
 
@@ -98,13 +104,17 @@ pnpm add @web4kit/context @web4kit/manifest @web4kit/planner @web4kit/react reac
 | [`@web4kit/conformance`](packages/conformance) | Fixture grids, label and invariant builders, per-engine evaluation, calibration profiles |
 | [`@web4kit/ir`](packages/ir) | Page Plan schema (`web4.plan/v1`), validation, privacy check |
 | [`@web4kit/solver`](packages/solver) | Deterministic layout solver |
-| [`create-web4kit`](packages/create-web4kit) | Scaffolder for the Casa Ribeira starter |
+| [`create-web4kit`](packages/create-web4kit) | Scaffolder: `pnpm create web4kit` (welcome or hotel starter) |
+| [`web4kit`](packages/web4kit) | Developer CLI: calibration check, component generator |
 
-## Run this repository
+## Work on this repository
+
+Everything above uses the published packages. This section is for changing web4kit itself; [CONTRIBUTING.md](CONTRIBUTING.md) has the checks a pull request needs.
 
 Requirements: Node ≥ 22 and pnpm 9.
 
 ```bash
+git clone https://github.com/shd8/web4kit && cd web4kit
 pnpm install
 cp .env.example .env          # optional: add JEV_API_KEY to plan with Jev
 cd apps/lab && W4_LAB_MODE=1 pnpm dev
@@ -118,7 +128,7 @@ Open <http://localhost:3004>:
 
 Use the **engine switcher** (Rules / Jev) and the **Why** panel to see each decision. Without `JEV_API_KEY`, everything runs on the offline rules engine.
 
-## Commands
+### Commands
 
 | Command | What it does |
 |---|---|
@@ -126,16 +136,21 @@ Use the **engine switcher** (Rules / Jev) and the **Why** panel to see each deci
 | `pnpm test` | Unit tests (offline) |
 | `pnpm lint` | Biome lint and format check |
 | `pnpm conformance --engines rules,jev --write` | Run the conformance suite and write `calibration/` and `reports/` |
-| `node scripts/ci.mjs` | Full offline CI: build, typecheck, lint, tests, conformance on rules |
+| `pnpm run ci` | Full offline CI: URL check, playground recordings, web4-bench, build, typecheck, lint, tests, conformance on rules |
 | `pnpm smoke` | Pack every package, install into a clean project, typecheck with TS 5.9 and run |
+| `pnpm bench run --engine laya` / `pnpm bench score <file>` | Run an engine on web4-bench and score it ([bench/README.md](bench/README.md)) |
 | `pnpm changeset` | Describe a change for the next release (Changesets) |
 | `W4_LIVE=1 pnpm --filter @web4kit/example-restaurant test` | Live planning test against Jev |
 
-## Releasing
+### Releasing
 
-Versions are managed with [Changesets](https://github.com/changesets/changesets); all `@web4kit/*` packages share one version. On `main`, the Release workflow opens a *Version Packages* PR, and merging it publishes to npm (with provenance once the repository is public). It is opt-in: set the repository variable `RELEASE_ENABLED=true` and add an `NPM_TOKEN` secret (a granular npm token with publish rights on `@web4kit` and 2FA bypass).
+Versions are managed with [Changesets](https://github.com/changesets/changesets). Every public package (`@web4kit/*`, `create-web4kit` and the `web4kit` CLI) shares one version. On `main`, the Release workflow opens a *Version Packages* PR. Merging it publishes to npm with provenance, then installs that version from npm and smoke-tests it (`node scripts/smoke.mjs --from-npm <version>`), starters included.
 
-## Repository layout
+Publishing is opt-in. Set the repository variable `RELEASE_ENABLED=true` and add an `NPM_TOKEN` secret: a granular npm token with publish rights on the `@web4kit` scope **and** on the unscoped `create-web4kit` and `web4kit` packages, with 2FA bypass for automation.
+
+The `web4kit` name first held a 0.0.1 placeholder. The owner deprecates that version once, by hand (it needs 2FA): `npm deprecate web4kit@0.0.1 "Placeholder; use web4kit@latest"`. Later versions are never deprecated.
+
+### Repository layout
 
 ```
 packages/
@@ -148,33 +163,38 @@ packages/
   solver        Deterministic layout solver
   react         Renderer and the curated component library (Tailwind v4, container queries)
   conformance   Fixtures, invariants, runner, calibration, reports
+  create-web4kit, web4kit   The scaffolder and the developer CLI
 templates/      welcome (default) and hotel (Casa Ribeira): the create-web4kit templates
+apps/site       The public site: docs, playground of precomputed Jev plans, thesis, web4-bench
 apps/lab        Next.js lab: context panel, personas, engine switcher, Why panel
+bench/          web4-bench: dataset export, scorer, runner, leaderboard
 examples/       restaurant (Casa Lumbre) and db-explorer (Meridian Supply)
 schemas/        Language-neutral JSON Schemas: the canonical contracts
 calibration/    Generated calibration profiles per site and engine
 reports/        Generated conformance reports
 ```
 
-## Measured results (Jev 1.13, 3 repeats)
+## Measured results (Jev 1.13.0, 3 repeats)
 
 | | Casa Lumbre | Meridian Supply |
 |---|---|---|
 | Fixtures | 164 | 113 |
 | Invariant pass rate | 100% | 100% |
-| Relevance accuracy | 100% | 97.1% (rules: 56%) |
-| Tokens per uncached page | 6,664 | 7,251 |
-| Cost per uncached page | $0.00028 | $0.00030 |
-| Latency p50 / p95 | 278 / 346 ms | 284 / 353 ms |
+| Relevance accuracy (raw) | 99.9% (rules: 94.9%) | 96.1% (rules: 55.9%) |
+| Tokens per uncached page | 6,795 | 7,302 |
+| Cost per uncached page | $0.00029 | $0.00031 |
+| Latency p50 / p95 | 271 / 341 ms | 278 / 354 ms |
 
-The full reports are in [`reports/`](reports).
+From [`reports/conformance-casa-lumbre.md`](reports/conformance-casa-lumbre.md) and [`reports/conformance-meridian-ops.md`](reports/conformance-meridian-ops.md).
+
+The [heuristic ablation](reports/ablation/report.md) asked whether the model plans well from descriptions alone, with the hand-written rules removed. Its pre-registered verdict is **not shown**. Jev led the rules engine by 25 points of decision accuracy, but without `audience` lines it kept too few invariants on two of the four sites. [The thesis](https://shd8.github.io/web4kit/thesis/) discusses what that means.
 
 ## Limitations and roadmap
 
-- v0 renders read-only pages: no actions such as booking.
+- v0 renders read-only pages: no actions such as booking. Forms and actions are first on the [roadmap](ROADMAP.md).
 - Manifests are written by hand. Importing them from Google Business, Instagram or a POS is the path to real adoption.
 - Owner-written labels are English only; content is localised by the data layer.
-- Local Laya works offline, but on these examples it is not accurate enough to plan pages alone. Use it through the cascade.
+- Local Laya works offline, but on these examples it is not accurate enough to plan pages alone. Use it through the cascade. [web4-bench](https://shd8.github.io/web4kit/bench/) challenges anyone to build a small open engine that is.
 - Deciding on the device, in the browser, is a future option.
 
 ## License

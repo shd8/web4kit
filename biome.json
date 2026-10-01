@@ -10,6 +10,8 @@
       "!**/*.gen.json",
       "!openspec",
       "!.claude",
+      "!.w4-cache",
+      "!reports/ablation",
       "!packages/create-web4kit/template",
       "!**/calibration/report.md"
     ]

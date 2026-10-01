@@ -6,6 +6,11 @@ const bar = (h: number[]) => {
   return h.map((v) => " ▁▂▃▄▅▆▇█"[Math.round((v / max) * 8)]).join("");
 };
 
+const decided = (r: EngineRun, key: string) => {
+  const d = r.decisionAccuracy[key];
+  return d ? pct(d.accuracy) : "–";
+};
+
 /** Markdown comparison report across engines (spec: conformance-suite). */
 export function renderReport(site: string, runs: EngineRun[]): string {
   const lines: string[] = [`# web4 conformance: ${site}`, ""];
@@ -25,14 +30,18 @@ export function renderReport(site: string, runs: EngineRun[]): string {
   for (const r of runs.filter((x) => !x.skipped)) {
     lines.push("", `## ${r.engineVersion}`, "");
     lines.push(
-      "| kind | language | samples | accuracy | mean conf (correct) | mean conf (incorrect) | conf histogram correct / incorrect | flip rate | threshold |",
+      "| kind | language | samples | accuracy | decision accuracy | mean conf (correct) | mean conf (incorrect) | conf histogram correct / incorrect | flip rate | threshold |",
     );
-    lines.push("|---|---|---|---|---|---|---|---|---|");
+    lines.push("|---|---|---|---|---|---|---|---|---|---|");
     for (const k of Object.values(r.byKind).sort((a, b) => a.kind.localeCompare(b.kind))) {
       lines.push(
-        `| ${k.kind} | ${k.language} | ${k.samples} | ${pct(k.accuracy)} | ${k.meanConfidenceCorrect.toFixed(2)} | ${k.meanConfidenceIncorrect.toFixed(2)} | \`${bar(k.histogram.correct)}\` / \`${bar(k.histogram.incorrect)}\` | ${k.flipRate === undefined ? "–" : pct(k.flipRate)} | ${r.engine === "rules" ? "n/a (rules)" : k.uncalibrated ? "**uncalibrated**" : (k.threshold?.toFixed(3) ?? "–")} |`,
+        `| ${k.kind} | ${k.language} | ${k.samples} | ${pct(k.accuracy)} | ${decided(r, `${k.kind}|${k.language}`)} | ${k.meanConfidenceCorrect.toFixed(2)} | ${k.meanConfidenceIncorrect.toFixed(2)} | \`${bar(k.histogram.correct)}\` / \`${bar(k.histogram.incorrect)}\` | ${k.flipRate === undefined ? "–" : pct(k.flipRate)} | ${r.engine === "rules" ? "n/a (rules)" : k.uncalibrated ? "**uncalibrated**" : (k.threshold?.toFixed(3) ?? "–")} |`,
       );
     }
+    lines.push(
+      "",
+      "Decision accuracy scores the labels against the final page (after gating, defaults, invariants and fallbacks).",
+    );
     if (r.invariantFailures.length) {
       lines.push("", "Invariant failures:", "");
       for (const f of r.invariantFailures.slice(0, 25))

@@ -1,0 +1,5492 @@
+{
+  "generatedAt": "2026-10-01T11:52:56.820Z",
+  "engine": "jev-1.13.0",
+  "seed": 7,
+  "robustnessSeed": 1009,
+  "levels": [
+    1,
+    0.75,
+    0.5,
+    0.25,
+    0
+  ],
+  "arms": {
+    "h": "heuristics removed",
+    "ha": "heuristics and audiences removed"
+  },
+  "complete": true,
+  "spend": {
+    "thisRun": {
+      "inputTokens": 0,
+      "usd": 0
+    },
+    "recordings": {
+      "inputTokens": 16177920,
+      "usd": 0.6794726400000001
+    }
+  },
+  "verdict": {
+    "outcome": "not-shown",
+    "reason": "The pre-registered conditions are not met: gap without heuristics or audiences 25.0 points (needs >= 10); gap without heuristics 25.4 points; Jev invariants below 99% at 0% without audiences on explorer (65.2%), hotel (97.7%). Lead with cost, safety and explainability.",
+    "gapHeuristics": 0.2535415296319069,
+    "gapHeuristicsAndAudiences": 0.25039982540803096,
+    "jevInvariantsAtZeroHA": {
+      "restaurant": 0.9964285714285714,
+      "explorer": 0.6521739130434783,
+      "hotel": 0.9766081871345029,
+      "welcome": 1
+    },
+    "rules": "gap = mean over sites, at 0% kept, of Jev's minus the rules' pooled decision accuracy. holds: gap(ha) >= 10 points and Jev invariants >= 99% on every site at 0% ha; holds-partially: gap(h) >= 10 points while gap(ha) < 10 points; otherwise not-shown."
+  },
+  "sites": {
+    "restaurant": {
+      "title": "Casa Lumbre (restaurant)",
+      "accounting": {
+        "buckets": 8,
+        "bucketLabels": {
+          "arrival": 4,
+          "device": 3,
+          "mediaBudget": 2,
+          "familiarity": 3,
+          "language": 2,
+          "visitor": 3,
+          "mealWindow": 5,
+          "openState": 3
+        },
+        "situations": 6480,
+        "fixtures": 164,
+        "situationsCovered": 164,
+        "sources": 9,
+        "heuristics": 30,
+        "audiences": 2,
+        "descriptionChars": 986,
+        "naiveRules": 291600
+      },
+      "arms": {
+        "h": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7070063694267515
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9096045197740112
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6687898089171974
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7326732673267327
+              }
+            },
+            "decisionAccuracyAll": 0.8753799392097265,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.802547770700637
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9594731509625126,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6496815286624203
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.8418079096045198
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6496815286624203
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracyAll": 0.8814589665653495,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 0.8892857142857142,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@3"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.802547770700637
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9594731509625126,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.8587570621468926
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7005649717514124
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracyAll": 0.878419452887538,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 0.8892857142857142,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.8089171974522293
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9604863221884499,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.8580375782881002
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.751412429378531
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8768115942028986
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.5932203389830508
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracyAll": 0.8186423505572442,
+            "relevanceRaw": 0.8580375782881002,
+            "relevanceDecision": 0.8768115942028986,
+            "invariantPassRate": 0.8892857142857142,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.8089171974522293
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9604863221884499,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7411273486430062
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.3389830508474576
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.7753623188405797
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.1807909604519774
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracyAll": 0.5916919959473151,
+            "relevanceRaw": 0.7411273486430062,
+            "relevanceDecision": 0.7753623188405797,
+            "invariantPassRate": 0.8821428571428571,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.8089171974522293
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9604863221884499,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          }
+        ],
+        "ha": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7070063694267515
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9096045197740112
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6687898089171974
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7326732673267327
+              }
+            },
+            "decisionAccuracyAll": 0.8753799392097265,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.950354609929078,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6496815286624203
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.8418079096045198
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6496815286624203
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracyAll": 0.8814589665653495,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 0.8892857142857142,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@3"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.950354609929078,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.8587570621468926
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7005649717514124
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracyAll": 0.878419452887538,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 0.8892857142857142,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7961783439490446
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9513677811550152,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.8580375782881002
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.751412429378531
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8768115942028986
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.5932203389830508
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracyAll": 0.8186423505572442,
+            "relevanceRaw": 0.8580375782881002,
+            "relevanceDecision": 0.8768115942028986,
+            "invariantPassRate": 0.8892857142857142,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7961783439490446
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9513677811550152,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7411273486430062
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.3389830508474576
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.7753623188405797
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.1807909604519774
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracyAll": 0.5916919959473151,
+            "relevanceRaw": 0.7411273486430062,
+            "relevanceDecision": 0.7753623188405797,
+            "invariantPassRate": 0.8821428571428571,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7961783439490446
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9513677811550152,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          }
+        ]
+      },
+      "robustness": {
+        "h": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7070063694267515
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9096045197740112
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6687898089171974
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7326732673267327
+              }
+            },
+            "decisionAccuracyAll": 0.8753799392097265,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.802547770700637
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9594731509625126,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7745302713987474
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7070063694267515
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8043478260869565
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6687898089171974
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7326732673267327
+              }
+            },
+            "decisionAccuracyAll": 0.8105369807497467,
+            "relevanceRaw": 0.7745302713987474,
+            "relevanceDecision": 0.8043478260869565,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.8089171974522293
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9604863221884499,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7745302713987474
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.5923566878980892
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8043478260869565
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.5159235668789809
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7821782178217822
+              }
+            },
+            "decisionAccuracyAll": 0.7416413373860182,
+            "relevanceRaw": 0.7745302713987474,
+            "relevanceDecision": 0.8043478260869565,
+            "invariantPassRate": 0.9928571428571429,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.8089171974522293
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9604863221884499,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7995824634655533
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6878980891719745
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8260869565217391
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6878980891719745
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8034447821681864,
+            "relevanceRaw": 0.7995824634655533,
+            "relevanceDecision": 0.8260869565217391,
+            "invariantPassRate": 0.9928571428571429,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.8089171974522293
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9604863221884499,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7411273486430062
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.3389830508474576
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.7753623188405797
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.1807909604519774
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracyAll": 0.5916919959473151,
+            "relevanceRaw": 0.7411273486430062,
+            "relevanceDecision": 0.7753623188405797,
+            "invariantPassRate": 0.8821428571428571,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9320594479830149
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.933993399339934
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 1
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9887005649717514
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.8089171974522293
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9604863221884499,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          }
+        ],
+        "ha": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.941544885177453
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7070063694267515
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9492753623188406
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9096045197740112
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6687898089171974
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7326732673267327
+              }
+            },
+            "decisionAccuracyAll": 0.8753799392097265,
+            "relevanceRaw": 0.941544885177453,
+            "relevanceDecision": 0.9492753623188406,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7898089171974523
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.950354609929078,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7745302713987474
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7070063694267515
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9405940594059405
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8043478260869565
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6687898089171974
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7326732673267327
+              }
+            },
+            "decisionAccuracyAll": 0.8105369807497467,
+            "relevanceRaw": 0.7745302713987474,
+            "relevanceDecision": 0.8043478260869565,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7961783439490446
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9513677811550152,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7745302713987474
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.5923566878980892
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8043478260869565
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.5159235668789809
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.7821782178217822
+              }
+            },
+            "decisionAccuracyAll": 0.7416413373860182,
+            "relevanceRaw": 0.7745302713987474,
+            "relevanceDecision": 0.8043478260869565,
+            "invariantPassRate": 0.9928571428571429,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7961783439490446
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9513677811550152,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7995824634655533
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6878980891719745
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.8260869565217391
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.7231638418079096
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.6878980891719745
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8034447821681864,
+            "relevanceRaw": 0.7995824634655533,
+            "relevanceDecision": 0.8260869565217391,
+            "invariantPassRate": 0.9928571428571429,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7961783439490446
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9513677811550152,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 479,
+                "accuracy": 0.7411273486430062
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.3389830508474576
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.7753623188405797
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.1807909604519774
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.25477707006369427
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.8316831683168316
+              }
+            },
+            "decisionAccuracyAll": 0.5916919959473151,
+            "relevanceRaw": 0.7411273486430062,
+            "relevanceDecision": 0.7753623188405797,
+            "invariantPassRate": 0.8821428571428571,
+            "invariantFailures": [
+              {
+                "fixture": "tourist-insta",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "local-maps",
+                "detail": "lunch-menu@- vs dinner-menu@1"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "regular-desktop",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "late-night-closed",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=desktop,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=1.2km,device=mobile,visits=none,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=1.2km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=12km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=1.2km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=instagram,time=13:10,distance=12km,device=desktop,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=12km,device=mobile,visits=none,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=12km,device=mobile,visits=returning,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=maps,time=13:10,distance=900km,device=mobile,visits=returning,lang=es",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=tripadvisor,time=13:10,distance=900km,device=desktop,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              },
+              {
+                "fixture": "arrival=direct,time=13:10,distance=900km,device=mobile,visits=regular,lang=en",
+                "detail": "lunch-menu missing"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1437,
+                "accuracy": 0.9916492693110647
+              },
+              "A.salience|english": {
+                "samples": 531,
+                "accuracy": 1
+              },
+              "C.region|english": {
+                "samples": 471,
+                "accuracy": 0.9299363057324841
+              },
+              "B.component|english": {
+                "samples": 303,
+                "accuracy": 0.9174917491749175
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 552,
+                "accuracy": 0.9891304347826086
+              },
+              "A.salience|english": {
+                "samples": 177,
+                "accuracy": 0.9830508474576272
+              },
+              "C.region|english": {
+                "samples": 157,
+                "accuracy": 0.7961783439490446
+              },
+              "B.component|english": {
+                "samples": 101,
+                "accuracy": 0.9306930693069307
+              }
+            },
+            "decisionAccuracyAll": 0.9513677811550152,
+            "relevanceRaw": 0.9916492693110647,
+            "relevanceDecision": 0.9891304347826086,
+            "invariantPassRate": 0.9964285714285714,
+            "invariantFailures": [
+              {
+                "fixture": "regular-desktop",
+                "detail": "hero is lunch-menu"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "explorer": {
+      "title": "Meridian Supply (database explorer)",
+      "accounting": {
+        "buckets": 6,
+        "bucketLabels": {
+          "arrival": 4,
+          "device": 3,
+          "mediaBudget": 2,
+          "familiarity": 3,
+          "language": 2,
+          "role": 3
+        },
+        "situations": 432,
+        "fixtures": 113,
+        "situationsCovered": 7,
+        "sources": 10,
+        "heuristics": 19,
+        "audiences": 1,
+        "descriptionChars": 1199,
+        "naiveRules": 21600
+      },
+      "arms": {
+        "h": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracyAll": 0.5586206896551724,
+            "relevanceRaw": 0.5586206896551724,
+            "relevanceDecision": 0.5586206896551724,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9632183908045977
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9689655172413794
+              }
+            },
+            "decisionAccuracyAll": 0.9689655172413794,
+            "relevanceRaw": 0.9632183908045977,
+            "relevanceDecision": 0.9689655172413794,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracyAll": 0.5586206896551724,
+            "relevanceRaw": 0.5586206896551724,
+            "relevanceDecision": 0.5586206896551724,
+            "invariantPassRate": 0.8695652173913043,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9632183908045977
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9689655172413794
+              }
+            },
+            "decisionAccuracyAll": 0.9689655172413794,
+            "relevanceRaw": 0.9632183908045977,
+            "relevanceDecision": 0.9689655172413794,
+            "invariantPassRate": 0.8695652173913043,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.5655172413793104,
+            "relevanceRaw": 0.5655172413793104,
+            "relevanceDecision": 0.5655172413793104,
+            "invariantPassRate": 0.7391304347826086,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9632183908045977
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9689655172413794
+              }
+            },
+            "decisionAccuracyAll": 0.9689655172413794,
+            "relevanceRaw": 0.9632183908045977,
+            "relevanceDecision": 0.9689655172413794,
+            "invariantPassRate": 0.7391304347826086,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.5655172413793104,
+            "relevanceRaw": 0.5655172413793104,
+            "relevanceDecision": 0.5655172413793104,
+            "invariantPassRate": 0.6086956521739131,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "inventory-risk present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "inventory-risk present in aside"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "inventory-risk present in secondary"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9632183908045977
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9689655172413794
+              }
+            },
+            "decisionAccuracyAll": 0.9689655172413794,
+            "relevanceRaw": 0.9632183908045977,
+            "relevanceDecision": 0.9689655172413794,
+            "invariantPassRate": 0.7391304347826086,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.7034482758620689
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.7034482758620689
+              }
+            },
+            "decisionAccuracyAll": 0.7034482758620689,
+            "relevanceRaw": 0.7034482758620689,
+            "relevanceDecision": 0.7034482758620689,
+            "invariantPassRate": 0.6086956521739131,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "inventory-risk present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "inventory-risk present in aside"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "inventory-risk present in secondary"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9632183908045977
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9689655172413794
+              }
+            },
+            "decisionAccuracyAll": 0.9689655172413794,
+            "relevanceRaw": 0.9632183908045977,
+            "relevanceDecision": 0.9689655172413794,
+            "invariantPassRate": 0.7391304347826086,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          }
+        ],
+        "ha": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracyAll": 0.5586206896551724,
+            "relevanceRaw": 0.5586206896551724,
+            "relevanceDecision": 0.5586206896551724,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.9655172413793104,
+            "relevanceRaw": 0.9655172413793104,
+            "relevanceDecision": 0.9655172413793104,
+            "invariantPassRate": 0.9130434782608695,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "briefing present in secondary"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5586206896551724
+              }
+            },
+            "decisionAccuracyAll": 0.5586206896551724,
+            "relevanceRaw": 0.5586206896551724,
+            "relevanceDecision": 0.5586206896551724,
+            "invariantPassRate": 0.8695652173913043,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.9655172413793104,
+            "relevanceRaw": 0.9655172413793104,
+            "relevanceDecision": 0.9655172413793104,
+            "invariantPassRate": 0.782608695652174,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.5655172413793104,
+            "relevanceRaw": 0.5655172413793104,
+            "relevanceDecision": 0.5655172413793104,
+            "invariantPassRate": 0.7391304347826086,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.9655172413793104,
+            "relevanceRaw": 0.9655172413793104,
+            "relevanceDecision": 0.9655172413793104,
+            "invariantPassRate": 0.6521739130434783,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.5655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.5655172413793104,
+            "relevanceRaw": 0.5655172413793104,
+            "relevanceDecision": 0.5655172413793104,
+            "invariantPassRate": 0.6086956521739131,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "inventory-risk present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "inventory-risk present in aside"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "inventory-risk present in secondary"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.9655172413793104,
+            "relevanceRaw": 0.9655172413793104,
+            "relevanceDecision": 0.9655172413793104,
+            "invariantPassRate": 0.6521739130434783,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.7034482758620689
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.7034482758620689
+              }
+            },
+            "decisionAccuracyAll": 0.7034482758620689,
+            "relevanceRaw": 0.7034482758620689,
+            "relevanceDecision": 0.7034482758620689,
+            "invariantPassRate": 0.6086956521739131,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "inventory-risk present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "inventory-risk present in aside"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "inventory-risk present in secondary"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 870,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 290,
+                "accuracy": 0.9655172413793104
+              }
+            },
+            "decisionAccuracyAll": 0.9655172413793104,
+            "relevanceRaw": 0.9655172413793104,
+            "relevanceDecision": 0.9655172413793104,
+            "invariantPassRate": 0.6521739130434783,
+            "invariantFailures": [
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "ops-manager-monday",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "executive-mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=ops-manager,device=desktop",
+                "detail": "briefing present in secondary"
+              },
+              {
+                "fixture": "role=ops-manager,device=mobile",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=desktop",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "role=executive,device=mobile",
+                "detail": "hero is empty"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "hotel": {
+      "title": "Casa Ribeira (hotel starter)",
+      "accounting": {
+        "buckets": 9,
+        "bucketLabels": {
+          "arrival": 4,
+          "device": 3,
+          "mediaBudget": 2,
+          "familiarity": 3,
+          "language": 1,
+          "dayPart": 4,
+          "stayPhase": 5,
+          "weather": 3,
+          "visitor": 3
+        },
+        "situations": 12960,
+        "fixtures": 105,
+        "situationsCovered": 98,
+        "sources": 10,
+        "heuristics": 11,
+        "audiences": 9,
+        "descriptionChars": 972,
+        "naiveRules": 648000
+      },
+      "arms": {
+        "h": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.9375
+              }
+            },
+            "decisionAccuracyAll": 0.9959514170040485,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.9759036144578314
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.9783549783549783
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.979757085020243,
+            "relevanceRaw": 0.9759036144578314,
+            "relevanceDecision": 0.9783549783549783,
+            "invariantPassRate": 0.9941520467836257,
+            "invariantFailures": [
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.9375
+              }
+            },
+            "decisionAccuracyAll": 0.9959514170040485,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.9759036144578314
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.9783549783549783
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.979757085020243,
+            "relevanceRaw": 0.9759036144578314,
+            "relevanceDecision": 0.9783549783549783,
+            "invariantPassRate": 0.9941520467836257,
+            "invariantFailures": [
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.9375
+              }
+            },
+            "decisionAccuracyAll": 0.9959514170040485,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.9759036144578314
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.9783549783549783
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracyAll": 0.9655870445344129,
+            "relevanceRaw": 0.9759036144578314,
+            "relevanceDecision": 0.9783549783549783,
+            "invariantPassRate": 0.9941520467836257,
+            "invariantFailures": [
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.9375
+              }
+            },
+            "decisionAccuracyAll": 0.9959514170040485,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.8626506024096385
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8917748917748918
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracyAll": 0.8846153846153846,
+            "relevanceRaw": 0.8626506024096385,
+            "relevanceDecision": 0.8917748917748918,
+            "invariantPassRate": 0.9824561403508771,
+            "invariantFailures": [
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is empty"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "today missing"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 1
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.9375
+              }
+            },
+            "decisionAccuracyAll": 0.9959514170040485,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 0.9941520467836257,
+            "invariantFailures": [
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is empty"
+              }
+            ]
+          }
+        ],
+        "ha": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.8240963855421687
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.841991341991342
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8522267206477733,
+            "relevanceRaw": 0.8240963855421687,
+            "relevanceDecision": 0.841991341991342,
+            "invariantPassRate": 0.9766081871345029,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 0.727710843373494
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8376623376623377
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8481781376518218,
+            "relevanceRaw": 0.727710843373494,
+            "relevanceDecision": 0.8376623376623377,
+            "invariantPassRate": 0.9766081871345029,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.8
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8203463203463204
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8319838056680162,
+            "relevanceRaw": 0.8,
+            "relevanceDecision": 0.8203463203463204,
+            "invariantPassRate": 0.9707602339181286,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 0.727710843373494
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8376623376623377
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8481781376518218,
+            "relevanceRaw": 0.727710843373494,
+            "relevanceDecision": 0.8376623376623377,
+            "invariantPassRate": 0.9766081871345029,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.8
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8203463203463204
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8319838056680162,
+            "relevanceRaw": 0.8,
+            "relevanceDecision": 0.8203463203463204,
+            "invariantPassRate": 0.9707602339181286,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 0.727710843373494
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8376623376623377
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8481781376518218,
+            "relevanceRaw": 0.727710843373494,
+            "relevanceDecision": 0.8376623376623377,
+            "invariantPassRate": 0.9766081871345029,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.8
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8203463203463204
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracyAll": 0.8178137651821862,
+            "relevanceRaw": 0.8,
+            "relevanceDecision": 0.8203463203463204,
+            "invariantPassRate": 0.9707602339181286,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 0.727710843373494
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8376623376623377
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8481781376518218,
+            "relevanceRaw": 0.727710843373494,
+            "relevanceDecision": 0.8376623376623377,
+            "invariantPassRate": 0.9766081871345029,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 415,
+                "accuracy": 0.6867469879518072
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.7337662337662337
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 0.78125
+              }
+            },
+            "decisionAccuracyAll": 0.7368421052631579,
+            "relevanceRaw": 0.6867469879518072,
+            "relevanceDecision": 0.7337662337662337,
+            "invariantPassRate": 0.9649122807017544,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "breakfast missing"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "today missing"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 1245,
+                "accuracy": 0.727710843373494
+              },
+              "B.component|english": {
+                "samples": 96,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 462,
+                "accuracy": 0.8376623376623377
+              },
+              "B.component|english": {
+                "samples": 32,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 0.8481781376518218,
+            "relevanceRaw": 0.727710843373494,
+            "relevanceDecision": 0.8376623376623377,
+            "invariantPassRate": 0.9766081871345029,
+            "invariantFailures": [
+              {
+                "fixture": "arriving-today",
+                "detail": "reviews present in secondary"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "hero is hero-photos"
+              },
+              {
+                "fixture": "in-house-morning",
+                "detail": "offer present in primary"
+              },
+              {
+                "fixture": "in-house-rainy-evening",
+                "detail": "hero-photos present in hero"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "welcome": {
+      "title": "Welcome starter",
+      "accounting": {
+        "buckets": 6,
+        "bucketLabels": {
+          "arrival": 4,
+          "device": 3,
+          "mediaBudget": 2,
+          "familiarity": 3,
+          "language": 1,
+          "dayPart": 4
+        },
+        "situations": 288,
+        "fixtures": 27,
+        "situationsCovered": 24,
+        "sources": 6,
+        "heuristics": 4,
+        "audiences": 3,
+        "descriptionChars": 584,
+        "naiveRules": 8640
+      },
+      "arms": {
+        "h": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracyAll": 0.9351851851851852,
+            "relevanceRaw": 0.9351851851851852,
+            "relevanceDecision": 0.9351851851851852,
+            "invariantPassRate": 0.9883720930232558,
+            "invariantFailures": [
+              {
+                "fixture": "night-owl",
+                "detail": "late-night missing"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.8518518518518519
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.8518518518518519
+              }
+            },
+            "decisionAccuracyAll": 0.8518518518518519,
+            "relevanceRaw": 0.8518518518518519,
+            "relevanceDecision": 0.8518518518518519,
+            "invariantPassRate": 0.9767441860465116,
+            "invariantFailures": [
+              {
+                "fixture": "from-instagram",
+                "detail": "from-social missing"
+              },
+              {
+                "fixture": "night-owl",
+                "detail": "late-night missing"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.7314814814814815
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.7314814814814815
+              }
+            },
+            "decisionAccuracyAll": 0.7314814814814815,
+            "relevanceRaw": 0.7314814814814815,
+            "relevanceDecision": 0.7314814814814815,
+            "invariantPassRate": 0.9651162790697675,
+            "invariantFailures": [
+              {
+                "fixture": "from-instagram",
+                "detail": "from-social missing"
+              },
+              {
+                "fixture": "from-instagram",
+                "detail": "on-mobile missing"
+              },
+              {
+                "fixture": "night-owl",
+                "detail": "late-night missing"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          }
+        ],
+        "ha": [
+          {
+            "level": 1,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 1,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 0.9351851851851852,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 1,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.75,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 0.9351851851851852,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.5,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracyAll": 0.9351851851851852,
+            "relevanceRaw": 0.9351851851851852,
+            "relevanceDecision": 0.9351851851851852,
+            "invariantPassRate": 0.9883720930232558,
+            "invariantFailures": [
+              {
+                "fixture": "night-owl",
+                "detail": "late-night missing"
+              }
+            ]
+          },
+          {
+            "level": 0.5,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 0.9351851851851852,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0.25,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.8518518518518519
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.8518518518518519
+              }
+            },
+            "decisionAccuracyAll": 0.8518518518518519,
+            "relevanceRaw": 0.8518518518518519,
+            "relevanceDecision": 0.8518518518518519,
+            "invariantPassRate": 0.9767441860465116,
+            "invariantFailures": [
+              {
+                "fixture": "from-instagram",
+                "detail": "from-social missing"
+              },
+              {
+                "fixture": "night-owl",
+                "detail": "late-night missing"
+              }
+            ]
+          },
+          {
+            "level": 0.25,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 0.9351851851851852,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          },
+          {
+            "level": 0,
+            "engine": "rules",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.7314814814814815
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 0.7314814814814815
+              }
+            },
+            "decisionAccuracyAll": 0.7314814814814815,
+            "relevanceRaw": 0.7314814814814815,
+            "relevanceDecision": 0.7314814814814815,
+            "invariantPassRate": 0.9651162790697675,
+            "invariantFailures": [
+              {
+                "fixture": "from-instagram",
+                "detail": "from-social missing"
+              },
+              {
+                "fixture": "from-instagram",
+                "detail": "on-mobile missing"
+              },
+              {
+                "fixture": "night-owl",
+                "detail": "late-night missing"
+              }
+            ]
+          },
+          {
+            "level": 0,
+            "engine": "jev-1.13.0",
+            "rawAccuracy": {
+              "A.relevance|english": {
+                "samples": 324,
+                "accuracy": 0.9351851851851852
+              }
+            },
+            "decisionAccuracy": {
+              "A.relevance|english": {
+                "samples": 108,
+                "accuracy": 1
+              }
+            },
+            "decisionAccuracyAll": 1,
+            "relevanceRaw": 0.9351851851851852,
+            "relevanceDecision": 1,
+            "invariantPassRate": 1,
+            "invariantFailures": []
+          }
+        ]
+      }
+    }
+  }
+}

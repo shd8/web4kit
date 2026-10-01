@@ -8,6 +8,8 @@
 
 [Site](https://shd8.github.io/web4kit/) · [Playground](https://shd8.github.io/web4kit/playground/) · [Docs](https://shd8.github.io/web4kit/docs/getting-started/) · [The thesis](https://shd8.github.io/web4kit/thesis/) · [web4-bench](https://shd8.github.io/web4kit/bench/) · [FAQ](https://shd8.github.io/web4kit/faq/)
 
+https://github.com/user-attachments/assets/fe950c5c-4859-4f7e-addc-c75381916990
+
 Traditional web pages are decided at build time: every visitor gets the same content, components and layout. web4 moves those decisions to request time. For each visitor's *situation* (how they arrived, where from, on what device, at what local time), a System One model such as [TypeSafe Jev](https://docs.typesafe.ai) decides **what** to show, **how** to show it and **where** to put it. Deterministic code then lays the page out and renders it.
 
 Same URL, different page, and never a broken one.

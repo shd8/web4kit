@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LaunchVideo } from "@/components/launch-video";
 import { TryIt } from "@/components/try-it";
 
 const MORE = [
@@ -42,6 +43,7 @@ export default function Home() {
           Read the docs
         </Link>
       </div>
+      <LaunchVideo />
       <nav aria-label="Read more" data-home-more="" className="grid gap-3 sm:grid-cols-3">
         {MORE.map((m) => (
           <Link

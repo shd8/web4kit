@@ -43,6 +43,11 @@ for (const page of pages) {
       broken.add(`github …/${path} (no such path in the repository) in ${page.slice(out.length)}`);
   }
 }
+// Only final cuts of the launch video are published (spec: launch-video).
+const media = join(out, "media");
+if (existsSync(media))
+  for (const f of readdirSync(media))
+    if (f.includes("-draft")) broken.add(`media/${f} is a draft video: publish the final cut`);
 if (broken.size) {
   console.error(`✖ ${broken.size} broken internal links:\n  ${[...broken].join("\n  ")}`);
   process.exit(1);

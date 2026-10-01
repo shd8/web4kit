@@ -6,6 +6,8 @@ import { inspectPlan, type RenderedBlock } from "./render";
 import { type XRayCalibration, XRayClient } from "./xray-client";
 
 export type { XRayCalibration } from "./xray-client";
+/** The card that explains one block, for showing a decision outside the overlay (e.g. the launch video). */
+export { BlockCard } from "./xray-client";
 
 export interface XRayProps {
   plan: Plan;

@@ -1,0 +1,77 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:02.400
+Three people open the same link.
+
+2
+00:00:02.700 --> 00:00:04.700
+They see three different pages.
+
+3
+00:00:05.000 --> 00:00:07.800
+None of these were designed. They were decided.
+
+4
+00:00:08.800 --> 00:00:11.500
+Today, every visitor gets the same page.
+
+5
+00:00:11.800 --> 00:00:16.100
+Everything, in the same order. What you need is somewhere down there.
+
+6
+00:00:16.400 --> 00:00:19.900
+web4 gives each visitor the page that fits their moment.
+
+7
+00:00:23.300 --> 00:00:29.200
+How? Jev, a small decision model by TypeSafe, looks at a few facts about the visit.
+
+8
+00:00:29.500 --> 00:00:33.000
+From Instagram, on a phone, at 8:30 pm, from abroad.
+
+9
+00:00:33.300 --> 00:00:38.800
+For every part of the page, it answers three questions: show it? How? And where?
+
+10
+00:00:39.100 --> 00:00:42.200
+In about a quarter of a second, for a fraction of a cent.
+
+11
+00:00:43.300 --> 00:00:47.700
+It only picks from what the business already has. It never writes a word.
+
+12
+00:00:48.000 --> 00:00:50.700
+To steer it, just say who something is for.
+
+13
+00:00:51.000 --> 00:00:54.800
+Now a guest who is already staying stops seeing the booking offer.
+
+14
+00:00:55.800 --> 00:00:58.300
+We tested it against hand-written rules.
+
+15
+00:00:58.600 --> 00:01:05.300
+With those rules taken away, the model was right 98% of the time. The rules alone: 73%.
+
+16
+00:01:05.600 --> 00:01:10.300
+But without saying who things are for, it broke some business rules on 2 of 4 sites.
+
+17
+00:01:10.600 --> 00:01:14.100
+So it doesn't replace rules yet. Every number is public.
+
+18
+00:01:15.300 --> 00:01:16.800
+Web 4 is here.
+
+19
+00:01:17.100 --> 00:01:22.100
+web4kit is open source. Try the playground, or start a site with one command.

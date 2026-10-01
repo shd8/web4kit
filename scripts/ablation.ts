@@ -560,6 +560,12 @@ const verdict = !useJev
 const outDir = resolve(root, values.out!);
 mkdirSync(outDir, { recursive: true });
 const spendUsd = useJev ? (spentTokens / 1e6) * remote.jev!.capabilities.costPerMTok : 0;
+// What recording cost in total, from the token usage stored with every recorded answer set.
+const recordedTokens = Object.values(recorded)
+  .flatMap((arms) => Object.values(arms))
+  .flatMap((r) => Object.values(r.sets).flat())
+  .reduce((n, set) => n + set.usage.inputTokens, 0);
+const recordedUsd = useJev ? (recordedTokens / 1e6) * remote.jev!.capabilities.costPerMTok : 0;
 const data = {
   generatedAt: new Date().toISOString(),
   engine: useJev ? (Object.values(recorded)[0]?.h?.engineVersion ?? remote.jev!.id) : "rules",
@@ -568,7 +574,10 @@ const data = {
   levels: LEVELS,
   arms: Object.fromEntries(arms.map((a) => [a, ARM_TITLE[a]])),
   complete,
-  spend: { inputTokens: spentTokens, usd: spendUsd },
+  spend: {
+    thisRun: { inputTokens: spentTokens, usd: spendUsd },
+    recordings: { inputTokens: recordedTokens, usd: recordedUsd },
+  },
   verdict: {
     ...verdict,
     gapHeuristics: gapH,
@@ -689,7 +698,7 @@ function renderMarkdown(): string {
   const L: string[] = [
     "# Heuristic ablation: descriptions vs hand-written rules",
     "",
-    `Generated ${data.generatedAt} · engine ${data.engine} · seed ${seed} · Jev spend this run $${spendUsd.toFixed(3)}${complete ? "" : " · **partial run**"}`,
+    `Generated ${data.generatedAt} · engine ${data.engine} · seed ${seed} · Jev spent on recordings $${recordedUsd.toFixed(2)} (${recordedTokens.toLocaleString("en")} input tokens; this run $${spendUsd.toFixed(3)})${complete ? "" : " · **partial run**"}`,
     "",
     "## Verdict",
     "",

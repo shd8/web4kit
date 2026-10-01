@@ -1,6 +1,6 @@
 # Heuristic ablation: descriptions vs hand-written rules
 
-Generated 2026-10-01T11:45:07.763Z · engine jev-1.13.0 · seed 7 · Jev spend this run $0.000
+Generated 2026-10-01T11:46:46.622Z · engine jev-1.13.0 · seed 7 · Jev spent on recordings $0.68 (16,177,920 input tokens; this run $0.000)
 
 ## Verdict
 

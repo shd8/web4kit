@@ -1,17 +1,29 @@
 {
-  "generatedAt": "2026-10-01T11:45:07.763Z",
+  "generatedAt": "2026-10-01T11:46:46.622Z",
   "engine": "jev-1.13.0",
   "seed": 7,
   "robustnessSeed": 1009,
-  "levels": [1, 0.75, 0.5, 0.25, 0],
+  "levels": [
+    1,
+    0.75,
+    0.5,
+    0.25,
+    0
+  ],
   "arms": {
     "h": "heuristics removed",
     "ha": "heuristics and audiences removed"
   },
   "complete": true,
   "spend": {
-    "inputTokens": 0,
-    "usd": 0
+    "thisRun": {
+      "inputTokens": 0,
+      "usd": 0
+    },
+    "recordings": {
+      "inputTokens": 16177920,
+      "usd": 0.6794726400000001
+    }
   },
   "verdict": {
     "outcome": "not-shown",

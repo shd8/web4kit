@@ -9,11 +9,10 @@ export const MEDIA = {
 };
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-/** The main cut with captions on, when it has been published; nothing otherwise. */
+/** The main cut, with captions off until the viewer turns them on; nothing when unpublished. */
 export function LaunchVideo() {
   if (!existsSync(join(process.cwd(), "public", MEDIA.video))) return null;
   return (
-    // biome-ignore lint/a11y/useMediaCaption: the captions track is the <track> below
     <video
       data-launch-video=""
       controls
@@ -23,13 +22,7 @@ export function LaunchVideo() {
       className="w-full rounded-2xl border border-fd-border bg-black"
     >
       <source src={`${base}/${MEDIA.video}`} type="video/mp4" />
-      <track
-        kind="captions"
-        src={`${base}/${MEDIA.captions}`}
-        srcLang="en"
-        label="English"
-        default
-      />
+      <track kind="captions" src={`${base}/${MEDIA.captions}`} srcLang="en" label="English" />
     </video>
   );
 }

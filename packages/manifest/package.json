@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/manifest",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "web4 manifests: declarative data-source and component descriptions that replace hand-written pages.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

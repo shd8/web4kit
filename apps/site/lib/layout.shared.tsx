@@ -1,4 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import { Logo } from "@/components/logo";
 import { GITHUB_URL } from "./links";
 import { sitePages } from "./source";
 
@@ -20,7 +21,14 @@ export function siteLinks() {
 
 export function baseOptions(): BaseLayoutProps {
   return {
-    nav: { title: "web4kit" },
+    nav: {
+      title: (
+        <>
+          <Logo className="size-5" />
+          web4kit
+        </>
+      ),
+    },
     githubUrl: GITHUB_URL,
     links: siteLinks(),
   };

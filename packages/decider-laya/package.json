@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/decider-laya",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "web4 in-process Decider running the open Laya System One model on ONNX Runtime.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

@@ -2,6 +2,7 @@ name: Smoke test npm
 
 # Run after approving a staged release: installs that version from npm, type-checks and runs it,
 # and builds both starters made with `pnpm create web4kit@<version>` (spec: public-release).
+# When the smoke test passes, it creates the GitHub release `v<version>`.
 on:
   workflow_dispatch:
     inputs:
@@ -26,3 +27,19 @@ jobs:
       - run: node scripts/smoke.mjs --from-npm "$VERSION"
         env:
           VERSION: ${{ inputs.version }}
+
+  github-release:
+    needs: smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Tags the commit npm's provenance names, so it doesn't matter which ref this run is on.
+      - run: node scripts/github-release.mjs "$VERSION"
+        env:
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}

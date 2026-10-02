@@ -71,4 +71,6 @@ if (staged.length)
   console.log(
     `\n✓ staged ${staged.length}: ${staged.join(", ")}\nApprove each with 2FA: npm stage list, then npm stage approve <stage-id>.`,
   );
-console.log('Then run the "Smoke test npm" workflow for this version.');
+console.log(
+  'Then run the "Smoke test npm" workflow for this version; it creates the GitHub release.',
+);

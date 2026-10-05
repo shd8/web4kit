@@ -15,3 +15,6 @@ packages/web4kit/.tmp/
 # videos are published, in apps/site/public/media.
 apps/video/
 .DS_Store
+
+# Private launch notes (kept locally, not published)
+launch/

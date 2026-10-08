@@ -206,6 +206,10 @@ The [heuristic ablation](reports/ablation/report.md) asked whether the model pla
 - Local Laya works offline, but on these examples it is not accurate enough to plan pages alone. Use it through the cascade. [web4-bench](https://shd8.github.io/web4kit/bench/) challenges anyone to build a small open engine that is.
 - Deciding on the device, in the browser, is a future option.
 
+## Support
+
+web4kit is built in my free time. If it's useful to you or your company, you can [sponsor it on GitHub](https://github.com/sponsors/shd8).
+
 ## License
 
 [MIT](LICENSE)

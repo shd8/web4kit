@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/planner",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "web4 planner: one decider round (what, how, where), confidence gating, plan cache and portability lint.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

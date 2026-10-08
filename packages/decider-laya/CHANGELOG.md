@@ -1,5 +1,11 @@
 # @web4kit/decider-laya
 
+## 0.2.1
+
+### Patch Changes
+
+- @web4kit/decider@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

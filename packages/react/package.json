@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/react",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "web4 React renderer and curated component library: fail-soft, server-renderable, container-query based.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

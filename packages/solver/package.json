@@ -1,6 +1,6 @@
 {
   "name": "@web4kit/solver",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "web4 deterministic layout solver: regions, capacities, invariants and per-device grids.",
   "license": "MIT",
   "author": "Fernando Gómez Graciani",

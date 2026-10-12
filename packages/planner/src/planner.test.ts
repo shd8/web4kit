@@ -190,6 +190,23 @@ describe("minimal, trusted decider input (task 6.1)", () => {
   });
 });
 
+describe("site purpose (zero-config-ablation 1.3)", () => {
+  const purpose = "Website of a neighbourhood restaurant";
+
+  it("adds the purpose to every question's source, never to the state", () => {
+    const set = defineManifests({ site: "test-restaurant", purpose, sources, components });
+    const qp = buildQuestions(set, lunch);
+    expect(qp.state).toEqual(lunch);
+    for (const q of Object.values(qp.questions))
+      expect((q.instructions as { source: { site?: string } }).source.site).toBe(purpose);
+  });
+
+  it("leaves questions unchanged without a purpose", () => {
+    const qp = buildQuestions(manifests, lunch);
+    expect(JSON.stringify(qp.questions)).not.toContain('"site"');
+  });
+});
+
 describe("single logical round (task 6.2)", () => {
   it("asks all five stage questions for each of the 8 sources in one round", async () => {
     const calls: Array<{ state: State; questions: Questions }> = [];

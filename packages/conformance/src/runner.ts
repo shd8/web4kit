@@ -32,6 +32,8 @@ export interface EngineRun {
    * fallbacks): what a visitor actually gets. Keyed by `${kind}|${language}`.
    */
   decisionAccuracy: Record<string, { samples: number; accuracy: number }>;
+  /** How plans were made for decision accuracy and invariants (see `RunOptions.decisions`). */
+  decisionPolicy: DecisionPolicy;
   invariantPassRate: number;
   invariantFailures: Array<{ fixture: string; detail: string }>;
   latencyMs: { p50: number; p95: number };
@@ -54,10 +56,19 @@ export interface KindStats {
   uncalibrated?: boolean;
 }
 
+/**
+ * `self-calibrated`: plan with the profile generated from this run (production gating).
+ * `ungated`: plan with no profile, using the engine's answers directly (development gating):
+ * what a site with no labels gets under provisional trust.
+ */
+export type DecisionPolicy = "self-calibrated" | "ungated";
+
 export interface RunOptions {
   manifests: ManifestSet;
   fixtures: SituatedFixture[];
   decider: Decider;
+  /** Policy for decision accuracy and invariants. Raw accuracy is the same under both. */
+  decisions?: DecisionPolicy;
   repeats?: number;
   concurrency?: number;
   calibrate?: CalibrateOptions;
@@ -172,7 +183,9 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
     entries,
   };
 
-  // Phase 3: invariants, planning with the generated profile and the recorded first answers.
+  // Phase 3: invariants, planning with the recorded first answers and the generated profile
+  // (or, ungated, no profile at all).
+  const decisionPolicy = options.decisions ?? "self-calibrated";
   const failures: EngineRun["invariantFailures"] = [];
   const decisions = new Map<string, { met: number; total: number }>();
   let checks = 0;
@@ -184,7 +197,10 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
       capabilities: decider.capabilities,
       decide: async () => first,
     };
-    const planner = createPlanner({ manifests, decider: replay, calibration: profile });
+    const planner =
+      decisionPolicy === "ungated"
+        ? createPlanner({ manifests, decider: replay, gating: "development" })
+        : createPlanner({ manifests, decider: replay, calibration: profile });
     const { plan } = await planner.plan({
       situation: f.situation,
       ...(f.intent ? { intent: f.intent } : {}),
@@ -219,6 +235,7 @@ export async function runEngine(options: RunOptions): Promise<EngineRun> {
         { samples: total, accuracy: met / total },
       ]),
     ),
+    decisionPolicy,
     invariantPassRate: checks ? (checks - failures.length) / checks : 1,
     invariantFailures: failures,
     latencyMs: { p50: percentile(latencies, 0.5), p95: percentile(latencies, 0.95) },

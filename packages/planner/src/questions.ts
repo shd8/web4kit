@@ -73,11 +73,14 @@ export function buildState(situation: Situation, intent?: Intent): State {
  * Manifest-level summary of a candidate. Built only from owner-written semantics: never from
  * fetched data, field values, or third-party content (JevOut defense, design D5).
  */
-export function sourceSummary(source: DataSourceManifest): Json {
+export function sourceSummary(source: DataSourceManifest, purpose?: string): Json {
   const summary: Record<string, Json> = { id: source.id, what: source.what };
   if (source.audience) summary.audience = describeAudience(source.audience);
   if (source.not_for) summary.not_for = source.not_for;
   if (source.tags.length) summary.tags = source.tags;
+  // Owner-written, site-wide: what the site is for. Last, and only when set, so sites without
+  // a purpose keep byte-identical questions.
+  if (purpose !== undefined) summary.site = purpose;
   return summary;
 }
 
@@ -132,7 +135,7 @@ export function buildQuestions(
   for (const source of manifests.sources) {
     // A source a mustExclude rule removes is never placed: asking about it would waste tokens.
     if (matches(source.mustExclude, situation)) continue;
-    const summary = sourceSummary(source);
+    const summary = sourceSummary(source, manifests.purpose);
     const ask = (question: string) => ({ question, source: summary });
     const sourceId = source.id;
 

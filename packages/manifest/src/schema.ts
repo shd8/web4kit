@@ -45,6 +45,7 @@ export const LIMITS = {
   componentWhat: 80,
   audience: 160,
   question: 280,
+  purpose: 120,
 } as const;
 
 const limited = (field: string, max: number) =>
@@ -170,6 +171,8 @@ export type ComponentManifestInput = z.input<typeof ComponentManifestSchema>;
 
 export interface ManifestSet {
   site: string;
+  /** Optional owner-written sentence about what the site is for, shown with every source. */
+  purpose?: string;
   /** Full content version (plan cache key). */
   version: string;
   /** Version of the decider-visible surface only (calibration profiles match on it). */

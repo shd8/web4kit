@@ -2,6 +2,7 @@ import "./global.css";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { GoatCounter } from "@/components/goatcounter";
 
 const description = "Pages planned per visitor by System One decision models.";
 // Link previews (Open Graph / X cards) need absolute URLs. SITE_BASE_PATH is /web4kit on Pages.
@@ -32,11 +33,15 @@ export const metadata: Metadata = {
   },
 };
 
+/** GoatCounter site code; only the Pages build sets it, so local dev and forks send nothing. */
+const goatcounter = process.env.NEXT_PUBLIC_GOATCOUNTER;
+
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="flex min-h-screen flex-col">
         <RootProvider search={{ options: { type: "static" } }}>{children}</RootProvider>
+        {goatcounter ? <GoatCounter code={goatcounter} /> : null}
       </body>
     </html>
   );

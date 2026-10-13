@@ -18,6 +18,7 @@ function watch(page) {
   const errors = [];
   page.on("request", (r) => {
     if (r.url().startsWith(origin) || r.url().startsWith("data:")) return;
+    if (ANALYTICS.test(r.url())) return; // the Pages build counts views; hits are blocked below
     if (r.resourceType() === "image") return;
     foreign.push(r.url());
   });
@@ -49,6 +50,55 @@ checks.tryIt = async (browser) => {
   const button = await block.getByRole("button", { name: /copy/i }).count();
   return {
     ok: text.includes("pnpm create web4kit") && button === 1 && !seen.errors.length,
+    ...seen,
+  };
+};
+
+/** GoatCounter: its script may load, but no hit ever leaves these checks (see `guarded`). */
+const ANALYTICS = /^https:\/\/(gc\.zgo\.at|[a-z0-9-]+\.goatcounter\.com)\//;
+const HIT = /^https:\/\/[a-z0-9-]+\.goatcounter\.com\/count/;
+/** Hits the checks would have sent, blocked before they leave the browser. */
+const hits = [];
+async function blockHits(target) {
+  await target.route(HIT, (route) => {
+    hits.push(new URL(route.request().url()));
+    return route.abort();
+  });
+}
+
+/**
+ * Page views on the Pages build: counted without the base path, once per client-side route
+ * change, with `?ref=` passed along for GoatCounter's sources. Skipped when the build has no
+ * NEXT_PUBLIC_GOATCOUNTER (local builds and forks send nothing).
+ */
+checks.analytics = async (browser) => {
+  const html = await (await fetch(url("/playground/"))).text();
+  const enabled = html.includes("gc.zgo.at/count.js");
+  const page = await browser.newPage();
+  const seen = watch(page);
+  // count.js never counts on localhost unless allowed; this only affects the test page.
+  await page.addInitScript(() => {
+    window.goatcounter = { allow_local: true };
+  });
+  const from = hits.length;
+  await page.goto(url("/playground/?ref=linkedin-demo"), { waitUntil: "networkidle" });
+  await ready(page);
+  await page.locator('a[href$="/docs/getting-started/"]').first().click();
+  await page.waitForURL(/\/docs\/getting-started\/$/);
+  await page.waitForTimeout(500);
+  const sent = hits
+    .slice(from)
+    .map((h) => ({ p: h.searchParams.get("p"), q: h.searchParams.get("q") }));
+  if (!enabled) return { ok: sent.length === 0 && !seen.errors.length, enabled, sent };
+  return {
+    ok:
+      JSON.stringify(sent.map((h) => h.p)) ===
+        JSON.stringify(["/playground/", "/docs/getting-started/"]) &&
+      sent[0]?.q === "?ref=linkedin-demo" &&
+      seen.foreign.length === 0 &&
+      !seen.errors.length,
+    enabled,
+    sent,
     ...seen,
   };
 };
@@ -461,7 +511,21 @@ checks.combinations = async (browser) => {
 
 const wanted = process.argv.slice(2);
 const server = await serve(PORT);
-const browser = await chromium.launch({ channel: "chrome", headless: !process.env.HEADED });
+const chrome = await chromium.launch({ channel: "chrome", headless: !process.env.HEADED });
+/** Every page and context the checks open blocks analytics hits. */
+const browser = {
+  newPage: async (options) => {
+    const page = await chrome.newPage(options);
+    await blockHits(page);
+    return page;
+  },
+  newContext: async (options) => {
+    const context = await chrome.newContext(options);
+    await blockHits(context);
+    return context;
+  },
+  close: () => chrome.close(),
+};
 let failed = 0;
 try {
   for (const [name, check] of Object.entries(checks)) {

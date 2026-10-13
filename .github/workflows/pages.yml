@@ -30,6 +30,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     env:
       SITE_BASE_PATH: /web4kit
+      # Cookie-free page views (goatcounter.com); unset everywhere else, so nothing is sent.
+      NEXT_PUBLIC_GOATCOUNTER: web4kit
       # The playground is built from committed recordings: no engine key, here or at runtime.
       JEV_API_KEY: ""
     steps:

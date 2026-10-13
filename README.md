@@ -20,6 +20,16 @@ Same URL, different page, and never a broken one.
 
 > Status: **experimental (v0, read-only pages)**. The concepts, contracts and numbers here are real; the APIs will change.
 
+## Try it
+
+- **In the browser:** the [playground](https://shd8.github.io/web4kit/playground/) plans three sites for any situation you pick.
+- **Your own copy of the welcome starter** ([shd8/web4kit-starter](https://github.com/shd8/web4kit-starter)):
+
+  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshd8%2Fweb4kit-starter&project-name=my-web4kit-site&repository-name=my-web4kit-site)
+
+  It runs on the rules engine with no configuration. Add `JEV_API_KEY` to the project's environment later to have Jev plan the pages.
+- **Locally:** `pnpm create web4kit my-site` (see [Start a site](#start-a-site)).
+
 ## Why System One models
 
 System One models (Jev, and small Jev-like open models such as Laya) do not generate text. They answer typed questions (`choice`, `score`, `noul`) with calibrated probabilities in about 0.1–0.3 s. That makes page planning a *selection* problem over things you declared, not a generation problem:

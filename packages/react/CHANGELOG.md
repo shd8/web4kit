@@ -1,5 +1,15 @@
 # @web4kit/react
 
+## 0.3.0
+
+### Patch Changes
+
+- 90fc053: `@web4kit/react/xray` exports `BlockCard`, the card that explains one block's decisions, for showing it outside the X-ray overlay.
+- Updated dependencies [b6662a0]
+- Updated dependencies [e0d2fc5]
+  - @web4kit/manifest@0.3.0
+  - @web4kit/ir@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

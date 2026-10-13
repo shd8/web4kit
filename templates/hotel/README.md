@@ -57,8 +57,8 @@ scripts/
 ## Make it yours
 
 1. **Change the content** in `web4/data.ts` and `web4/hotel.ts`.
-2. **Edit the manifests.** Say who each source is for with `audience: { stayPhase: ["researching"] }`, and put hard business rules in `mustInclude` / `mustExclude`. System One models read literally.
-3. **Keep the rules engine good:** `pnpm test` checks that every invariant holds with rules alone, because rules are the fallback.
+2. **Edit the manifests.** Say who each source is for with `audience: { stayPhase: ["researching"] }` (buckets and labels autocomplete from `web4/situation.ts`), and put hard business rules in `mustInclude` / `mustExclude`. System One models read literally.
+3. **Keep the rules engine good:** `pnpm test` checks that every invariant holds with rules alone, because rules are the fallback, and that every time-bound source has an `audience`.
 4. **Recalibrate** after changing what the model sees (`what`, `not_for`, `audience`, tags): `pnpm calibrate`, about $0.05 of Jev. Headings, heuristics and defaults can change freely. Until you recalibrate, the edited sources' answers fall back to rules in production (ungated in dev), and `/stats` and `pnpm web4kit check` name them.
 
 Measured on this starter (Jev 1.13, 105 fixtures, 3 repeats): **100% invariants, 100% relevance accuracy, ~7.7k input tokens and $0.00032 per uncached page**. A page served from the plan cache costs nothing.

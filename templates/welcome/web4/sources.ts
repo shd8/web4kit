@@ -1,5 +1,9 @@
-import { defineManifests, defineSource, owner, system } from "@web4kit/manifest";
+import { defineManifests, defineSourceFor, owner, system } from "@web4kit/manifest";
 import { componentManifests } from "./components";
+import { BUCKETS } from "./situation";
+
+/** Conditions autocomplete from BUCKETS; a misspelt bucket or label is a type error. */
+const defineSource = defineSourceFor(BUCKETS);
 
 /**
  * Your data sources. web4 decides, per visitor, which of these to show, with which component,

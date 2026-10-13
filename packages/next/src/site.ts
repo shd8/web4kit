@@ -13,6 +13,7 @@ import {
   type CalibrationProfile,
   createPlanner,
   LruPlanCache,
+  lintManifests,
   type PlanCache,
   type PlanEvent,
   type Planner,
@@ -100,6 +101,8 @@ export interface Site {
   stats(): SiteStats;
   /** Is calibration current for the configured engine? (`web4kit check` reads this.) */
   calibrationReport(): CalibrationReport;
+  /** Authoring warnings for the manifests (`lintManifests`); `web4kit check` prints them. */
+  manifestWarnings(): string[];
 }
 
 const isProduction = () => typeof process !== "undefined" && process.env?.NODE_ENV === "production";
@@ -116,6 +119,8 @@ export function createSiteCore(config: SiteConfig): Site {
       gating: (config.developmentGating ?? !isProduction()) ? "development" : "production",
     });
   checkCalibrationAtBuild({ planner }, config.calibrationCheck);
+  const warnings = lintManifests(config.manifests);
+  if (!isProduction()) for (const w of warnings) console.warn(`[web4] ${w}`);
   const situationOf =
     typeof config.situation === "function"
       ? config.situation
@@ -132,6 +137,7 @@ export function createSiteCore(config: SiteConfig): Site {
     previewParam,
     stats: () => planner.stats(),
     calibrationReport: () => calibrationReport({ planner }),
+    manifestWarnings: () => [...warnings],
     async handle(request, options = {}) {
       // 1. Persona preview (development only).
       const url = new URL(request.url, "http://localhost");

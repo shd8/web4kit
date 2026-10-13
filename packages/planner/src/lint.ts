@@ -55,3 +55,31 @@ export function lintPortability(
   if (issues.length) throw new PortabilityError(issues);
   return { stateTokens, questions: Object.keys(plan.questions).length };
 }
+
+/** Day-scale time words: content that is only true at some times of day. */
+const TIME_WORDS =
+  /\b(today|tonight|this (morning|afternoon|evening)|at night|until \d{1,2}(:\d{2})?)\b/i;
+
+/**
+ * Authoring lint: warnings, not errors. A source whose `what` is time-bound ("this morning's
+ * breakfast", "today's arrival") but has no `audience` is offered to every visitor at any time.
+ * In the zero-config ablation (reports/ablation/zero-config-z2) that was the main cause of wrong
+ * pages, and `audience` with `default.include: false` fixed it. With the site's buckets, the
+ * fix names its time-of-day bucket.
+ */
+export function lintManifests(manifests: ManifestSet, buckets?: BucketSpec): string[] {
+  const timeBucket = Object.entries(buckets ?? {}).find(([, labels]) =>
+    ["morning", "night"].every((l) => labels.includes(l)),
+  )?.[0];
+  const fix = timeBucket
+    ? `add audience: { ${timeBucket}: [...] } and default: { include: false }`
+    : "add an audience on a time-of-day bucket (dayPartRule) and default: { include: false }";
+  return manifests.sources.flatMap((s) => {
+    const word = s.audience ? null : TIME_WORDS.exec(s.what)?.[0];
+    return word
+      ? [
+          `source ${s.id}: \`what\` says "${word}" but there is no audience, so engines may show it at any time; ${fix}`,
+        ]
+      : [];
+  });
+}

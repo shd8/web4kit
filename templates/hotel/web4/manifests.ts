@@ -2,13 +2,17 @@ import { distanceKm } from "@web4kit/context";
 import {
   type DataSourceManifestInput,
   defineManifests,
-  defineSource,
+  defineSourceFor,
   owner,
   thirdParty,
 } from "@web4kit/manifest";
 import { componentManifests } from "./components";
 import { ARRIVAL_STEPS, BREAKFAST, EVENTS, OFFER, PHOTOS, REVIEWS, ROOMS } from "./data";
 import { forecastFor, HOTEL, hotelClock } from "./hotel";
+import { BUCKETS } from "./situation";
+
+/** Conditions autocomplete from BUCKETS; a misspelt bucket or label is a type error. */
+const defineSource = defineSourceFor(BUCKETS);
 
 /**
  * The manifests are the prompt. `audience` says who each source is for, as situation labels:

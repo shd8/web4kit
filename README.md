@@ -25,7 +25,7 @@ Same URL, different page, and never a broken one.
 - **In the browser:** the [playground](https://shd8.github.io/web4kit/playground/) plans three sites for any situation you pick.
 - **Your own copy of the welcome starter** ([shd8/web4kit-starter](https://github.com/shd8/web4kit-starter)):
 
-  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshd8%2Fweb4kit-starter&project-name=my-web4kit-site&repository-name=my-web4kit-site) [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/shd8/web4kit-starter)
+  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshd8%2Fweb4kit-starter&project-name=my-web4kit-site&repository-name=my-web4kit-site)
 
   It runs on the rules engine with no configuration. Add `JEV_API_KEY` to the project's environment later to have Jev plan the pages.
 - **Locally:** `pnpm create web4kit my-site` (see [Start a site](#start-a-site)).

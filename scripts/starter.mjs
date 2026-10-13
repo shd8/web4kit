@@ -1,6 +1,6 @@
 // Generate the standalone starter (github.com/shd8/web4kit-starter) from a version live on npm.
-// It is exactly what `create-web4kit@<version>` scaffolds, plus an npm lockfile, so Vercel and
-// StackBlitz can install it as cloned. The README's Try it buttons point at that repository.
+// It is exactly what `create-web4kit@<version>` scaffolds, plus an npm lockfile, so Vercel can
+// install it as cloned. The README's Deploy with Vercel button points at that repository.
 //
 //   node scripts/starter.mjs 0.2.0 <dir>    write the starter into <dir> (kept: <dir>/.git)
 //

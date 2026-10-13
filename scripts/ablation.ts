@@ -10,6 +10,7 @@
  *   pnpm ablation --study zero-config --engines rules,laya --yes   # harness check, free, no verdict
  *   pnpm ablation --study zero-config --engines rules,jev          # estimate, then --yes for the verdict
  *   (zero-config arms: f,z1,z0; OpenSpec change zero-config-ablation)
+ *   pnpm ablation --study zero-config-z2 --engines rules,jev       # follow-up Z2 (arms f,z2)
  *
  * Heuristics never reach the model, so within an arm Jev's answers are identical at every level:
  * they are recorded once and replayed (design D3). Re-rendering from recordings is free.
@@ -457,12 +458,15 @@ const ZC_PURPOSE: Record<string, string> = {
   hotel: "Website of Casa Ribeira, a boutique hotel in Porto",
   welcome: "Starter homepage of a new site built with web4kit",
 };
-type ZArm = "f" | "z1" | "z0";
+type ZArm = "f" | "z1" | "z0" | "z2";
 const ZC_ARMS: ZArm[] = ["f", "z1", "z0"];
+/** Follow-up Z2 (registered after the zero-config verdict, before Z2 was run). */
+const Z2_ARMS: ZArm[] = ["f", "z2"];
 const ZC_ARM_TITLE: Record<ZArm, string> = {
   f: "F: full manifests",
   z1: "Z1: what only",
   z0: "Z0: pure (id and field names)",
+  z2: "Z2: what, audience, include",
 };
 /** defineSource's defaults, with no default component: the first compatible one is used. */
 const NEUTRAL_DEFAULT: DataSourceManifest["default"] = {
@@ -474,6 +478,12 @@ const NEUTRAL_DEFAULT: DataSourceManifest["default"] = {
 /** Pre-registered verdict rule (spec: Pre-registered zero-config verdict). */
 const ZC_RULE =
   "accuracy = Jev's ungated pooled decision accuracy, averaged across the four sites. holds: Z0 accuracy >= 90%, at most 5 points below F, and Z0 invariants >= 99% on every site. holds-with-one-line: Z0 fails that test and Z1 passes it. not-shown: neither passes.";
+/**
+ * Z2 rule, fixed before Z2 was run. Relative to F: the zero-config rule's absolute 99% invariant
+ * bar is failed by F itself on the explorer (95.7%), so it cannot tell a sufficient manifest apart.
+ */
+const Z2_RULE =
+  "Jev ungated, per site: accuracy = pooled decision accuracy, invariants = invariant pass rate. holds: on every site, Z2 accuracy and Z2 invariants are each at most 2 points below F's. holds-on-average: not holds, but Z2's accuracy and invariants averaged across the four sites are each at most 2 points below F's. not-shown: otherwise.";
 
 const humanise = (id: string) => {
   const words = id.replace(/-/g, " ");
@@ -505,9 +515,11 @@ function zeroConfigArm(site: Site, arm: ZArm): ManifestSet {
     return {
       ...kept,
       what: arm === "z0" ? standIn(s) : s.what,
+      // Z2 keeps who/when a source is for and whether it is shown by default; nothing else.
+      ...(arm === "z2" && s.audience ? { audience: s.audience } : {}),
       tags: [],
       heuristics: [],
-      default: { ...NEUTRAL_DEFAULT },
+      default: { ...NEUTRAL_DEFAULT, ...(arm === "z2" ? { include: s.default.include } : {}) },
     } satisfies DataSourceManifestInput as DataSourceManifest;
   });
   return withSources(m, sources, ZC_PURPOSE[site.key]);
@@ -591,7 +603,9 @@ ${grid}${rects}${legend}
 `;
 }
 
-if (values.study === "zero-config") {
+const z2Study = values.study === "zero-config-z2";
+if (values.study === "zero-config" || z2Study) {
+  const studyArms = z2Study ? Z2_ARMS : ZC_ARMS;
   const zcSites = (values.site === "all" ? Object.keys(SITES) : values.site!.split(",")).map(
     (k) => {
       const make = SITES[k];
@@ -599,8 +613,8 @@ if (values.study === "zero-config") {
       return make();
     },
   );
-  const zcArms = (values.arms === "h,ha" ? ZC_ARMS.join(",") : values.arms!).split(",") as ZArm[];
-  for (const a of zcArms) if (!ZC_ARMS.includes(a)) throw new Error(`unknown zero-config arm ${a}`);
+  const zcArms = (values.arms === "h,ha" ? studyArms.join(",") : values.arms!).split(",") as ZArm[];
+  for (const a of zcArms) if (!studyArms.includes(a)) throw new Error(`unknown arm ${a}`);
   const zcEngines = values.engines!.split(",");
   for (const e of zcEngines)
     if (!["rules", "jev", "laya"].includes(e)) throw new Error(`unknown engine ${e}`);
@@ -758,10 +772,24 @@ if (values.study === "zero-config") {
   const zcComplete =
     useJevZ &&
     zcSites.length === Object.keys(SITES).length &&
-    ZC_ARMS.every((a) => zcArms.includes(a));
+    studyArms.every((a) => zcArms.includes(a));
   const pctZ = (v: number | null | undefined) =>
     v === null || v === undefined ? "–" : `${(v * 100).toFixed(1)}%`;
-  const numbers = `F ${pctZ(accF)}, Z1 ${pctZ(accuracyOf("z1"))}, Z0 ${pctZ(accuracyOf("z0"))}`;
+  const numbers = zcArms.map((a) => `${a.toUpperCase()} ${pctZ(accuracyOf(a))}`).join(", ");
+  const mean = (xs: (number | null)[]) =>
+    xs.every((x) => x !== null) ? (xs as number[]).reduce((a, b) => a + b, 0) / xs.length : null;
+  const invMean = (arm: ZArm) => mean(Object.values(invariantsOf(arm)));
+  const within2 = (a: number | null | undefined, f: number | null | undefined) =>
+    a !== null && a !== undefined && f !== null && f !== undefined && a >= f - 0.02;
+  const z2Numbers = `accuracy F ${pctZ(accF)}, Z2 ${pctZ(accuracyOf("z2"))}; invariants F ${pctZ(invMean("f"))}, Z2 ${pctZ(invMean("z2"))}`;
+  const z2Misses = zcSites.flatMap((s) => {
+    const f = pick(s.key, "f", verdictEngine);
+    const z = pick(s.key, "z2", verdictEngine);
+    return [
+      ...(within2(z?.decisionAccuracyAll, f?.decisionAccuracyAll) ? [] : [`${s.key} accuracy`]),
+      ...(within2(z?.invariantPassRate, f?.invariantPassRate) ? [] : [`${s.key} invariants`]),
+    ];
+  });
   const zVerdict = !useJevZ
     ? { outcome: "not-computed", reason: "Harness check, no verdict: Jev was not measured." }
     : !zcComplete
@@ -769,25 +797,37 @@ if (values.study === "zero-config") {
           outcome: "not-computed",
           reason: `Partial run (needs all four sites and arms): ${numbers}.`,
         }
-      : passes("z0")
-        ? { outcome: "holds", reason: `Zero config plans acceptable pages: ${numbers}.` }
-        : passes("z1")
-          ? {
-              outcome: "holds-with-one-line",
-              reason: `Pages need each source's one-line \`what\`, not more: ${numbers}.`,
-            }
-          : { outcome: "not-shown", reason: `Neither zero-config arm passes: ${numbers}.` };
+      : z2Study
+        ? !z2Misses.length
+          ? { outcome: "holds", reason: `Z2 is within 2 points of F on every site: ${z2Numbers}.` }
+          : within2(accuracyOf("z2"), accF) && within2(invMean("z2"), invMean("f"))
+            ? {
+                outcome: "holds-on-average",
+                reason: `Within 2 points of F on average, not on ${z2Misses.join(", ")}: ${z2Numbers}.`,
+              }
+            : {
+                outcome: "not-shown",
+                reason: `More than 2 points below F (${z2Misses.join(", ")}): ${z2Numbers}.`,
+              }
+        : passes("z0")
+          ? { outcome: "holds", reason: `Zero config plans acceptable pages: ${numbers}.` }
+          : passes("z1")
+            ? {
+                outcome: "holds-with-one-line",
+                reason: `Pages need each source's one-line \`what\`, not more: ${numbers}.`,
+              }
+            : { outcome: "not-shown", reason: `Neither zero-config arm passes: ${numbers}.` };
 
   const zOutRel =
     values.out ??
-    (useJevZ ? "reports/ablation/zero-config" : ".w4-cache/ablation/zero-config-check");
+    (useJevZ ? `reports/ablation/${values.study}` : `.w4-cache/ablation/${values.study}-check`);
   const zOut = resolve(root, zOutRel);
   mkdirSync(zOut, { recursive: true });
   const zEngineName =
     verdictEngine === "jev" ? zRemote.jev!.id : verdictEngine === "laya" ? LAYA_ID : "rules";
   const zData = {
     generatedAt: new Date().toISOString(),
-    study: "zero-config",
+    study: values.study,
     harnessCheck: !useJevZ,
     engines: zcEngines.map((e) => (e === "rules" ? "rules" : engineId(e))),
     arms: Object.fromEntries(zcArms.map((a) => [a, ZC_ARM_TITLE[a]])),
@@ -802,9 +842,9 @@ if (values.study === "zero-config") {
     verdict: {
       ...zVerdict,
       engine: zEngineName,
-      accuracy: { f: accF, z1: accuracyOf("z1"), z0: accuracyOf("z0") },
-      invariants: { f: invariantsOf("f"), z1: invariantsOf("z1"), z0: invariantsOf("z0") },
-      rule: ZC_RULE,
+      accuracy: Object.fromEntries(zcArms.map((a) => [a, accuracyOf(a)])),
+      invariants: Object.fromEntries(zcArms.map((a) => [a, invariantsOf(a)])),
+      rule: z2Study ? Z2_RULE : ZC_RULE,
     },
     sites: Object.fromEntries(
       zcSites.map((s) => [
@@ -819,13 +859,18 @@ if (values.study === "zero-config") {
   };
   writeFileSync(resolve(zOut, "data.json"), `${JSON.stringify(zData, null, 2)}\n`);
 
-  const ARM_COLOR: Record<ZArm, string> = { f: "#2563eb", z1: "#16a34a", z0: "#d97706" };
+  const ARM_COLOR: Record<ZArm, string> = {
+    f: "#2563eb",
+    z1: "#16a34a",
+    z0: "#d97706",
+    z2: "#7c3aed",
+  };
   const groups = [...zcSites.map((s) => s.key), "mean"];
   writeFileSync(
     resolve(zOut, "all-sites.svg"),
     barChart(
       `${useJevZ ? "Zero config" : "Zero config (harness check)"}: what visitors get, ${zEngineName} ungated`,
-      `Ungated decision accuracy per site for full manifests (F), what only (Z1) and pure zero config (Z0), planned by ${zEngineName}.`,
+      `Ungated decision accuracy per site for ${zcArms.map((a) => ZC_ARM_TITLE[a]).join(", ")}, planned by ${zEngineName}.`,
       groups,
       zcArms.map((a) => ({
         name: ZC_ARM_TITLE[a],
@@ -839,10 +884,18 @@ if (values.study === "zero-config") {
   );
 
   const L: string[] = [
-    useJevZ
-      ? "# Zero-config ablation: how much does the developer need to write?"
-      : "# Zero-config ablation: harness check, no verdict",
+    z2Study
+      ? `# Zero-config follow-up Z2: is what, audience and include enough?${useJevZ ? "" : " (harness check, no verdict)"}`
+      : useJevZ
+        ? "# Zero-config ablation: how much does the developer need to write?"
+        : "# Zero-config ablation: harness check, no verdict",
     "",
+    ...(z2Study
+      ? [
+          "> Registered after the [zero-config study](../zero-config/report.md) (verdict: not-shown) was known, and before Z2 was run. Reported separately; it never changes that verdict.",
+          "",
+        ]
+      : []),
     ...(useJevZ
       ? []
       : [
@@ -855,7 +908,9 @@ if (values.study === "zero-config") {
     "",
     `**${zVerdict.outcome}.** ${zVerdict.reason}`,
     "",
-    `Rule fixed before any engine was run: ${ZC_RULE}`,
+    z2Study
+      ? `Rule fixed before Z2 was run: ${Z2_RULE}`
+      : `Rule fixed before any engine was run: ${ZC_RULE}`,
     "",
     "![All sites](all-sites.svg)",
     "",
@@ -863,7 +918,13 @@ if (values.study === "zero-config") {
     "",
     "- **F (full):** the site's manifests unchanged.",
     "- **Z1 (what only):** each source keeps its `what`. `not_for`, tags, `audience` and heuristics are removed, defaults become neutral (included, standard, primary, noticeable, first compatible component), and the site gets one purpose sentence.",
-    "- **Z0 (pure):** as Z1, but `what` is replaced by the humanised source id and its owner and system field paths. No owner-written text.",
+    ...(z2Study
+      ? [
+          "- **Z2 (what, audience, include):** as Z1, but each source keeps its `audience` and its default `include`. `not_for`, tags and heuristics are removed; salience, region, prominence and component defaults are neutral.",
+        ]
+      : [
+          "- **Z0 (pure):** as Z1, but `what` is replaced by the humanised source id and its owner and system field paths. No owner-written text.",
+        ]),
     "- **Kept in every arm:** `mustInclude` / `mustExclude` (business rules can't be inferred) and the site's situation rules, which a developer still writes.",
     "- **Ungated:** decisions use the engine's answers directly, with no calibration profile (provisional trust). Self-calibrated numbers, gated by a profile measured on the same fixtures, are shown beside them. The verdict uses ungated numbers only.",
     "- **Bias:** the fixtures and labels were written against the full manifests, so F has a home advantage.",
@@ -884,8 +945,10 @@ if (values.study === "zero-config") {
       L.push(
         `| ${r.arm.toUpperCase()} | ${r.engine} | ${r.policy} | ${pctZ(r.relevanceRaw)} | ${pctZ(r.decisionAccuracyAll)} | ${pctZ(r.invariantPassRate)} |`,
       );
-    L.push("", "Z0 descriptions:", "");
-    for (const src of s.manifests.sources) L.push(`- \`${src.id}\`: ${standIn(src)}`);
+    if (zcArms.includes("z0")) {
+      L.push("", "Z0 descriptions:", "");
+      for (const src of s.manifests.sources) L.push(`- \`${src.id}\`: ${standIn(src)}`);
+    }
     for (const r of zResults[s.key]!.filter(
       (x) => x.policy === "ungated" && x.engineKey !== "rules" && x.invariantFailures.length,
     )) {

@@ -14,7 +14,7 @@ try {
     const site = mod.site ?? mod.default;
     if (typeof site?.calibrationReport !== "function")
       out({ error: `${file} must export the site created with createSite (as \`site\`)` });
-    out({ report: site.calibrationReport() });
+    out({ report: site.calibrationReport(), warnings: site.manifestWarnings?.() ?? [] });
   }
   if (mode === "components") {
     const list = mod.components;

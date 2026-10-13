@@ -58,9 +58,9 @@ scripts/
 ## Make it yours
 
 1. **Add a source** in `web4/sources.ts` with `defineSource({ id, shape, label, what, fields, fetch })`. Shapes: `list`, `record`, `schedule`, `media-list`, `geo`, `timeseries`, `graph`.
-2. **Say who it's for** with `audience: { device: ["mobile"] }`, and hard business rules with `mustInclude` / `mustExclude`.
+2. **Say who it's for** with `audience: { device: ["mobile"] }` (buckets and labels autocomplete from `web4/situation.ts`), and hard business rules with `mustInclude` / `mustExclude`.
 3. **Add situation labels** in `web4/situation.ts` (for example `distanceRule`, `openingHoursRule`, or your own).
-4. **Test**: `pnpm test` checks that the rules engine alone passes every page invariant (it is the fallback).
+4. **Test**: `pnpm test` checks that the rules engine alone passes every page invariant (it is the fallback), and that every time-bound source has an `audience`.
 5. **Calibrate**: `pnpm calibrate` measures the configured engine on your personas and writes `calibration/`: `W4_ENGINE=laya pnpm calibrate` is free, Jev costs under $0.01. After you change a source's description or audience, that source's answers fall back to rules in production until you re-run it (`pnpm web4kit check` tells you which sources).
 
 Measured on this starter (27 fixtures):

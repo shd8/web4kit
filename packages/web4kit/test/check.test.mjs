@@ -45,6 +45,13 @@ describe("web4kit check", () => {
     assert.match(r.out, /rules engine; there is nothing to calibrate/);
   });
 
+  it("prints authoring warnings without changing the exit code", () => {
+    const r = run("timebound", "--strict");
+    assert.equal(r.code, 0, r.out);
+    assert.match(r.out, /⚠ source offer: `what` says "Today" but there is no audience/);
+    assert.doesNotMatch(run("rules").out, /no audience/);
+  });
+
   it("explains a missing site module", () => {
     const r = run("rules", "--site", "web4/nope.ts");
     assert.equal(r.code, 1);

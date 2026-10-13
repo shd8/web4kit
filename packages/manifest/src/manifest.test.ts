@@ -5,6 +5,7 @@ import {
   type DataSourceManifestInput,
   defineManifests,
   defineSource,
+  defineSourceFor,
   describeAudience,
   ManifestError,
   owner,
@@ -270,5 +271,50 @@ describe("per-source decider versions (dx-dev-loop 1.1)", () => {
       components,
     });
     expect(next.sourceDeciderVersions).toEqual(base.sourceDeciderVersions);
+  });
+});
+
+describe("defineSourceFor", () => {
+  const BUCKETS = {
+    dayPart: ["morning", "night"],
+    language: [] as string[],
+  } as const;
+  const defineTyped = defineSourceFor(BUCKETS);
+  const base = {
+    id: "late",
+    shape: "record",
+    label: "Late",
+    what: "A note for night owls",
+  } as const;
+  const fetch = async () => ({});
+
+  it("accepts declared buckets and labels, unknown, and any label of an open bucket", () => {
+    const s = defineTyped({
+      ...base,
+      audience: { dayPart: ["night", "unknown"], language: ["portuguese"] },
+      heuristics: [{ when: { dayPart: ["night"] }, relevant: true }],
+      fetch,
+    });
+    expect(s.audience).toEqual({ dayPart: ["night", "unknown"], language: ["portuguese"] });
+    expect(s.default.include).toBe(true);
+  });
+
+  it("rejects a misspelt bucket or label, naming the source and the field", () => {
+    const bad = () =>
+      defineTyped({
+        ...base,
+        // @ts-expect-error misspelt label
+        audience: { dayPart: ["nigth"] },
+        // @ts-expect-error unknown bucket
+        mustExclude: { daypart: ["night"] },
+        fetch,
+      });
+    expect(bad).toThrow(ManifestError);
+    expect(bad).toThrow(
+      /source late: audience\.dayPart: unknown label "nigth" \(allowed: morning, night\)/,
+    );
+    expect(bad).toThrow(
+      /source late: mustExclude: unknown bucket "daypart" \(declared: dayPart, language\)/,
+    );
   });
 });

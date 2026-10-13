@@ -1,6 +1,6 @@
 import { runEngine } from "@web4kit/conformance";
 import { situationHash } from "@web4kit/context";
-import { createManifestRuleDecider, lintPortability } from "@web4kit/planner";
+import { createManifestRuleDecider, lintManifests, lintPortability } from "@web4kit/planner";
 import { describe, expect, it } from "vitest";
 import { PERSONAS, suiteFixtures } from "./fixtures";
 import { manifests } from "./manifests";
@@ -12,6 +12,10 @@ describe("Casa Ribeira", () => {
       suiteFixtures().map((f) => [f.name, situationHash(f.situation)]),
     );
     expect(situationHash(hashes)).toBe("619067b6f343fcc0");
+  });
+
+  it("tells engines who each time-bound block is for", () => {
+    expect(lintManifests(manifests, BUCKETS)).toEqual([]);
   });
 
   it("fits the portability contract", () => {

@@ -6,6 +6,7 @@ import { createSiteCore } from "@web4kit/next";
 import type { CalibrationProfile } from "@web4kit/planner";
 import { libraryManifests } from "@web4kit/react";
 
+const state = process.env.FIXTURE ?? "rules";
 const manifests = defineManifests({
   site: "fixture",
   components: libraryManifests,
@@ -14,7 +15,8 @@ const manifests = defineManifests({
       id,
       shape: "record",
       label: id,
-      what: `The ${id}`,
+      // "timebound": a time-bound source with no audience, for the authoring warning.
+      what: state === "timebound" && id === "offer" ? "Today's offer" : `The ${id}`,
       fields: { title: owner("title") },
       fetch: async () => ({ title: id }),
     }),
@@ -36,11 +38,10 @@ const profile = (sourceVersions: Record<string, string>): CalibrationProfile => 
   entries: {},
 });
 
-const state = process.env.FIXTURE ?? "rules";
 export const site = createSiteCore({
   manifests,
   situation: [],
-  ...(state === "rules" ? {} : { decider }),
+  ...(state === "rules" || state === "timebound" ? {} : { decider }),
   ...(state === "active" ? { calibration: profile(manifests.sourceDeciderVersions) } : {}),
   ...(state === "partial"
     ? { calibration: profile({ ...manifests.sourceDeciderVersions, offer: "dec-old" }) }

@@ -21,6 +21,7 @@ import {
   createPlanner,
   KINDS,
   LruPlanCache,
+  lintManifests,
   lintPortability,
   PortabilityError,
 } from "./index";
@@ -292,6 +293,36 @@ describe("portability lint (task 6.4)", () => {
     const set = defineManifests({ site: "f", sources: [src("items", "list")], components: many });
     expect(() => lintPortability(set, buckets)).toThrow(PortabilityError);
     expect(() => lintPortability(set, buckets)).toThrow(/B\.component:items: 26 options/);
+  });
+});
+
+describe("authoring lint", () => {
+  const timeBuckets = { ...buckets, dayPart: ["morning", "afternoon", "evening", "night"] };
+  const one = (over: Partial<DataSourceManifestInput>) =>
+    defineManifests({
+      site: "l",
+      sources: [src("breakfast", "list", { what: "This morning's breakfast menu", ...over })],
+      components: [comp("rows", "list")],
+    });
+
+  it("passes the test manifests", () => {
+    expect(lintManifests(manifests, buckets)).toEqual([]);
+  });
+
+  it("flags time-bound content with no audience and names the time bucket", () => {
+    expect(lintManifests(one({}), timeBuckets)).toEqual([
+      expect.stringMatching(
+        /^source breakfast: .*"This morning".*audience: \{ dayPart: \[\.\.\.\] \}/,
+      ),
+    ]);
+  });
+
+  it("is quiet once the source has an audience", () => {
+    expect(lintManifests(one({ audience: { dayPart: ["morning"] } }), timeBuckets)).toEqual([]);
+  });
+
+  it("suggests a time-of-day bucket when the site has none", () => {
+    expect(lintManifests(one({ what: "Served until 10:30" }), buckets)[0]).toMatch(/dayPartRule/);
   });
 });
 

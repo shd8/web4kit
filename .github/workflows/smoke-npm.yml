@@ -43,3 +43,37 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ github.token }}
+
+  # Regenerates github.com/shd8/web4kit-starter (the README's Vercel and StackBlitz buttons) from
+  # the version just smoke-tested. STARTER_DEPLOY_KEY is a deploy key with write access to that
+  # repository only.
+  starter:
+    needs: smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/checkout@v4
+        with:
+          repository: shd8/web4kit-starter
+          path: starter
+          ssh-key: ${{ secrets.STARTER_DEPLOY_KEY }}
+      - run: node scripts/starter.mjs "$VERSION" starter
+        env:
+          VERSION: ${{ inputs.version }}
+      # The buttons install the starter as cloned: check that before publishing it.
+      - run: npm ci --no-audit --no-fund && npm run build && npm test
+        working-directory: starter
+      - name: Push the starter
+        working-directory: starter
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git add -A
+          if git diff --cached --quiet; then echo "the starter already matches $VERSION"; exit 0; fi
+          git -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "web4kit $VERSION starter"
+          git push

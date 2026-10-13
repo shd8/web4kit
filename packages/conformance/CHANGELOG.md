@@ -1,5 +1,21 @@
 # @web4kit/conformance
 
+## 0.3.0
+
+### Minor Changes
+
+- b6662a0: Add an optional site `purpose` to `defineManifests`: one sentence (up to 120 characters) about what the site is for, shown to the decider with every source. Manifests without a purpose keep identical questions and versions, so existing calibration profiles stay active. `runEngine` can now score decisions ungated (`decisions: "ungated"`), using the engine's answers with no calibration profile.
+
+### Patch Changes
+
+- Updated dependencies [b6662a0]
+- Updated dependencies [e0d2fc5]
+  - @web4kit/manifest@0.3.0
+  - @web4kit/planner@0.3.0
+  - @web4kit/context@0.3.0
+  - @web4kit/decider@0.3.0
+  - @web4kit/ir@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

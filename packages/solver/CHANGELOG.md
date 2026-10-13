@@ -1,5 +1,14 @@
 # @web4kit/solver
 
+## 0.3.0
+
+### Patch Changes
+
+- Updated dependencies [b6662a0]
+- Updated dependencies [e0d2fc5]
+  - @web4kit/manifest@0.3.0
+  - @web4kit/ir@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

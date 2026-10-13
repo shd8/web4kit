@@ -1,5 +1,23 @@
 # @web4kit/next
 
+## 0.3.0
+
+### Minor Changes
+
+- e0d2fc5: `defineSourceFor(BUCKETS)`: `defineSource` bound to the site's situation buckets, so `audience`, `mustInclude`, `mustExclude` and heuristic conditions autocomplete and a misspelt bucket or label is a type error (or a `ManifestError` from JavaScript). `lintManifests(manifests, buckets?)` warns when a source's `what` is time-bound ("this morning", "today", "until 10:30") but it has no `audience`. `createSite` prints these warnings outside production and exposes them as `site.manifestWarnings()`, and `web4kit check` prints them without changing its exit code. The starters use both.
+
+### Patch Changes
+
+- Updated dependencies [b6662a0]
+- Updated dependencies [e0d2fc5]
+- Updated dependencies [90fc053]
+  - @web4kit/manifest@0.3.0
+  - @web4kit/planner@0.3.0
+  - @web4kit/react@0.3.0
+  - @web4kit/context@0.3.0
+  - @web4kit/decider@0.3.0
+  - @web4kit/ir@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

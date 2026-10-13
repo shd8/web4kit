@@ -123,6 +123,37 @@ describe("versioning (task 5.4)", () => {
   });
 });
 
+describe("site purpose (zero-config-ablation 1.1-1.2)", () => {
+  const one = [components[0]!];
+  const purpose = "Website of a neighbourhood restaurant";
+
+  it("stores an optional purpose and rejects one that is too long", () => {
+    expect(defineManifests({ site: "t", purpose, sources: [menu], components }).purpose).toBe(
+      purpose,
+    );
+    expect(defineManifests({ site: "t", sources: [menu], components }).purpose).toBeUndefined();
+    expect(() =>
+      defineManifests({ site: "t", purpose: "x".repeat(121), sources: [menu], components }),
+    ).toThrow(/purpose: .*allowed 120, got 121/);
+  });
+
+  it("keeps every version byte-identical when no purpose is set", () => {
+    // Computed before the purpose field existed: calibration profiles must stay active.
+    const m = defineManifests({ site: "t", sources: [menu], components: one });
+    expect(m.version).toBe("man-f97eb24127ec");
+    expect(m.deciderVersion).toBe("dec-622201460d02");
+    expect(m.sourceDeciderVersions).toEqual({ menu: "dec-6b263d88e534" });
+  });
+
+  it("makes the purpose part of every decider-visible version", () => {
+    const plain = defineManifests({ site: "t", sources: [menu], components: one });
+    const withPurpose = defineManifests({ site: "t", purpose, sources: [menu], components: one });
+    expect(withPurpose.version).not.toBe(plain.version);
+    expect(withPurpose.deciderVersion).not.toBe(plain.deciderVersion);
+    expect(withPurpose.sourceDeciderVersions.menu).not.toBe(plain.sourceDeciderVersions.menu);
+  });
+});
+
 describe("v1 authoring (tasks 2.1-2.3)", () => {
   const set = (source: DataSourceManifestInput) =>
     defineManifests({ site: "t", sources: [source], components });

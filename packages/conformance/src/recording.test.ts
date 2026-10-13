@@ -125,6 +125,19 @@ describe("recording and replay (task 1.3)", () => {
     const run = await runEngine({ manifests, fixtures, decider: countingEngine().decider });
     expect(run.byKind["A.relevance|english"]?.accuracy).toBe(1);
     expect(run.decisionAccuracy["A.relevance|english"]).toEqual({ samples: 2, accuracy: 0 });
+    expect(run.decisionPolicy).toBe("self-calibrated");
+  });
+
+  it("scores decisions ungated: the engine's answer is used without a profile (zero-config-ablation 2.1)", async () => {
+    const engine = countingEngine();
+    const recorder = createRecordingDecider(engine.decider);
+    const gated = await runEngine({ manifests, fixtures, decider: recorder });
+    const replay = createReplayDecider(recorder.recordings(), engine.decider.capabilities);
+    const ungated = await runEngine({ manifests, fixtures, decider: replay, decisions: "ungated" });
+    expect(ungated.decisionPolicy).toBe("ungated");
+    expect(ungated.byKind).toEqual(gated.byKind);
+    expect(gated.decisionAccuracy["A.relevance|english"]).toEqual({ samples: 2, accuracy: 0 });
+    expect(ungated.decisionAccuracy["A.relevance|english"]).toEqual({ samples: 2, accuracy: 1 });
   });
 });
 

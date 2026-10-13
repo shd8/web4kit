@@ -24,6 +24,7 @@ export class ManifestError extends Error {
  */
 export function defineManifests(input: {
   site: string;
+  purpose?: string;
   sources: DataSourceManifestInput[];
   components: ComponentManifestInput[];
 }): ManifestSet {
@@ -45,6 +46,12 @@ export function defineManifests(input: {
       for (const i of r.error.issues)
         issues.push(`source ${idOf(raw)}: ${fieldOf(i.path)} ${i.message}`);
   }
+
+  const purpose = input.purpose;
+  if (purpose !== undefined && (purpose.length === 0 || purpose.length > LIMITS.purpose))
+    issues.push(
+      `purpose: must be 1 to ${LIMITS.purpose} characters (allowed ${LIMITS.purpose}, got ${purpose.length})`,
+    );
 
   const componentIds = new Set(components.map((c) => c.id));
   for (const id of duplicates(sources.map((s) => s.id))) issues.push(`source ${id}: duplicate id`);
@@ -85,9 +92,10 @@ export function defineManifests(input: {
 
   return {
     site: input.site,
-    version: manifestVersion(input.site, sources, components),
-    deciderVersion: deciderVersion(input.site, sources, components),
-    sourceDeciderVersions: sourceDeciderVersions(input.site, sources, components),
+    ...(purpose !== undefined ? { purpose } : {}),
+    version: manifestVersion(input.site, sources, components, purpose),
+    deciderVersion: deciderVersion(input.site, sources, components, purpose),
+    sourceDeciderVersions: sourceDeciderVersions(input.site, sources, components, purpose),
     sources,
     components,
   };
@@ -112,9 +120,11 @@ export function manifestVersion(
   site: string,
   sources: DataSourceManifest[],
   components: ComponentManifest[],
+  purpose?: string,
 ) {
-  const content = JSON.stringify({ site, sources, components }, (key, value) =>
-    key === "fetch" ? undefined : value,
+  const content = JSON.stringify(
+    { site, ...withPurpose(purpose), sources, components },
+    (key, value) => (key === "fetch" ? undefined : value),
   );
   return `man-${stableHash(content, 12)}`;
 }
@@ -128,9 +138,11 @@ export function deciderVersion(
   site: string,
   sources: DataSourceManifest[],
   components: ComponentManifest[],
+  purpose?: string,
 ) {
   const surface = {
     site,
+    ...withPurpose(purpose),
     template: QUESTION_TEMPLATE_VERSION,
     sources: sources.map(sourceSurface),
     components: components.map(componentSurface),
@@ -147,11 +159,13 @@ export function sourceDeciderVersions(
   site: string,
   sources: DataSourceManifest[],
   components: ComponentManifest[],
+  purpose?: string,
 ): Record<string, string> {
   return Object.fromEntries(
     sources.map((s) => {
       const surface = {
         site,
+        ...withPurpose(purpose),
         template: QUESTION_TEMPLATE_VERSION,
         source: sourceSurface(s),
         components: compatibleComponents(s, components).map((c) => ({
@@ -163,6 +177,9 @@ export function sourceDeciderVersions(
     }),
   );
 }
+
+/** The purpose joins a hashed object only when set, so manifests without one hash as before. */
+const withPurpose = (purpose: string | undefined) => (purpose !== undefined ? { purpose } : {});
 
 const sourceSurface = (s: DataSourceManifest) => ({
   id: s.id,
